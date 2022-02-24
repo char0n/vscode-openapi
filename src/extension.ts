@@ -27,6 +27,8 @@ import * as yamlSchemaContributor from "./yaml-schema-contributor";
 import * as audit from "./audit/activate";
 import * as preview from "./preview";
 import * as platform from "./platform/activate";
+import { ScanContext } from "./platform/scan/foo";
+import { ScanReportWebView } from "./platform/scan-report";
 
 export async function activate(context: vscode.ExtensionContext) {
   const versionProperty = "openapiVersion";
@@ -54,8 +56,20 @@ export async function activate(context: vscode.ExtensionContext) {
 
   cache.onDidActiveDocumentChange((document) => updateContext(cache, document));
 
+  const scanReportView = new ScanReportWebView(context.extensionPath);
+  const reportWebView = new AuditReportWebView(context.extensionPath, cache);
+
+  const auditContext: AuditContext = {
+    auditsByMainDocument: {},
+    auditsByDocument: {},
+    decorations: {},
+    diagnostics: vscode.languages.createDiagnosticCollection("audits"),
+  };
+
+  const scanContext: ScanContext = { scans: {} };
+
   context.subscriptions.push(...registerOutlines(context, cache));
-  context.subscriptions.push(...registerCommands(cache));
+  context.subscriptions.push(...registerCommands(cache, scanReportView));
   context.subscriptions.push(registerAddApprovedHost(context));
 
   const completionProvider = new CompletionItemProvider(context, cache);
@@ -86,17 +100,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
   yamlSchemaContributor.activate(context, cache);
 
-  const auditContext: AuditContext = {
-    auditsByMainDocument: {},
-    auditsByDocument: {},
-    decorations: {},
-    diagnostics: vscode.languages.createDiagnosticCollection("audits"),
-  };
-
-  const reportWebView = new AuditReportWebView(context.extensionPath, cache);
   audit.activate(context, auditContext, cache, reportWebView);
   preview.activate(context, cache, configuration);
-  await platform.activate(context, auditContext, cache, reportWebView);
+  await platform.activate(context, auditContext, scanContext, cache, reportWebView, scanReportView);
 
   if (previousVersion!.major < currentVersion.major) {
     createWhatsNewPanel(context);

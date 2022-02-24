@@ -129,10 +129,11 @@ export async function readScanReport(
 ): Promise<any> {
   const { body } = <any>await got(`api/v1/apis/${apiId}/scanreport`, {
     ...gotOptions("GET", options, logger),
-    searchParams: { medium: 1 },
+    searchParams: { medium: 2 },
   });
 
   const text = Buffer.from(body.data, "base64").toString("utf-8");
+
   return JSON.parse(text);
 }
 

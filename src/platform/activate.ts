@@ -19,12 +19,15 @@ import { CodelensProvider } from "./codelens";
 import { refreshAuditReport } from "./audit";
 import { AuditReportWebView } from "../audit/report";
 import { ScanReportWebView } from "./scan-report";
+import { ScanContext } from "./scan/foo";
 
 export async function activate(
   context: vscode.ExtensionContext,
   auditContext: AuditContext,
+  scanContext: ScanContext,
   cache: Cache,
-  reportWebView: AuditReportWebView
+  reportWebView: AuditReportWebView,
+  scanReportView: ScanReportWebView
 ) {
   const platformUrl = configuration.get<string>("platformUrl");
 
@@ -35,8 +38,6 @@ export async function activate(
     // secrets.get() sometimes throws an exception when running tests
     // ignore it
   }
-
-  const scanReportView = new ScanReportWebView(context.extensionPath);
 
   const platformContext: PlatformContext = {
     context,
@@ -100,6 +101,7 @@ export async function activate(
     context,
     platformContext,
     auditContext,
+    scanContext,
     store,
     favoriteCollections,
     importedUrls,

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Audit Report</title>
+    <style>
+      :root {
+        --audit-foreground: var(--audit-custom-foreground, var(--vscode-editor-foreground));
+        --audit-background: var(--audit-custom-background, var(--vscode-editor-background));
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", async (event) => {
+        const scan = await (await fetch("/scan.json")).json();
+        const host = { postMessage: (message) => console.log("pm", message) };
+        window.renderScanReport(host, { kind: "light" });
+        window.postMessage({ command: "show", report: scan });
+        //window.postMessage({ command: "focusPath", path: "/api/admin/all_users" });
+        //window.postMessage({ command: "focusOperation", path: ["/api/admin/all_users", "delete"] });
+      });
+    </script>
+  </body>
+</html>

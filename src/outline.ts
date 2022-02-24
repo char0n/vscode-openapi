@@ -3,7 +3,7 @@
  Licensed under the GNU Affero General Public License version 3. See LICENSE.txt in the project root for license information.
 */
 
-import { find, getLocation, Location } from "@xliic/preserving-json-yaml-parser";
+import { find, getLocation, Location, Path } from "@xliic/preserving-json-yaml-parser";
 import * as vscode from "vscode";
 import { Cache } from "./cache";
 import { configuration } from "./configuration";
@@ -15,7 +15,10 @@ export interface Node {
   value: any;
   depth: number;
   location?: Location;
+  path: Path;
 }
+
+const HTTP_METHODS: any[] = ["get", "put", "post", "delete", "options", "head", "patch", "trace"];
 
 function getChildren(node: Node): Node[] {
   if (node.value) {
@@ -28,6 +31,7 @@ function getChildren(node: Node): Node[] {
       depth: node.depth + 1,
       value: node.value[key],
       location: getLocation(node.value, key),
+      path: [...node.path, key],
     }));
   }
   return [];
@@ -44,6 +48,7 @@ function getChildrenByName(root: Node, names: string[]): Node[] {
           value: root.value[key],
           depth: root.depth + 1,
           location: getLocation(root.value, key),
+          path: [...root.path, key],
         });
       }
     }
@@ -76,6 +81,7 @@ abstract class OutlineProvider implements vscode.TreeDataProvider<Node> {
               depth: 0,
               value: found,
               location: undefined,
+              path: [],
             };
           } else {
             this.root = undefined;
@@ -187,17 +193,7 @@ export class PathOutlineProvider extends OutlineProvider {
     const key = node.key;
     if (depth === 2) {
       return children.filter((child) => {
-        return [
-          "get",
-          "put",
-          "post",
-          "delete",
-          "options",
-          "head",
-          "patch",
-          "trace",
-          "parameters",
-        ].includes(String(child.key));
+        return [...HTTP_METHODS, "parameters"].includes(String(child.key));
       });
     } else if (depth === 3 && key !== "parameters") {
       return children.filter((child) => {
@@ -206,6 +202,42 @@ export class PathOutlineProvider extends OutlineProvider {
       });
     }
     return children;
+  }
+
+  getCommand(node: Node): vscode.Command | undefined {
+    const { depth, key, path } = node;
+
+    const editor = vscode.window?.activeTextEditor;
+    if (editor && node && node.location) {
+      const { start, end } = node.location.value;
+      const range = new vscode.Range(
+        editor.document.positionAt(start),
+        editor.document.positionAt(end)
+      );
+
+      if (depth === 1) {
+        return {
+          command: "openapi.goToPath",
+          title: "",
+          arguments: [key, range],
+        };
+      }
+
+      if (depth === 2 && HTTP_METHODS.includes(key)) {
+        return {
+          command: "openapi.goToOperation",
+          title: "",
+          arguments: [path, range],
+        };
+      }
+
+      return {
+        command: "openapi.goToLine",
+        title: "",
+        arguments: [range],
+      };
+    }
+    return undefined;
   }
 
   getLabel(node: Node): string {
@@ -334,6 +366,22 @@ export class OperationIdOutlineProvider extends OutlineProvider {
 
   getLabel(node: Node): string {
     return node.value["operationId"];
+  }
+
+  getCommand(node: Node): vscode.Command | undefined {
+    const editor = vscode.window?.activeTextEditor;
+    if (editor && node && node.location) {
+      const { start, end } = node.location.value;
+      return {
+        command: "openapi.goToOperation",
+        title: "",
+        arguments: [
+          node.path,
+          new vscode.Range(editor.document.positionAt(start), editor.document.positionAt(end)),
+        ],
+      };
+    }
+    return undefined;
   }
 }
 

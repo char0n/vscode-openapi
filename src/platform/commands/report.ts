@@ -10,11 +10,12 @@ import { ScanReportWebView } from "../scan-report";
 import { parseAuditReport, updateAuditContext } from "../../audit/audit";
 import { setDecorations, updateDecorations } from "../../audit/decoration";
 import { updateDiagnostics } from "../../audit/diagnostic";
+import { parseScanReport, ScanContext } from "../scan/foo";
 
 export default (
   store: PlatformStore,
-  context: vscode.ExtensionContext,
   auditContext: AuditContext,
+  scanContext: ScanContext,
   cache: Cache,
   reportWebView: AuditReportWebView,
   scanReportView: ScanReportWebView
@@ -84,8 +85,12 @@ export default (
       },
       async () => {
         try {
-          const scanReport = await store.getScanReport(apiId);
-          scanReportView.show(scanReport);
+          const report = await store.getScanReport(apiId);
+          const uri = makePlatformUri(apiId);
+          const document = await vscode.workspace.openTextDocument(uri);
+          const scan = await parseScanReport(cache, document, report);
+          scanContext.scans[uri.toString()] = scan;
+          scanReportView.show(scan);
         } catch (e) {
           vscode.window.showErrorMessage(`Unexpected error: ${e}`);
         }

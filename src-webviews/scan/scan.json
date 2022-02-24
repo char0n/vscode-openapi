@@ -1,0 +1,373 @@
+{
+  "summary": {
+    "issues": 6
+  },
+  "paths": {
+    "/api/admin/all_users": {
+      "delete": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘delete’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'DELETE' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/all_users'"
+          }
+        ]
+      },
+      "get": {
+        "issues": []
+      },
+      "head": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘head’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'HEAD' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/all_users'"
+          }
+        ]
+      },
+      "options": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘options’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'OPTIONS' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/all_users'"
+          }
+        ]
+      },
+      "patch": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘patch’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PATCH' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/all_users'"
+          }
+        ]
+      },
+      "post": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘post’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'POST' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/all_users'"
+          }
+        ]
+      },
+      "put": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘put’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PUT' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/all_users'"
+          }
+        ]
+      },
+      "trace": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘trace’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'TRACE' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/all_users'"
+          }
+        ]
+      }
+    },
+    "/api/admin/users/search": {
+      "delete": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘delete’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'DELETE' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/users/search?search=NyS0g2w%40u7.qZI'"
+          }
+        ]
+      },
+      "get": {
+        "issues": []
+      },
+      "head": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘head’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'HEAD' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/users/search?search=NyS0g2w%40u7.qZI'"
+          }
+        ]
+      },
+      "options": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘options’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'OPTIONS' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/users/search?search=NyS0g2w%40u7.qZI'"
+          }
+        ]
+      },
+      "patch": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘patch’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PATCH' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/users/search?search=NyS0g2w%40u7.qZI'"
+          }
+        ]
+      },
+      "post": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘post’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'POST' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/users/search?search=NyS0g2w%40u7.qZI'"
+          }
+        ]
+      },
+      "put": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘put’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PUT' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/users/search?search=NyS0g2w%40u7.qZI'"
+          }
+        ]
+      },
+      "trace": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘trace’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'TRACE' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/admin/users/search?search=NyS0g2w%40u7.qZI'"
+          }
+        ]
+      }
+    },
+    "/api/login": {
+      "delete": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘delete’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'DELETE' -H 'Content-Type: application/x-www-form-urlencoded' -H 'X-Scan-Transactionid: dbaaf638-e6d8-4df6-b650-050c1da5df20' 'http://host.docker.internal:8090/api/login'"
+          }
+        ]
+      },
+      "get": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘get’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'GET' -H 'Content-Type: application/x-www-form-urlencoded' -H 'X-Scan-Transactionid: d4da5624-5a7d-4c13-9ad2-ad0b2fcc8dc4' 'http://host.docker.internal:8090/api/login'"
+          }
+        ]
+      },
+      "head": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘head’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'HEAD' -H 'Content-Type: application/x-www-form-urlencoded' -H 'X-Scan-Transactionid: 0a3fcbcf-bda6-4036-b1b4-dea6d517f0e4' 'http://host.docker.internal:8090/api/login'"
+          }
+        ]
+      },
+      "options": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘options’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'OPTIONS' -H 'Content-Type: application/x-www-form-urlencoded' -H 'X-Scan-Transactionid: 1dda9edc-13fd-4331-b25f-01342d023971' 'http://host.docker.internal:8090/api/login'"
+          }
+        ]
+      },
+      "patch": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘patch’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PATCH' -H 'Content-Type: application/x-www-form-urlencoded' -H 'X-Scan-Transactionid: 9b9fbbdc-28f7-47a4-a8b2-ff74b2ca1d45' 'http://host.docker.internal:8090/api/login'"
+          }
+        ]
+      },
+      "post": {
+        "issues": []
+      },
+      "put": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘put’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PUT' -H 'Content-Type: application/x-www-form-urlencoded' -H 'X-Scan-Transactionid: b096f09b-d786-4879-916f-bf25970af461' 'http://host.docker.internal:8090/api/login'"
+          }
+        ]
+      },
+      "trace": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘trace’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'TRACE' -H 'Content-Type: application/x-www-form-urlencoded' -H 'X-Scan-Transactionid: 70b5f725-f086-4b35-9cfe-90984d07571a' 'http://host.docker.internal:8090/api/login'"
+          }
+        ]
+      }
+    },
+    "/api/register": {
+      "delete": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘delete’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'DELETE' -H 'Content-Type: application/json' -H 'X-Scan-Transactionid: e1cc6dbd-25c9-44e8-a6f2-78b47341a415' 'http://host.docker.internal:8090/api/register'"
+          }
+        ]
+      },
+      "get": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘get’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'GET' -H 'Content-Type: application/json' -H 'X-Scan-Transactionid: 9f4335e7-0854-4ff3-88db-ddd047f77075' 'http://host.docker.internal:8090/api/register'"
+          }
+        ]
+      },
+      "head": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘head’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'HEAD' -H 'Content-Type: application/json' -H 'X-Scan-Transactionid: 9fd2a820-42fb-43ce-a6f2-37506184bf57' 'http://host.docker.internal:8090/api/register'"
+          }
+        ]
+      },
+      "options": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘options’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'OPTIONS' -H 'Content-Type: application/json' -H 'X-Scan-Transactionid: 09925afb-058d-4c95-84df-e09544675153' 'http://host.docker.internal:8090/api/register'"
+          }
+        ]
+      },
+      "patch": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘patch’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PATCH' -H 'Content-Type: application/json' -H 'X-Scan-Transactionid: b76551c7-ec03-45df-b816-b5d57053c8b7' 'http://host.docker.internal:8090/api/register'"
+          }
+        ]
+      },
+      "post": {
+        "issues": []
+      },
+      "put": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘put’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PUT' -H 'Content-Type: application/json' -H 'X-Scan-Transactionid: 84e95d82-e5b1-4e4f-b85d-b4c388b27072' 'http://host.docker.internal:8090/api/register'"
+          }
+        ]
+      },
+      "trace": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘trace’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'TRACE' -H 'Content-Type: application/json' -H 'X-Scan-Transactionid: fb30b684-1085-481b-b951-0473f798375b' 'http://host.docker.internal:8090/api/register'"
+          }
+        ]
+      }
+    },
+    "/api/user/edit_info": {
+      "delete": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘delete’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'DELETE' -H 'Content-Type: application/json' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/edit_info'"
+          }
+        ]
+      },
+      "get": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘get’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'GET' -H 'Content-Type: application/json' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/edit_info'"
+          }
+        ]
+      },
+      "head": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘head’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'HEAD' -H 'Content-Type: application/json' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/edit_info'"
+          }
+        ]
+      },
+      "options": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘options’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'OPTIONS' -H 'Content-Type: application/json' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/edit_info'"
+          }
+        ]
+      },
+      "patch": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘patch’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PATCH' -H 'Content-Type: application/json' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/edit_info'"
+          }
+        ]
+      },
+      "post": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘post’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'POST' -H 'Content-Type: application/json' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/edit_info'"
+          }
+        ]
+      },
+      "put": {
+        "issues": []
+      },
+      "trace": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘trace’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'TRACE' -H 'Content-Type: application/json' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/edit_info'"
+          }
+        ]
+      }
+    },
+    "/api/user/info": {
+      "delete": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘delete’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'DELETE' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/info'"
+          }
+        ]
+      },
+      "get": {
+        "issues": []
+      },
+      "head": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘head’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'HEAD' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/info'"
+          }
+        ]
+      },
+      "options": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘options’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'OPTIONS' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/info'"
+          }
+        ]
+      },
+      "patch": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘patch’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PATCH' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/info'"
+          }
+        ]
+      },
+      "post": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘post’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'POST' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/info'"
+          }
+        ]
+      },
+      "put": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘put’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'PUT' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/info'"
+          }
+        ]
+      },
+      "trace": {
+        "issues": [
+          {
+            "description": "The request is generated with the verb ‘trace’ that is not defined in the OpenAPI definition of the API",
+            "curl": "curl -X 'TRACE' -H 'X-Access-Token: ******' 'http://host.docker.internal:8090/api/user/info'"
+          }
+        ]
+      }
+    }
+  }
+}

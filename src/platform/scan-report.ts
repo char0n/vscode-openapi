@@ -6,10 +6,12 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import { readFileSync } from "fs";
+import { Scan } from "./scan/foo";
+import { Path } from "@xliic/preserving-json-yaml-parser";
 
 export class ScanReportWebView {
   private panel?: vscode.WebviewPanel;
-  private style: string = ""; // FIXME
+  private style: string;
   private script: vscode.Uri;
 
   constructor(extensionPath: string) {
@@ -17,19 +19,25 @@ export class ScanReportWebView {
       path.join(extensionPath, "webview", "generated", "scan", "index.js")
     );
 
-    /* FIXME
     this.style = readFileSync(
       path.join(extensionPath, "webview", "generated", "scan", "style.css"),
       { encoding: "utf-8" }
     );
-    */
   }
 
-  public show(report: any) {
+  public show(report: Scan) {
     if (!this.panel) {
       this.panel = this.createPanel();
     }
-    // FIXME this.panel.webview.postMessage({ command: "show", report: sample });
+    this.panel.webview.postMessage({ command: "show", report });
+  }
+
+  public focusOperation(path: Path) {
+    this.panel?.webview.postMessage({ command: "focusOperation", path });
+  }
+
+  public focusPath(path: string) {
+    this.panel?.webview.postMessage({ command: "focusPath", path });
   }
 
   private createPanel(): vscode.WebviewPanel {
@@ -67,35 +75,37 @@ export class ScanReportWebView {
   }
 
   private getHtml(cspSource: string, script: vscode.Uri, style: string): string {
+    const themeKind =
+      vscode.window.activeColorTheme.kind == vscode.ColorThemeKind.Light ? "light" : "dark";
+
     return `<!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta http-equiv="Content-Security-Policy"  content="default-src 'none';  img-src ${cspSource} https: data:; script-src ${cspSource} 'unsafe-inline'; style-src ${cspSource}  'unsafe-inline'; connect-src http: https:">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <!-- style>{style}</style-->
+      <style>${style}</style>
       <style>
-        body {
-        background-color: #FEFEFE;
+        :root {
+          --audit-foreground: var(
+            --audit-custom-foreground,
+            var(--vscode-editor-foreground)
+          );
+          --audit-background: var(
+            --audit-custom-background,
+            var(--vscode-editor-background)
+          );
         }
       </style>
     </head>
     <body>
     <div id="root"></div>  
-    <!--script src="{script}"></script-->
+    <script src="${script}"></script>
     <script>
     window.addEventListener("DOMContentLoaded", (event) => {
       console.log('content loaded');
       const vscode = acquireVsCodeApi();
-      window.addEventListener('message', event => {
-        console.log('got message', event);
-        const message = event.data;
-              switch (message.command) {
-                  case 'show':
-                      window.renderScanReport(vscode, message.report);
-                      break;
-              }
-      });
+      window.renderScanReport(vscode, {kind: "${themeKind}"});
       console.log("all done");
     });
     </script>

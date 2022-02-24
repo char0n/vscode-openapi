@@ -22,11 +22,11 @@ export class ApiNode extends AbstractExplorerNode {
   }
 
   async getChildren(): Promise<ExplorerNode[]> {
-    // FIXME const scanNode = this.api.scan.isProcessed ? [new ScanNode(this, this.store, this.api)] : [];
+    const scanNode = this.api.scan.isProcessed ? [new ScanNode(this, this.store, this.api)] : [];
     return [
       new OasNode(this, this.store, this.api),
       new AuditNode(this, this.store, this.api),
-      // FIXME ...scanNode,
+      ...scanNode,
     ];
   }
 

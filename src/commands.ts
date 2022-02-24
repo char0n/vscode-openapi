@@ -9,6 +9,7 @@ import {
   findNodeAtOffset,
   joinJsonPointer,
   simpleClone,
+  Path,
 } from "@xliic/preserving-json-yaml-parser";
 import * as snippets from "./generated/snippets.json";
 import { Cache } from "./cache";
@@ -18,6 +19,7 @@ import { fixInsert } from "./audit/quickfix";
 import { getPointerLastSegment, getPointerParent } from "./pointer";
 import { processSnippetParameters } from "./util";
 import { Node, outlines } from "./outline";
+import { ScanReportWebView } from "./platform/scan-report";
 
 const commands: { [key: string]: Function } = {
   goToLine,
@@ -66,11 +68,24 @@ const commands: { [key: string]: Function } = {
 
 export const registeredSnippetQuickFixes: { [key: string]: Fix } = {};
 
-export function registerCommands(cache: Cache): vscode.Disposable[] {
+export function registerCommands(
+  cache: Cache,
+  scanReportView: ScanReportWebView
+): vscode.Disposable[] {
   for (const fix of snippets.fixes) {
     registeredSnippetQuickFixes[fix.problem[0]] = fix as Fix;
   }
-  return Object.keys(commands).map((name) => registerCommand(name, cache, commands[name]));
+  const disposables = Object.keys(commands).map((name) =>
+    registerCommand(name, cache, commands[name])
+  );
+
+  disposables.push(
+    vscode.commands.registerCommand("openapi.goToOperation", (args) =>
+      goToOperation(cache, scanReportView, ...args)
+    )
+  );
+
+  return disposables;
 }
 
 function registerCommand(name: string, cache: Cache, handler: Function): vscode.Disposable {
@@ -90,6 +105,34 @@ function goToLine(cache: Cache, range: vscode.Range) {
   if (editor) {
     editor.selection = new vscode.Selection(range.start, range.start);
     editor.revealRange(editor.selection, vscode.TextEditorRevealType.AtTop);
+  }
+}
+
+function goToPath(
+  cache: Cache,
+  scanReportView: ScanReportWebView,
+  path: string,
+  range: vscode.Range
+) {
+  const editor = vscode.window.activeTextEditor;
+  if (editor) {
+    editor.selection = new vscode.Selection(range.start, range.start);
+    editor.revealRange(editor.selection, vscode.TextEditorRevealType.AtTop);
+    scanReportView.focusPath(path);
+  }
+}
+
+function goToOperation(
+  cache: Cache,
+  scanReportView: ScanReportWebView,
+  path: Path,
+  range: vscode.Range
+) {
+  const editor = vscode.window.activeTextEditor;
+  if (editor) {
+    editor.selection = new vscode.Selection(range.start, range.start);
+    editor.revealRange(editor.selection, vscode.TextEditorRevealType.AtTop);
+    scanReportView.focusOperation(path);
   }
 }
 

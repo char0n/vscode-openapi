@@ -18,11 +18,13 @@ import { CollectionsProvider } from "./explorer/provider";
 import { ExplorerNode } from "./explorer/nodes/base";
 import { AuditReportWebView } from "../audit/report";
 import { ScanReportWebView } from "./scan-report";
+import { ScanContext } from "./scan/foo";
 
 export function registerCommands(
   context: vscode.ExtensionContext,
   platformContext: PlatformContext,
   auditContext: AuditContext,
+  scanContext: ScanContext,
   store: PlatformStore,
   favorites: FavoritesStore,
   importedUrls: ImportedUrlStore,
@@ -39,7 +41,7 @@ export function registerCommands(
   Object.assign(commands, filter(store, provider));
   Object.assign(
     commands,
-    report(store, context, auditContext, cache, reportWebView, scanReportView)
+    report(store, auditContext, scanContext, cache, reportWebView, scanReportView)
   );
   Object.assign(commands, scan());
 
