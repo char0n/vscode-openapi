@@ -1,11 +1,11 @@
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { goToLine, openLink } from "../hostActions";
-import Paths from "./Paths";
+import Report from "./Report";
 
 function App() {
   const dispatch = useAppDispatch();
   const theme = useAppSelector((state) => state.theme);
-  const report = useAppSelector((state) => state.report);
+  const report = useAppSelector((state) => state.report.filteredReport);
 
   const cssVars = [];
   if (theme.foreground !== undefined) {
@@ -21,10 +21,12 @@ function App() {
      }
   `;
 
+  console.log("do", report);
+
   return (
     <>
       <style>{style}</style>
-      <Paths paths={report.focusedPaths} />
+      <Report report={report} />
     </>
   );
 }

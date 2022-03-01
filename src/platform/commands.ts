@@ -41,7 +41,7 @@ export function registerCommands(
   Object.assign(commands, filter(store, provider));
   Object.assign(
     commands,
-    report(store, auditContext, scanContext, cache, reportWebView, scanReportView)
+    report(context, store, auditContext, scanContext, cache, reportWebView, scanReportView)
   );
   Object.assign(commands, scan());
 

@@ -227,7 +227,7 @@ export class PathOutlineProvider extends OutlineProvider {
         return {
           command: "openapi.goToOperation",
           title: "",
-          arguments: [path, range],
+          arguments: [path[0], path[1], range],
         };
       }
 
@@ -376,7 +376,8 @@ export class OperationIdOutlineProvider extends OutlineProvider {
         command: "openapi.goToOperation",
         title: "",
         arguments: [
-          node.path,
+          node.path[0],
+          node.path[1],
           new vscode.Range(editor.document.positionAt(start), editor.document.positionAt(end)),
         ],
       };

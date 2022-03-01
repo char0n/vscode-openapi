@@ -5,8 +5,9 @@ import { ScanReport } from "./types";
 export interface ReportState {
   display: "loading";
   summary: ScanReport["summary"];
-  paths: ScanReport["paths"];
-  focusedPaths: ScanReport["paths"];
+  report: ScanReport["report"];
+  filter?: { path?: string; method?: string };
+  filteredReport: ScanReport["report"];
 }
 
 const initialState: ReportState = {
@@ -14,8 +15,8 @@ const initialState: ReportState = {
   summary: {
     issues: 0,
   },
-  paths: {},
-  focusedPaths: {},
+  report: [],
+  filteredReport: [],
 };
 
 export const reportSlice = createSlice({
@@ -23,18 +24,22 @@ export const reportSlice = createSlice({
   initialState,
   reducers: {
     show: (state, action: PayloadAction<ScanReport>) => {
+      console.log("sho", action);
+      state.filter = undefined;
       state.summary = action.payload.summary;
-      state.paths = action.payload.paths;
-      state.focusedPaths = action.payload.paths;
+      state.report = action.payload.report;
+      state.filteredReport = action.payload.report;
     },
     focusOperation: (state, action: PayloadAction<{ path: string; method: string }>) => {
       const { path, method } = action.payload;
-      const operation = state.paths[path][method];
-      state.focusedPaths = { [path]: { [method]: operation } };
+      state.filter = { path, method };
+      state.filteredReport = state.report.filter((or) => or.path === path && or.method === method);
     },
 
     focusPath: (state, action: PayloadAction<string>) => {
-      console.log("focus path", action.payload);
+      state.filter = { path: action.payload };
+      console.log("fo pa", action.payload);
+      state.filteredReport = state.report.filter((or) => or.path === action.payload);
     },
   },
 });

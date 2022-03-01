@@ -7,7 +7,10 @@ export interface Issue {
   curl: string;
 }
 
-export interface Operation {
+export interface OperationReport {
+  path: string;
+  method: string;
+  isSkipped: boolean;
   issues: Issue[];
 }
 
@@ -15,11 +18,7 @@ export interface Scan {
   summary: {
     issues: number;
   };
-  paths: {
-    [path: string]: {
-      [operation: string]: Operation;
-    };
-  };
+  report: OperationReport[];
 }
 
 export interface ScanContext {
@@ -36,15 +35,27 @@ export async function parseScanReport(
   const index = report.index;
   const issues = report.summary.issues;
 
-  const paths: Scan["paths"] = {};
+  const result: OperationReport[] = [];
 
-  for (const path of Object.keys(report.paths)) {
-    paths[path] = {};
-    for (const operation of Object.keys(report.paths[path])) {
-      paths[path][operation] = { issues: [] };
-      if (report.paths[path][operation].issues) {
-        for (const issue of report.paths[path][operation].issues) {
-          paths[path][operation].issues.push({
+  for (const [path, pathReport] of Object.entries<any>(report.paths)) {
+    for (const [method, opReport] of Object.entries<any>(pathReport)) {
+      const isSkipped = !opReport.checked;
+      const operationReport: OperationReport = {
+        path,
+        method,
+        issues: [],
+        isSkipped,
+      };
+      result.push(operationReport);
+      if (isSkipped) {
+        operationReport.issues.push({
+          description: opReport.skipReasonDetails,
+          curl: "",
+        });
+      }
+      if (opReport.issues) {
+        for (const issue of report.paths[path][method].issues) {
+          operationReport.issues.push({
             description: format(
               index.injectionDescriptions[issue.injectionDescription],
               ...issue.injectionDescriptionParams
@@ -56,5 +67,5 @@ export async function parseScanReport(
     }
   }
 
-  return { summary: { issues }, paths };
+  return { summary: { issues }, report: result };
 }

@@ -32,8 +32,8 @@ export class ScanReportWebView {
     this.panel.webview.postMessage({ command: "show", report });
   }
 
-  public focusOperation(path: Path) {
-    this.panel?.webview.postMessage({ command: "focusOperation", path });
+  public focusOperation(path: string, method: string) {
+    this.panel?.webview.postMessage({ command: "focusOperation", path, method });
   }
 
   public focusPath(path: string) {

@@ -4,6 +4,8 @@ export interface Issue {
 }
 
 export interface OperationReport {
+  path: string;
+  method: string;
   issues: Issue[];
 }
 
@@ -11,11 +13,7 @@ export interface ScanReport {
   summary: {
     issues: number;
   };
-  paths: {
-    [path: string]: {
-      [operation: string]: OperationReport;
-    };
-  };
+  report: OperationReport[];
 }
 
 export interface HostApplication {

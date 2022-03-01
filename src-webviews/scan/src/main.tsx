@@ -31,7 +31,7 @@ function renderScanReport(host: HostApplication, theme: ThemeState) {
         break;
       case "focusOperation":
         window.scrollTo(0, 0);
-        store.dispatch(focusOperation({ path: message.path[0], method: message.path[1] }));
+        store.dispatch(focusOperation({ path: message.path, method: message.method }));
         break;
       case "focusPath":
         window.scrollTo(0, 0);

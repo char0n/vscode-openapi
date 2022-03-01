@@ -80,8 +80,14 @@ export function registerCommands(
   );
 
   disposables.push(
-    vscode.commands.registerCommand("openapi.goToOperation", (args) =>
+    vscode.commands.registerCommand("openapi.goToOperation", (...args) =>
       goToOperation(cache, scanReportView, ...args)
+    )
+  );
+
+  disposables.push(
+    vscode.commands.registerCommand("openapi.goToPath", (...args) =>
+      goToPath(cache, scanReportView, ...args)
     )
   );
 
@@ -125,14 +131,15 @@ function goToPath(
 function goToOperation(
   cache: Cache,
   scanReportView: ScanReportWebView,
-  path: Path,
+  path: string,
+  method: string,
   range: vscode.Range
 ) {
   const editor = vscode.window.activeTextEditor;
   if (editor) {
     editor.selection = new vscode.Selection(range.start, range.start);
     editor.revealRange(editor.selection, vscode.TextEditorRevealType.AtTop);
-    scanReportView.focusOperation(path);
+    scanReportView.focusOperation(path, method);
   }
 }
 
