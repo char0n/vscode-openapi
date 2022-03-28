@@ -11,12 +11,15 @@ import util from "./commands/util";
 import createApi from "./commands/create-api";
 import filter from "./commands/filter";
 import report from "./commands/report";
+import scan from "./commands/scan";
+import dataDictionary from "./data-dictionary/commands";
 
 import { AuditContext } from "../types";
 import { CollectionsProvider } from "./explorer/provider";
 import { ExplorerNode } from "./explorer/nodes/base";
 import { AuditReportWebView } from "../audit/report";
 import { ScanReportWebView } from "./scan-report";
+import { DataDictionaryWebView } from "./data-dictionary/view";
 
 export function registerCommands(
   context: vscode.ExtensionContext,
@@ -29,7 +32,8 @@ export function registerCommands(
   provider: CollectionsProvider,
   tree: vscode.TreeView<ExplorerNode>,
   reportWebView: AuditReportWebView,
-  scanReportView: ScanReportWebView
+  scanReportView: ScanReportWebView,
+  dataDictionaryView: DataDictionaryWebView
 ): vscode.Disposable[] {
   const commands: any = {};
   Object.assign(commands, misc(store, favorites, provider, tree));
@@ -40,6 +44,8 @@ export function registerCommands(
     commands,
     report(store, context, auditContext, cache, reportWebView, scanReportView)
   );
+  Object.assign(commands, scan());
+  Object.assign(commands, dataDictionary(cache, platformContext, store, dataDictionaryView));
 
   return Object.keys(commands).map((name) => {
     const handler = commands[name];

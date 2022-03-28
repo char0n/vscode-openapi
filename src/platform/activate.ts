@@ -19,6 +19,9 @@ import { CodelensProvider } from "./codelens";
 import { refreshAuditReport } from "./audit";
 import { AuditReportWebView } from "../audit/report";
 import { ScanReportWebView } from "./scan-report";
+import { DataDictionaryWebView } from "./data-dictionary/view";
+import { DataDictionaryCompletionProvider } from "./data-dictionary/completion";
+import { DataDictionaryCodeActions } from "./data-dictionary/code-actions";
 
 export async function activate(
   context: vscode.ExtensionContext,
@@ -37,6 +40,13 @@ export async function activate(
   }
 
   const scanReportView = new ScanReportWebView(context.extensionPath);
+
+  const dataDictionaryView = new DataDictionaryWebView(
+    context.extensionPath,
+    "data-dictionary",
+    "Data Dictionary Browser",
+    vscode.ViewColumn.One
+  );
 
   const platformContext: PlatformContext = {
     context,
@@ -80,6 +90,24 @@ export async function activate(
 
   // TODO unsubscribe?
 
+  const selectors = {
+    json: { language: "json" },
+    jsonc: { language: "jsonc" },
+    yaml: { language: "yaml" },
+  };
+
+  const completionProvider = new DataDictionaryCompletionProvider(store);
+  for (const selector of Object.values(selectors)) {
+    vscode.languages.registerCompletionItemProvider(selector, completionProvider, ":");
+  }
+
+  const codeActionsProvider = new DataDictionaryCodeActions(cache, store);
+  for (const selector of Object.values(selectors)) {
+    vscode.languages.registerCodeActionsProvider(selector, codeActionsProvider, {
+      providedCodeActionKinds: DataDictionaryCodeActions.providedCodeActionKinds,
+    });
+  }
+
   const disposable1 = vscode.workspace.onDidSaveTextDocument((document) =>
     refreshAuditReport(store, cache, auditContext, document)
   );
@@ -107,7 +135,8 @@ export async function activate(
     provider,
     tree,
     reportWebView,
-    scanReportView
+    scanReportView,
+    dataDictionaryView
   );
 
   vscode.languages.registerCodeLensProvider(

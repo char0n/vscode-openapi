@@ -1,0 +1,27 @@
+{
+  "name": "@xliic/vscode-openapi-packages",
+  "private": true,
+  "workspaces": [
+    "audit",
+    "data-dictionary",
+    "web-icons",
+    "web-theme/dist",
+    "web-ui/dist",
+    "common/dist/esm",
+    "preview-swaggerui",
+    "preview-redoc"
+  ],
+  "scripts": {
+    "build": "npm run build-common && npm run build-dd && npm run build-audit && npm run build-swaggerui && npm run build-redoc",
+    "build-common": "cd common && npm run build",
+    "build-dd": "cd data-dictionary && npm run build && cd .. && mkdirp dist/data-dictionary && cpy --flat data-dictionary/dist/* dist/data-dictionary",
+    "build-audit": "cd audit && npm run build && cd .. && mkdirp dist/audit && cpy --flat audit/dist/* dist/audit",
+    "build-swaggerui": "cd preview-swaggerui && npm run build && cd .. && mkdirp dist/preview/swaggerui && cpy --flat preview-swaggerui/dist/* dist/preview/swaggerui",
+    "build-redoc": "cd preview-redoc && npm run build && cd .. && mkdirp dist/preview/redoc && cpy --flat preview-redoc/dist/* dist/preview/redoc"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^6.2.1",
+    "cpy-cli": "^4.1.0",
+    "mkdirp": "^1.0.4"
+  }
+}

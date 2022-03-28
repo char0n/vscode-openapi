@@ -41,15 +41,12 @@
   },
   "main": "./out/extension",
   "scripts": {
-    "install-deps": "npm install && cd src-webviews/audit && npm install && cd ../../src-webviews/preview-swaggerui && npm install && cd ../../src-webviews/preview-redoc && npm install",
-    "vscode:prepublish": "npm run build-quickfixes && npm run build-webapp-audit && npm run build-whatsnew && npm run build-preview-redoc && npm run build-preview-swaggerui && npm run build-snippets && npm run build-schema && npm run compile",
+    "vscode:prepublish": "npm run build-webapps && npm run build-quickfixes && npm run build-whatsnew && npm run build-snippets && npm run build-schema && npm run compile",
     "build-snippets": "js-yaml snippets/snippets.yaml > src/generated/snippets.json",
     "build-quickfixes": "js-yaml quickfixes/quickfixes.yaml > src/generated/quickfixes.json",
     "build-whatsnew": "scripts/build-whatsnew.js",
     "build-schema": "scripts/build-schema.js",
-    "build-preview-swaggerui": "cd src-webviews/preview-swaggerui && npm run build && cd ../.. && mkdirp webview/generated/preview/swaggerui && copyfiles -f src-webviews/preview-swaggerui/dist/* webview/generated/preview/swaggerui",
-    "build-preview-redoc": "cd src-webviews/preview-redoc && npm run build && cd ../.. && mkdirp webview/generated/preview/redoc && copyfiles -f src-webviews/preview-redoc/dist/* webview/generated/preview/redoc",
-    "build-webapp-audit": "cd src-webviews/audit && npm run build && cd ../.. && mkdirp webview/generated/audit && copyfiles -f src-webviews/audit/dist/* webview/generated/audit",
+    "build-webapps": "cd packages && npm run build && cd .. && mkdirp webview/generated && cpy . ../../webview/generated --cwd packages/dist",
     "compile": "tsc -b",
     "watch": "tsc -b -w",
     "lint": "eslint . --ext .ts,.tsx",
@@ -426,6 +423,10 @@
     },
     "commands": [
       {
+        "command": "openapi.platform.browseDataDictionaries",
+        "title": "42Crunch: Browse Data Dictionaries"
+      },
+      {
         "command": "openapi.platform.updatePlatformCredentials",
         "title": "42Crunch: Update platform credentials"
       },
@@ -795,9 +796,12 @@
       }
     ]
   },
+  "workspaces": [
+    "packages/common/dist/cjs"
+  ],
   "dependencies": {
     "@xliic/json-schema-ref-parser": "^9.3.0",
-    "@xliic/preserving-json-yaml-parser": "^1.9.0",
+    "@xliic/preserving-json-yaml-parser": "^1.9.3",
     "form-data": "^2.3.3",
     "got": "^11.8.2",
     "js-yaml": "^4.1.0",
@@ -815,7 +819,7 @@
     "@typescript-eslint/eslint-plugin": "^3.0.2",
     "@typescript-eslint/parser": "^3.0.2",
     "@vscode/test-electron": "^2.1.2",
-    "copyfiles": "^2.4.1",
+    "cpy-cli": "^4.1.0",
     "eslint": "^7.1.0",
     "esm": "^3.2.25",
     "glob": "^7.1.4",

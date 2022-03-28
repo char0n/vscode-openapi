@@ -16,6 +16,8 @@ import {
   UserData,
 } from "./types";
 
+import { DataDictionary, DataFormats } from "@xliic/common/types";
+
 function gotOptions(
   method: Method,
   options: PlatformConnection,
@@ -234,8 +236,32 @@ export async function getCollectionNamingConvention(
   logger: Logger
 ): Promise<NamingConvention> {
   const { body } = await got(
-    `api/v1/organizations/me/settings/collectionNamingConvention`,
+    "api/v1/organizations/me/settings/collectionNamingConvention",
     gotOptions("GET", options, logger)
   );
   return <NamingConvention>body;
+}
+
+export async function getDataDictionaries(
+  options: PlatformConnection,
+  logger: Logger
+): Promise<DataDictionary[]> {
+  const {
+    body: { list },
+  } = await got("api/v2/dataDictionaries", gotOptions("GET", options, logger));
+  return list as DataDictionary[];
+}
+
+export async function getDataDictionaryFormats(
+  dictionaryId: string,
+  options: PlatformConnection,
+  logger: Logger
+): Promise<DataFormats> {
+  const {
+    body: { formats },
+  } = await got(
+    `api/v2/dataDictionaries/${dictionaryId}/formats`,
+    gotOptions("GET", options, logger)
+  );
+  return formats as DataFormats;
 }

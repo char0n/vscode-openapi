@@ -4,7 +4,7 @@
 */
 
 import { find, getLocation, Location } from "@xliic/preserving-json-yaml-parser";
-import { Container } from "@xliic/preserving-json-yaml-parser/lib/types";
+import { Container } from "@xliic/preserving-json-yaml-parser";
 import * as vscode from "vscode";
 import { Cache } from "../cache";
 import { OpenApiVersion } from "../types";

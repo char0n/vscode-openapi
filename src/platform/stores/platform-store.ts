@@ -1,3 +1,4 @@
+import { DataFormat } from "@xliic/common/types";
 import {
   collectionUpdate,
   createApi,
@@ -6,6 +7,8 @@ import {
   deleteCollection,
   getApiNamingConvention,
   getCollectionNamingConvention,
+  getDataDictionaries,
+  getDataDictionaryFormats,
   listApis,
   listCollections,
   readApi,
@@ -33,6 +36,12 @@ export interface CollectionsView {
 export interface ApisView {
   apis: Api[];
   hasMore: boolean;
+}
+
+export interface DataDictionaryFormat {
+  name: string;
+  description: string;
+  format: DataFormat;
 }
 
 const COLLECTION_PAGE_SIZE = 100;
@@ -244,6 +253,27 @@ export class PlatformStore {
 
   async getScanReport(apiId: string): Promise<any> {
     return readScanReport(apiId, this.context.connection, this.context.logger);
+  }
+
+  async getDataDictionaryFormats(): Promise<DataDictionaryFormat[]> {
+    const dictionaries = await getDataDictionaries(this.context.connection, this.context.logger);
+    const result = [];
+    for (const dictionary of dictionaries) {
+      const formats = await getDataDictionaryFormats(
+        dictionary.id,
+        this.context.connection,
+        this.context.logger
+      );
+      for (const format of Object.values(formats)) {
+        result.push({
+          name: `o:${dictionary.name}:${format.name}`,
+          description: format.description,
+          format,
+        });
+      }
+    }
+
+    return result;
   }
 
   refresh(): void {}
