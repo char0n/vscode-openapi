@@ -194,6 +194,10 @@
       ],
       "view/title": [
         {
+          "command": "openapi.platform.editorRunSingleOperationScan",
+          "when": "viewItem == operation && view == openapiTwoPathOutline || viewItem == operation && view == openapiThreePathOutline"
+        },
+        {
           "command": "openapi.addHost",
           "when": "!openapiErrors && view == openapiTwoSpecOutline && openapiMissingHost"
         },
@@ -336,6 +340,10 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "openapi.platform.editorRunSingleOperationScan",
+          "title": "Run scan on this operation"
+        },
         {
           "command": "openapi.addOperation",
           "group": "inline",
