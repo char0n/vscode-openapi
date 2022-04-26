@@ -18,7 +18,7 @@ import { AuditContext } from "../types";
 import { CollectionsProvider } from "./explorer/provider";
 import { ExplorerNode } from "./explorer/nodes/base";
 import { AuditReportWebView } from "../audit/report";
-import { ScanReportWebView } from "./scan-report";
+import { ScanWebView } from "./scan/view";
 import { DataDictionaryWebView } from "./data-dictionary/view";
 
 export function registerCommands(
@@ -32,7 +32,7 @@ export function registerCommands(
   provider: CollectionsProvider,
   tree: vscode.TreeView<ExplorerNode>,
   reportWebView: AuditReportWebView,
-  scanReportView: ScanReportWebView,
+  scanView: ScanWebView,
   dataDictionaryView: DataDictionaryWebView
 ): vscode.Disposable[] {
   const commands: any = {};
@@ -40,10 +40,7 @@ export function registerCommands(
   Object.assign(commands, util(context, platformContext));
   Object.assign(commands, createApi(store, importedUrls, provider, tree, cache));
   Object.assign(commands, filter(store, provider));
-  Object.assign(
-    commands,
-    report(store, context, auditContext, cache, reportWebView, scanReportView)
-  );
+  Object.assign(commands, report(store, context, auditContext, cache, reportWebView, scanView));
   Object.assign(commands, scan());
   Object.assign(commands, dataDictionary(cache, platformContext, store, dataDictionaryView));
 

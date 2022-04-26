@@ -18,7 +18,7 @@ import { isPlatformUri } from "./util";
 import { CodelensProvider } from "./codelens";
 import { refreshAuditReport } from "./audit";
 import { AuditReportWebView } from "../audit/report";
-import { ScanReportWebView } from "./scan-report";
+import { ScanWebView } from "./scan/view";
 import { DataDictionaryWebView } from "./data-dictionary/view";
 import { DataDictionaryCompletionProvider } from "./data-dictionary/completion";
 import { DataDictionaryCodeActions } from "./data-dictionary/code-actions";
@@ -39,7 +39,7 @@ export async function activate(
     // ignore it
   }
 
-  const scanReportView = new ScanReportWebView(context.extensionPath);
+  const scanView = new ScanWebView(context.extensionPath, "scan", "Scan", vscode.ViewColumn.Two);
 
   const dataDictionaryView = new DataDictionaryWebView(
     context.extensionPath,
@@ -135,7 +135,7 @@ export async function activate(
     provider,
     tree,
     reportWebView,
-    scanReportView,
+    scanView,
     dataDictionaryView
   );
 

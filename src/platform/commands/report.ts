@@ -6,7 +6,7 @@ import { refreshAuditReport } from "../audit";
 import { AuditContext } from "../../types";
 import { makePlatformUri } from "../util";
 import { AuditReportWebView } from "../../audit/report";
-import { ScanReportWebView } from "../scan-report";
+import { ScanWebView } from "../scan/view";
 import { parseAuditReport, updateAuditContext } from "../../audit/audit";
 import { setDecorations, updateDecorations } from "../../audit/decoration";
 import { updateDiagnostics } from "../../audit/diagnostic";
@@ -17,7 +17,7 @@ export default (
   auditContext: AuditContext,
   cache: Cache,
   reportWebView: AuditReportWebView,
-  scanReportView: ScanReportWebView
+  scanView: ScanWebView
 ) => ({
   openAuditReport: async (apiId: string) => {
     await vscode.window.withProgress<void>(
@@ -85,7 +85,7 @@ export default (
       async () => {
         try {
           const scanReport = await store.getScanReport(apiId);
-          scanReportView.show(scanReport);
+          scanView.show(scanReport);
         } catch (e) {
           vscode.window.showErrorMessage(`Unexpected error: ${e}`);
         }
