@@ -11,8 +11,8 @@ import util from "./commands/util";
 import createApi from "./commands/create-api";
 import filter from "./commands/filter";
 import report from "./commands/report";
-import scan from "./commands/scan";
 import dataDictionary from "./data-dictionary/commands";
+import scan from "./scan/commands";
 
 import { AuditContext } from "../types";
 import { CollectionsProvider } from "./explorer/provider";
@@ -41,7 +41,7 @@ export function registerCommands(
   Object.assign(commands, createApi(store, importedUrls, provider, tree, cache));
   Object.assign(commands, filter(store, provider));
   Object.assign(commands, report(store, context, auditContext, cache, reportWebView, scanView));
-  Object.assign(commands, scan());
+  Object.assign(commands, scan(cache, scanView));
   Object.assign(commands, dataDictionary(cache, platformContext, store, dataDictionaryView));
 
   return Object.keys(commands).map((name) => {
