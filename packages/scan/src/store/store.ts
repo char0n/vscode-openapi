@@ -1,9 +1,11 @@
 import { configureStore, StateFromReducersMapObject } from "@reduxjs/toolkit";
 import themeReducer, { ThemeState } from "@xliic/web-theme";
+import parametersReducer from "./parametersSlice";
 import { HostApplication } from "../types";
 
 const reducer = {
   theme: themeReducer,
+  parameters: parametersReducer,
 };
 
 export const initStore = (hostApplication: HostApplication, theme: ThemeState) =>

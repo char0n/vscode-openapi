@@ -16,7 +16,7 @@
     "build": "npm run build-common && npm run build-dd && npm run build-scan && npm run build-audit && npm run build-swaggerui && npm run build-redoc",
     "build-common": "cd common && npm run build",
     "build-dd": "cd data-dictionary && npm run build && cd .. && mkdirp dist/data-dictionary && cpy --flat data-dictionary/dist/* dist/data-dictionary",
-    "build-scan": "cd scan && npm run build && cd .. && mkdirp dist/scan && cpy --flat scan/dist/* dist/scan",
+    "build-scan": "cd scan && npm run build && mkdirp ../../webview/generated/scan && cpy --flat dist/* ../../webview/generated/scan",
     "build-audit": "cd audit && npm run build && cd .. && mkdirp dist/audit && cpy --flat audit/dist/* dist/audit",
     "build-swaggerui": "cd preview-swaggerui && npm run build && cd .. && mkdirp dist/preview/swaggerui && cpy --flat preview-swaggerui/dist/* dist/preview/swaggerui",
     "build-redoc": "cd preview-redoc && npm run build && cd .. && mkdirp dist/preview/redoc && cpy --flat preview-redoc/dist/* dist/preview/redoc"

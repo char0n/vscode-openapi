@@ -269,3 +269,23 @@ export interface OasRef {
 }
 
 export type RefOr<T> = OasRef | T;
+
+export interface BundledOpenApiSpec extends OpenApiSpec {
+  paths: Record<string, BundledOasPathItem>;
+  webhooks?: Record<string, BundledOasPathItem>;
+  components?: BundledOasComponents;
+}
+
+export interface BundledOasComponents {
+  schemas?: Record<string, OasSchema>;
+  responses?: Record<string, OasResponse>;
+  parameters?: Record<string, OasParameter>;
+  examples?: Record<string, OasExample>;
+  requestBodies?: Record<string, OasRequestBody>;
+  headers?: Record<string, OasHeader>;
+  securitySchemes?: Record<string, OasSecurityScheme>;
+  links?: Record<string, OasLink>;
+  callbacks?: Record<string, OasCallback>;
+}
+
+export type BundledOasPathItem = Omit<OasPathItem, "$ref">;

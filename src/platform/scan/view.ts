@@ -9,10 +9,9 @@ import { WebView } from "../web-view";
 export class ScanWebView extends WebView {
   private panel?: vscode.WebviewPanel;
 
-  async show(report: any) {
+  async show(parameters: any) {
     this.panel = await this.createPanel();
-    // fixme
-    //this.panel.webview.postMessage({ command: "loadDictionaries", dictionaries });
+    this.panel.webview.postMessage({ command: "showParameters", parameters });
   }
 
   async foo() {}

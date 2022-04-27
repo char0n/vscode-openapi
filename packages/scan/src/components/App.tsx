@@ -8,6 +8,7 @@ import ThemeStyles from "@xliic/web-theme/ThemeStyles";
 
 function App() {
   const theme = useAppSelector((state) => state.theme);
+  const parameters = useAppSelector((state) => state.parameters.parameters);
 
   return (
     <>
@@ -15,7 +16,7 @@ function App() {
       <Container>
         <Form>
           <FloatingLabel label="Email address">
-            <Form.Control type="email" placeholder="name@example.com" />
+            <Form.Control type="email" placeholder={"foo"} />
           </FloatingLabel>
 
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -34,7 +35,7 @@ function App() {
             <Form.Check type="checkbox" label="Check me out" />
           </Form.Group>
           <Button variant="primary" type="submit">
-            Submit
+            Submit and ${parameters.length}
           </Button>
         </Form>
       </Container>
@@ -44,7 +45,7 @@ function App() {
 
 const Container = styled.div`
   width: 600px;
-  margin-left: 100px;
+  margin-left: 10px;
 `;
 
 export default App;

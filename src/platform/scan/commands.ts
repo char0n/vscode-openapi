@@ -1,10 +1,20 @@
 import * as vscode from "vscode";
 
-import { Cache } from "../../cache";
 import { parseJsonPointer, Path, simpleClone } from "@xliic/preserving-json-yaml-parser";
+import { HttpMethod, BundledOpenApiSpec } from "@xliic/common/types-oas30";
+import {
+  getOperation,
+  getOperationParameters,
+  getPath,
+  getPathItemParameters,
+  mergeParameters,
+} from "@xliic/common";
+
+import { Cache } from "../../cache";
 import { writeFileSync } from "fs";
 import { OpenApiVersion } from "../../types";
 import { ScanWebView } from "./view";
+import { Node } from "../../outline";
 
 export default (cache: Cache, scanView: ScanWebView) => ({
   async runCurl(command: string): Promise<void> {
@@ -17,11 +27,22 @@ export default (cache: Cache, scanView: ScanWebView) => ({
   async editorRunSingleOperationScan(
     editor: vscode.TextEditor,
     edit: vscode.TextEditorEdit,
-    path: string,
-    method: string
+    node: Node
   ): Promise<void> {
-    console.log("run single op scan", editor, path);
-    scanView.show(null);
+    const [path, method] = node.path;
+    console.log("run single op scan", path, method);
+    const bundle = await cache.getDocumentBundle(editor.document);
+    if (bundle && !("errors" in bundle)) {
+      const spec = bundle.value as BundledOpenApiSpec;
+      const pathItem = getPath(spec, path)!;
+      const operation = getOperation(spec, path, method as HttpMethod)!;
+      const pathParameters = getPathItemParameters(spec, pathItem);
+      const opParameters = getOperationParameters(spec, operation);
+      const parameters = mergeParameters(pathParameters, opParameters);
+      console.log(parameters);
+      scanView.show(parameters);
+    }
+
     /*
     const bundle = await cache.getDocumentBundle(editor.document);
     const version = cache.getDocumentVersion(editor.document);
