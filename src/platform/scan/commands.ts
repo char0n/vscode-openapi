@@ -45,6 +45,10 @@ export default (cache: Cache, scanView: ScanWebView) => ({
       }
       copyByPointer(bundle.value, cloned, Array.from(visited));
       //console.log("cloned", cloned, getPath(spec, ""));
+
+      const json = JSON.stringify(cloned, null, 2);
+      writeFileSync("/Users/anton/crunch/platform/src/daemon/scand/test.json", json);
+
       scanView.show(cloned, path, method);
 
       /*
