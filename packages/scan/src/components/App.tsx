@@ -1,18 +1,23 @@
 import styled from "styled-components";
 import Button from "react-bootstrap/Button";
+import Badge from "react-bootstrap/Badge";
+import Form from "react-bootstrap/Form";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
 import ThemeStyles from "@xliic/web-theme/ThemeStyles";
 import Parameters from "./Parameters";
 
 function App() {
   const theme = useAppSelector((state) => state.theme);
-  const parameters = useAppSelector((state) => state.oas.parameters);
+  const oas = useAppSelector((state) => state.oas);
 
   return (
     <>
       <ThemeStyles theme={theme} />
       <Container>
-        <Parameters parameters={parameters} />
+        <Badge>{oas.method?.toUpperCase()}</Badge>
+        <code> {oas.path}</code>
+        <Parameters parameters={oas.parameters} />
+        <Form.Control as="textarea" rows={5} className="mb-3" />
         <Button variant="primary" type="submit">
           Submit
         </Button>
@@ -21,9 +26,6 @@ function App() {
   );
 }
 
-const Container = styled.div`
-  width: 600px;
-  margin-left: 10px;
-`;
+const Container = styled.div``;
 
 export default App;
