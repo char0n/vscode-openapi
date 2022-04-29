@@ -10,11 +10,12 @@ import App from "./components/App";
 import { initStore } from "./store/store";
 import { changeTheme, ThemeState } from "@xliic/web-theme";
 import { updateOas, focus } from "./store/oasSlice";
+import createListener from "./store/listener";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function renderWebView(host: HostApplication, theme: ThemeState) {
-  const store = initStore(host, theme);
+  const store = initStore(createListener(host), theme);
 
   ReactDOM.render(
     <React.StrictMode>

@@ -18,6 +18,14 @@ export class ScanWebView extends WebView {
       path,
       method,
     });
+
+    this.panel.webview.onDidReceiveMessage((message) => {
+      switch (message.command) {
+        case "scan":
+          console.log("got scan command", message);
+          return;
+      }
+    });
   }
 
   async foo() {}
