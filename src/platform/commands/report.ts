@@ -85,7 +85,8 @@ export default (
       async () => {
         try {
           const scanReport = await store.getScanReport(apiId);
-          scanView.show(scanReport);
+          // FIXME implement show scan report
+          //scanView.show(scanReport);
         } catch (e) {
           vscode.window.showErrorMessage(`Unexpected error: ${e}`);
         }

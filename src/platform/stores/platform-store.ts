@@ -1,4 +1,4 @@
-import { DataFormat } from "@xliic/common/types";
+import { DataFormat } from "@xliic/common";
 import {
   collectionUpdate,
   createApi,

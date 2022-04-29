@@ -1,11 +1,13 @@
 import { configureStore, StateFromReducersMapObject } from "@reduxjs/toolkit";
+import logger from "redux-logger";
+
 import themeReducer, { ThemeState } from "@xliic/web-theme";
-import parametersReducer from "./parametersSlice";
-import { HostApplication } from "../types";
+import oasSlice from "./oasSlice";
+import type { HostApplication } from "../types";
 
 const reducer = {
   theme: themeReducer,
-  parameters: parametersReducer,
+  oas: oasSlice,
 };
 
 export const initStore = (hostApplication: HostApplication, theme: ThemeState) =>
@@ -16,7 +18,7 @@ export const initStore = (hostApplication: HostApplication, theme: ThemeState) =
         thunk: {
           extraArgument: hostApplication,
         },
-      }),
+      }).concat(logger),
     preloadedState: {
       theme,
     },

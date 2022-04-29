@@ -18,5 +18,10 @@
     "types": ["vite-plugin-svgr/client"]
   },
   "include": ["./src"],
-  "references": [{ "path": "../web-ui" }, { "path": "../web-theme" }, { "path": "../web-icons" }]
+  "references": [
+    { "path": "../common/tsconfig.esm.json" },
+    { "path": "../web-ui" },
+    { "path": "../web-theme" },
+    { "path": "../web-icons" }
+  ]
 }

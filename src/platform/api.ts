@@ -16,7 +16,7 @@ import {
   UserData,
 } from "./types";
 
-import { DataDictionary, DataFormats } from "@xliic/common/types";
+import { DataDictionary, DataFormats } from "@xliic/common";
 
 function gotOptions(
   method: Method,

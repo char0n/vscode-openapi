@@ -16,16 +16,24 @@
     <script type="module" src="/src/main.tsx"></script>
     <script>
       window.addEventListener("DOMContentLoaded", async (event) => {
+        const oas = await (await fetch("/oas.json")).json();
         const host = { postMessage: (message) => console.log("postMessage", message) };
         window.renderWebView(host, { kind: "light" });
-        /*
+        window.postMessage({
+          command: "updateOas",
+          oas,
+        });
+        window.postMessage({
+          command: "focus",
+          path: "/api/register/{foo}/{bar}",
+          method: "post",
+        });
         window.postMessage({
           command: "changeTheme",
           kind: "dark",
           background: "lemonchiffon",
           foreground: "maroon",
         });
-        */
       });
     </script>
   </body>

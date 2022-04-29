@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 
 import { parseJsonPointer, Path, simpleClone } from "@xliic/preserving-json-yaml-parser";
-import { HttpMethod, BundledOpenApiSpec } from "@xliic/common/types-oas30";
+import { HttpMethod, BundledOpenApiSpec } from "@xliic/common";
 import {
   getOperation,
   getOperationParameters,
-  getPath,
   getPathItemParameters,
   mergeParameters,
+  getPath,
 } from "@xliic/common";
 
 import { Cache } from "../../cache";
@@ -30,17 +30,31 @@ export default (cache: Cache, scanView: ScanWebView) => ({
     node: Node
   ): Promise<void> {
     const [path, method] = node.path;
-    console.log("run single op scan", path, method);
     const bundle = await cache.getDocumentBundle(editor.document);
     if (bundle && !("errors" in bundle)) {
       const spec = bundle.value as BundledOpenApiSpec;
+
+      const visited = new Set<string>();
+      crawl(bundle.value, bundle.value["paths"][path][method], visited);
+      const cloned: any = simpleClone(bundle.value);
+      delete cloned["paths"];
+      delete cloned["components"]["schemas"];
+      cloned["paths"] = { [path]: { [method]: bundle.value["paths"][path][method] } };
+      if (bundle.value["paths"][path]["parameters"]) {
+        cloned["paths"][path]["parameters"] = bundle.value["paths"][path]["parameters"];
+      }
+      copyByPointer(bundle.value, cloned, Array.from(visited));
+      //console.log("cloned", cloned, getPath(spec, ""));
+      scanView.show(cloned, path, method);
+
+      /*
       const pathItem = getPath(spec, path)!;
       const operation = getOperation(spec, path, method as HttpMethod)!;
       const pathParameters = getPathItemParameters(spec, pathItem);
       const opParameters = getOperationParameters(spec, operation);
       const parameters = mergeParameters(pathParameters, opParameters);
-      console.log(parameters);
-      scanView.show(parameters);
+      */
+      //scanView.show(parameters);
     }
 
     /*

@@ -2,14 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 
-import { OasParameter } from "@xliic/common/types-oas30";
+import { BundledOpenApiSpec } from "@xliic/common";
 
 import { HostApplication } from "./types";
 import App from "./components/App";
 
 import { initStore } from "./store/store";
 import { changeTheme, ThemeState } from "@xliic/web-theme";
-import { showParameters } from "./store/parametersSlice";
+import { updateOas, focus } from "./store/oasSlice";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -28,8 +28,11 @@ function renderWebView(host: HostApplication, theme: ThemeState) {
   window.addEventListener("message", (event) => {
     const message = event.data;
     switch (message.command) {
-      case "showParameters":
-        store.dispatch(showParameters(message.parameters as OasParameter[]));
+      case "updateOas":
+        store.dispatch(updateOas(message.oas as BundledOpenApiSpec));
+        break;
+      case "focus":
+        store.dispatch(focus({ path: message.path, method: message.method }));
         break;
       case "changeTheme":
         store.dispatch(
