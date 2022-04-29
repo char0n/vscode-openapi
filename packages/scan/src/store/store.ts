@@ -1,9 +1,29 @@
-import { configureStore, StateFromReducersMapObject } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  createListenerMiddleware,
+  StateFromReducersMapObject,
+} from "@reduxjs/toolkit";
 import logger from "redux-logger";
 
 import themeReducer, { ThemeState } from "@xliic/web-theme";
-import oasSlice from "./oasSlice";
+import oasSlice, { focus, scan } from "./oasSlice";
 import type { HostApplication } from "../types";
+
+const listenerMiddleware = createListenerMiddleware();
+
+listenerMiddleware.startListening({
+  actionCreator: focus,
+  effect: async (action, listenerApi) => {
+    console.log("me here", action, listenerApi);
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: scan,
+  effect: async (action, listenerApi) => {
+    console.log("me scanning here", action, listenerApi);
+  },
+});
 
 const reducer = {
   theme: themeReducer,
@@ -18,7 +38,9 @@ export const initStore = (hostApplication: HostApplication, theme: ThemeState) =
         thunk: {
           extraArgument: hostApplication,
         },
-      }).concat(logger),
+      })
+        .prepend(listenerMiddleware.middleware)
+        .concat(logger),
     preloadedState: {
       theme,
     },

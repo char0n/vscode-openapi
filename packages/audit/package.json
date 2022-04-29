@@ -7,7 +7,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@reduxjs/toolkit": "^1.7.2",
+    "@reduxjs/toolkit": "^1.8.0",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@vitejs/plugin-react": "^1.3.0",

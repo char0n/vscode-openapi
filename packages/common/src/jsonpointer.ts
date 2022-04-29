@@ -55,6 +55,9 @@ export function findByPath(target: unknown, path: Path): any | undefined {
   return current;
 }
 
-export function find(target: unknown, jsonPointer: string): unknown | undefined {
-  return findByPath(target, parseJsonPointer(jsonPointer));
+export function find(target: unknown, pointer: string | string[]): unknown | undefined {
+  if (Array.isArray(pointer)) {
+    return findByPath(target, pointer);
+  }
+  return findByPath(target, parseJsonPointer(pointer));
 }

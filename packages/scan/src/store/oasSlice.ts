@@ -37,6 +37,7 @@ export const parametersSlice = createSlice({
     updateOas: (state, action: PayloadAction<BundledOpenApiSpec>) => {
       state.oas = action.payload;
     },
+    scan: (state, action: PayloadAction<string>) => {},
     focus: (state, action: PayloadAction<{ path: string; method: HttpMethod }>) => {
       const { path, method } = action.payload;
 
@@ -53,6 +54,6 @@ export const parametersSlice = createSlice({
   },
 });
 
-export const { updateOas, focus } = parametersSlice.actions;
+export const { updateOas, focus, scan } = parametersSlice.actions;
 
 export default parametersSlice.reducer;

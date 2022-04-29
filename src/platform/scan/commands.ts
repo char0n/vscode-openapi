@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 
 import { parseJsonPointer, Path, simpleClone } from "@xliic/preserving-json-yaml-parser";
 import { HttpMethod, BundledOpenApiSpec } from "@xliic/common";
+import { find } from "@xliic/common/jsonpointer";
 import {
   getOperation,
   getOperationParameters,
@@ -11,7 +12,7 @@ import {
 } from "@xliic/common";
 
 import { Cache } from "../../cache";
-import { writeFileSync } from "fs";
+import { writeFileSync, unlinkSync, fstat, existsSync, readFileSync } from "fs";
 import { OpenApiVersion } from "../../types";
 import { ScanWebView } from "./view";
 import { Node } from "../../outline";
@@ -48,6 +49,41 @@ export default (cache: Cache, scanView: ScanWebView) => ({
 
       const json = JSON.stringify(cloned, null, 2);
       writeFileSync("/Users/anton/crunch/platform/src/daemon/scand/test.json", json);
+
+      const configFile = "/Users/anton/crunch/platform/src/daemon/scand/debug_configuration.json";
+      if (existsSync(configFile)) {
+        unlinkSync(configFile);
+      }
+
+      const terminal = vscode.window.createTerminal({
+        cwd: "/Users/anton/crunch/platform/src/daemon/scand",
+      });
+      terminal.sendText(
+        "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -default-configuration -oasfile single.json"
+      );
+      terminal.show();
+
+      const configuration = await readWhenExists(configFile, 30);
+      if (configuration === undefined) {
+        return;
+      }
+
+      const parsedConfig = JSON.parse(configuration);
+
+      const request = find(parsedConfig, [
+        "playbook",
+        "paths",
+        "/api/register/{foo}/{bar}",
+        "post",
+        "happyPaths",
+        "0",
+        "requests",
+        "0",
+        "request",
+        "request",
+      ]);
+
+      console.log("found", request);
 
       scanView.show(cloned, path, method);
 
@@ -173,4 +209,21 @@ function copyByPath(src: any, dest: any, path: Path): void {
   if (currentDest[key] === undefined) {
     currentDest[key] = currentSrc[key];
   }
+}
+
+async function readWhenExists(filename: string, maxDelay: number): Promise<string | undefined> {
+  let currentDelay = 0;
+  while (currentDelay < maxDelay) {
+    if (existsSync(filename)) {
+      return readFileSync(filename, { encoding: "utf8" });
+    }
+    console.log("Waiting for", filename, "to become available");
+    await delay(1000);
+  }
+  console.log("Failed to read", filename);
+  return undefined;
+}
+
+async function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
