@@ -8,7 +8,7 @@ export default function createListener(host: HostApplication) {
   listenerMiddleware.startListening({
     actionCreator: focus,
     effect: async (action, listenerApi) => {
-      console.log("me here", action, listenerApi);
+      //console.log("focused", action);
     },
   });
 
@@ -16,7 +16,7 @@ export default function createListener(host: HostApplication) {
     actionCreator: scan,
     effect: async (action, listenerApi) => {
       host.postMessage({ command: "scan", data: "blah" });
-      console.log("me scanning here", action, listenerApi);
+      //console.log("me scanning here", action, listenerApi);
     },
   });
 

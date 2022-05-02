@@ -70,7 +70,7 @@ export default (cache: Cache, scanView: ScanWebView) => ({
 
       const parsedConfig = JSON.parse(configuration);
 
-      const request = find(parsedConfig, [
+      const config = find(parsedConfig, [
         "playbook",
         "paths",
         "/api/register/{foo}/{bar}",
@@ -83,9 +83,9 @@ export default (cache: Cache, scanView: ScanWebView) => ({
         "request",
       ]);
 
-      console.log("found", request);
+      console.log("found", config);
 
-      scanView.show(cloned, path, method);
+      scanView.show(cloned, path, method, config);
 
       /*
       const pathItem = getPath(spec, path)!;

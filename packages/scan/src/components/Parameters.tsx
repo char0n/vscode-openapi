@@ -1,8 +1,13 @@
 import styled from "styled-components";
-import type { OasParameter, OasParameterLocation, ParametersMap } from "@xliic/common";
+import type {
+  BundledOasParameter,
+  OasParameterLocation,
+  BundledParametersMap,
+} from "@xliic/common";
 import Parameter from "./Parameter";
+import ArrayParameter from "./ArrayParameter";
 
-export default function Parameters({ parameters }: { parameters: ParametersMap }) {
+export default function Parameters({ parameters }: { parameters: BundledParametersMap }) {
   return (
     <>
       <ParametersBlock location="path" parameters={parameters.path} />
@@ -18,7 +23,7 @@ function ParametersBlock({
   parameters,
 }: {
   location: OasParameterLocation;
-  parameters: OasParameter[];
+  parameters: BundledOasParameter[];
 }) {
   if (parameters.length === 0) {
     return null;
@@ -27,9 +32,14 @@ function ParametersBlock({
   return (
     <div>
       <Heading>{location} parameters</Heading>
-      {parameters.map((parameter) => (
-        <Parameter key={`${location}-${parameter.name}`} parameter={parameter} />
-      ))}
+      {parameters.map((parameter) => {
+        console.log("param", parameter);
+        if (parameter?.schema?.type === "array") {
+          return <ArrayParameter key={`${parameter.in}/${parameter.name}`} parameter={parameter} />;
+        } else {
+          return <Parameter key={`${parameter.in}.${parameter.name}`} parameter={parameter} />;
+        }
+      })}
     </div>
   );
 }

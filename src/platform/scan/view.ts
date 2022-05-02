@@ -9,7 +9,7 @@ import { WebView } from "../web-view";
 export class ScanWebView extends WebView {
   private panel?: vscode.WebviewPanel;
 
-  async show(oas: any, path: string | number, method: string | number) {
+  async show(oas: any, path: string | number, method: string | number, config: any) {
     this.panel = await this.createPanel();
 
     this.panel.webview.postMessage({ command: "updateOas", oas });
@@ -17,6 +17,7 @@ export class ScanWebView extends WebView {
       command: "focus",
       path,
       method,
+      config,
     });
 
     this.panel.webview.onDidReceiveMessage((message) => {

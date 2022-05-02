@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { BundledOpenApiSpec, HttpMethod, ParametersMap } from "@xliic/common";
+import type {
+  BundledOpenApiSpec,
+  HttpMethod,
+  ParameterConfiguration,
+  ParametersMap,
+} from "@xliic/common";
 
 import {
   getOperation,
@@ -14,6 +19,7 @@ export interface OasState {
   path?: string;
   method?: HttpMethod;
   parameters: ParametersMap;
+  config: ParameterConfiguration;
 }
 
 const initialState: OasState = {
@@ -28,6 +34,12 @@ const initialState: OasState = {
     path: [],
     cookie: [],
   },
+  config: {
+    pathParameters: {},
+    queryParameters: {},
+    headerParameters: {},
+    cookieParameters: {},
+  },
 };
 
 export const parametersSlice = createSlice({
@@ -38,8 +50,11 @@ export const parametersSlice = createSlice({
       state.oas = action.payload;
     },
     scan: (state, action: PayloadAction<string>) => {},
-    focus: (state, action: PayloadAction<{ path: string; method: HttpMethod }>) => {
-      const { path, method } = action.payload;
+    focus: (
+      state,
+      action: PayloadAction<{ path: string; method: HttpMethod; config: ParameterConfiguration }>
+    ) => {
+      const { path, method, config } = action.payload;
 
       const pathItem = getPath(state.oas, path);
       const operation = getOperation(state.oas, path, method as HttpMethod);
@@ -50,6 +65,7 @@ export const parametersSlice = createSlice({
       state.path = path;
       state.method = method;
       state.parameters = parameters;
+      state.config = config;
     },
   },
 });

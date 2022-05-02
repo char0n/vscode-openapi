@@ -2,7 +2,6 @@ import { find } from "./jsonpointer";
 
 export function getPath(oas: BundledOpenApiSpec, path: string): BundledOasPathItem | undefined {
   // TODO ref
-  console.log(find);
   return oas.paths[path];
 }
 
@@ -41,6 +40,17 @@ export function getOperationParameters(
     }
     return paramOrRef;
   });
+}
+
+export function deref<T>(oas: BundledOpenApiSpec, maybeRef: RefOr<T> | undefined): T | undefined {
+  if (maybeRef === undefined) {
+    return undefined;
+  }
+  if ("$ref" in maybeRef) {
+    const refTarget = find(oas, maybeRef.$ref);
+    return refTarget as T;
+  }
+  return maybeRef;
 }
 
 export function mergeParameters(path: OasParameter[], operation: OasParameter[]): ParametersMap {
@@ -120,7 +130,7 @@ export interface OasOperation {
 
 export interface OasParameter {
   name: string;
-  in?: OasParameterLocation;
+  in: OasParameterLocation;
   description?: string;
   required?: boolean;
   deprecated?: boolean;
@@ -355,6 +365,11 @@ export interface BundledOasComponents {
 export type BundledOasPathItem = Omit<OasPathItem, "$ref">;
 
 export type ParametersMap = Record<OasParameterLocation, OasParameter[]>;
+export type BundledParametersMap = Record<OasParameterLocation, BundledOasParameter[]>;
+
+export interface BundledOasParameter extends OasParameter {
+  schema?: OasSchema;
+}
 
 // ---- types 2
 
@@ -416,4 +431,11 @@ export type FlattenedDataFormat = DataFormat & {
 
 export interface HostApplication {
   postMessage(message: any): void;
+}
+
+export interface ParameterConfiguration {
+  pathParameters: Record<string, unknown>;
+  queryParameters: Record<string, unknown>;
+  headerParameters: Record<string, unknown>;
+  cookieParameters: Record<string, unknown>;
 }

@@ -16,24 +16,38 @@
     <script type="module" src="/src/main.tsx"></script>
     <script>
       window.addEventListener("DOMContentLoaded", async (event) => {
-        const sample = await (await fetch("/sample-data.json")).json();
+        const oas = await (await fetch("/sample-oas.json")).json();
+        const report = await (await fetch("/sample-report.json")).json();
+        const config =
+          report["playbook"]["paths"]["/api/register/{foo}/{bar}"]["post"]["happyPaths"][0][
+            "requests"
+          ][0]["request"]["request"];
+
+        console.log("me got config", config);
+
         const host = { postMessage: (message) => console.log("postMessage", message) };
         window.renderWebView(host, { kind: "light" });
+
         window.postMessage({
           command: "updateOas",
-          oas: sample,
+          oas,
         });
+
         window.postMessage({
           command: "focus",
           path: "/api/register/{foo}/{bar}",
           method: "post",
+          config: config,
         });
+
+        /*
         window.postMessage({
           command: "changeTheme",
           kind: "dark",
           background: "lemonchiffon",
           foreground: "maroon",
         });
+        */
       });
     </script>
   </body>

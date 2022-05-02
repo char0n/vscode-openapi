@@ -33,7 +33,9 @@ function renderWebView(host: HostApplication, theme: ThemeState) {
         store.dispatch(updateOas(message.oas as BundledOpenApiSpec));
         break;
       case "focus":
-        store.dispatch(focus({ path: message.path, method: message.method }));
+        store.dispatch(
+          focus({ path: message.path, method: message.method, config: message.config })
+        );
         break;
       case "changeTheme":
         store.dispatch(
