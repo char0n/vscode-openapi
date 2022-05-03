@@ -84,13 +84,18 @@ function generateDefaultValues(
   const locations = Object.keys(parameterToConfigMap) as OasParameterLocation[];
   for (const location of locations) {
     for (const parameter of parameters[location]) {
-      const config = configuration[parameterToConfigMap[parameter.in]];
-      if (config[parameter.name] !== undefined) {
-        values[`${parameter.in}/${parameter.name}`] = config[parameter.name];
+      const value = configuration[parameterToConfigMap[parameter.in]]?.[parameter.name];
+      if (value !== undefined) {
+        values[`${parameter.in}/${parameter.name}`] = Array.isArray(value) ? wrap(value) : value;
       }
     }
   }
   return values;
+}
+
+// arrays must be wrapped for react form hook
+function wrap(array: unknown[]): unknown {
+  return array.map((value) => ({ value }));
 }
 
 function bundleParameters(
