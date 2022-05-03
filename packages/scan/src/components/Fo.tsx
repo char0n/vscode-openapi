@@ -32,8 +32,6 @@ function Fo({
   path: string;
   method: HttpMethod;
 }) {
-  console.log("config", config);
-
   const defaultValues = generateDefaultValues(parameters, config);
   const bundledParameters = bundleParameters(oas, parameters);
 

@@ -33,11 +33,11 @@ function ParametersBlock({
     <div>
       <Heading>{location} parameters</Heading>
       {parameters.map((parameter) => {
-        console.log("param", parameter);
+        const name = `${parameter.in}/${parameter.name}`;
         if (parameter?.schema?.type === "array") {
-          return <ArrayParameter key={`${parameter.in}/${parameter.name}`} parameter={parameter} />;
+          return <ArrayParameter name={name} key={name} parameter={parameter} />;
         } else {
-          return <Parameter key={`${parameter.in}.${parameter.name}`} parameter={parameter} />;
+          return <Parameter key={name} name={name} parameter={parameter} />;
         }
       })}
     </div>

@@ -5,14 +5,19 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 import type { BundledOasParameter } from "@xliic/common";
+import Parameter from "./Parameter";
 
-export default function ArrayParameter({ parameter }: { parameter: BundledOasParameter }) {
+export default function ArrayParameter({
+  name,
+  parameter,
+}: {
+  name: string;
+  parameter: BundledOasParameter;
+}) {
   const {
     control,
     formState: { errors },
   } = useFormContext();
-
-  const name = `${parameter.in}/${parameter.name}`;
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
     control,
@@ -22,20 +27,12 @@ export default function ArrayParameter({ parameter }: { parameter: BundledOasPar
   return (
     <>
       {fields.map((field, index) => (
-        <Field key={field.id} className="m-3">
-          <FloatingLabel label={parameter.name}>
-            <Controller
-              control={control}
-              name={`${name}.${index}.value`}
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <Form.Control type="text" onChange={onChange} value={value} ref={ref} />
-              )}
-            />
-          </FloatingLabel>
-          <Button className="m-1" variant="light">
+        <Field key={field.id} className="m-1">
+          <Parameter name={`${name}.${index}.value`} parameter={parameter} />
+          <Button className="m-1" variant="light" onClick={() => insert(index + 1, { value: "" })}>
             +
           </Button>
-          <Button className="m-1" variant="light">
+          <Button className="m-1" variant="light" onClick={() => remove(index)}>
             -
           </Button>
         </Field>
