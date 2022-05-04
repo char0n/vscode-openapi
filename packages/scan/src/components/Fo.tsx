@@ -51,7 +51,7 @@ function Fo({
   const { handleSubmit } = methods;
 
   const onSubmit = (data: any) => {
-    dispatch(scan(data));
+    dispatch(scan({ ...data, path }));
   };
 
   return (
@@ -90,16 +90,18 @@ function generateDefaultValues(
   parameters: ParametersMap,
   configuration: ParameterConfiguration
 ): Record<string, any> {
-  const values: Record<string, any> = {};
+  const values: Record<string, any> = { parameters: {} };
   const locations = Object.keys(parameterToConfigMap) as OasParameterLocation[];
   for (const location of locations) {
     for (const parameter of parameters[location]) {
       const value = configuration[parameterToConfigMap[parameter.in]]?.[parameter.name];
       if (value !== undefined) {
-        if (!values[parameter.in]) {
-          values[parameter.in] = {};
+        if (!values.parameters[parameter.in]) {
+          values.parameters[parameter.in] = {};
         }
-        values[parameter.in][parameter.name] = Array.isArray(value) ? wrap(value) : value;
+        values.parameters[parameter.in][parameter.name] = Array.isArray(value)
+          ? wrap(value)
+          : value;
       }
     }
   }

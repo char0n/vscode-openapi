@@ -23,7 +23,12 @@ export class ScanWebView extends WebView {
     this.panel.webview.onDidReceiveMessage((message) => {
       switch (message.command) {
         case "scan":
-          console.log("got scan command", message);
+          let { host, path, parameters } = message.data;
+          for (const [name, value] of Object.entries(parameters.path)) {
+            path = path.replaceAll(`{${name}}`, value);
+          }
+          const url = host + path;
+          console.log("got scan command", url);
           return;
       }
     });

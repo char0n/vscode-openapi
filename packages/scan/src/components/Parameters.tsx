@@ -34,7 +34,7 @@ function ParametersBlock({
     <div>
       <Section>{location} parameters</Section>
       {parameters.map((parameter) => {
-        const name = `${parameter.in}.${parameter.name}`;
+        const name = `parameters.${parameter.in}.${parameter.name}`;
         if (parameter?.schema?.type === "array") {
           return <ArrayParameter name={name} key={name} parameter={parameter} />;
         } else {
