@@ -59,7 +59,7 @@ export default (cache: Cache, scanView: ScanWebView) => ({
         cwd: "/Users/anton/crunch/platform/src/daemon/scand",
       });
       terminal.sendText(
-        "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -default-configuration -oasfile single.json"
+        "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -default-configuration -oasfile test.json"
       );
       terminal.show();
 
@@ -73,8 +73,8 @@ export default (cache: Cache, scanView: ScanWebView) => ({
       const config = find(parsedConfig, [
         "playbook",
         "paths",
-        "/api/register/{foo}/{bar}",
-        "post",
+        path as string,
+        method as string,
         "happyPaths",
         "0",
         "requests",

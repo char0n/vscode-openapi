@@ -17,15 +17,18 @@ import {
 } from "@xliic/common";
 
 export interface OasState {
+  page: "request" | "response";
   oas: BundledOpenApiSpec;
   path?: string;
   method?: HttpMethod;
   parameters: ParametersMap;
   config: ParameterConfiguration;
   requestBody?: OasRequestBody;
+  response: any;
 }
 
 const initialState: OasState = {
+  page: "request",
   oas: {
     openapi: "3.0.0",
     info: { title: "", version: "0.0" },
@@ -44,6 +47,7 @@ const initialState: OasState = {
     headerParameters: {},
     cookieParameters: {},
   },
+  response: undefined,
 };
 
 export const parametersSlice = createSlice({
@@ -54,6 +58,10 @@ export const parametersSlice = createSlice({
       state.oas = action.payload;
     },
     scan: (state, action: PayloadAction<any>) => {},
+    showResponse: (state, action: PayloadAction<any>) => {
+      state.page = "response";
+      state.response = action.payload;
+    },
     focus: (
       state,
       action: PayloadAction<{ path: string; method: HttpMethod; config: ParameterConfiguration }>
@@ -75,6 +83,6 @@ export const parametersSlice = createSlice({
   },
 });
 
-export const { updateOas, focus, scan } = parametersSlice.actions;
+export const { updateOas, focus, scan, showResponse } = parametersSlice.actions;
 
 export default parametersSlice.reducer;

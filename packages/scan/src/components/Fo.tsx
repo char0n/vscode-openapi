@@ -51,7 +51,7 @@ function Fo({
   const { handleSubmit } = methods;
 
   const onSubmit = (data: any) => {
-    dispatch(scan({ ...data, path }));
+    dispatch(scan({ ...data, path, method }));
   };
 
   return (

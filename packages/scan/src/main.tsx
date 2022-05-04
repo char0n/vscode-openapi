@@ -9,7 +9,7 @@ import App from "./components/App";
 
 import { initStore } from "./store/store";
 import { changeTheme, ThemeState } from "@xliic/web-theme";
-import { updateOas, focus } from "./store/oasSlice";
+import { updateOas, focus, showResponse } from "./store/oasSlice";
 import createListener from "./store/listener";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -36,6 +36,9 @@ function renderWebView(host: HostApplication, theme: ThemeState) {
         store.dispatch(
           focus({ path: message.path, method: message.method, config: message.config })
         );
+        break;
+      case "showResponse":
+        store.dispatch(showResponse(message.response));
         break;
       case "changeTheme":
         store.dispatch(

@@ -22,9 +22,16 @@ export default function Parameter({
         control={control}
         name={name}
         render={({ field: { onChange, onBlur, value, ref } }) => (
-          <Form.Control type="text" onChange={onChange} value={value} ref={ref} />
+          <Form.Control
+            type="text"
+            className="is-invalid"
+            onChange={onChange}
+            value={value}
+            ref={ref}
+          />
         )}
       />
+      <div className="invalid-feedback">Please choose a username.</div>
     </FloatingLabel>
   );
 }
