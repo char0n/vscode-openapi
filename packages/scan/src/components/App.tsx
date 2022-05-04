@@ -5,16 +5,24 @@ import Fo from "./Fo";
 
 function App() {
   const theme = useAppSelector((state) => state.theme);
-  const { parameters, path, method, oas, config } = useAppSelector((state) => state.oas);
+  const { parameters, requestBody, path, method, oas, config } = useAppSelector(
+    (state) => state.oas
+  );
   //const dispatch = useAppDispatch();
 
-  console.log("params", path);
   return (
     <>
       <ThemeStyles theme={theme} />
       <Container>
         {path !== undefined && (
-          <Fo oas={oas} parameters={parameters} config={config} path={path!} method={method!} />
+          <Fo
+            oas={oas}
+            parameters={parameters}
+            requestBody={requestBody}
+            config={config}
+            path={path!}
+            method={method!}
+          />
         )}
       </Container>
     </>

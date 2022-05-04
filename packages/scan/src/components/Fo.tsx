@@ -4,6 +4,8 @@ import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
 
 import Parameters from "./Parameters";
+import Servers from "./Servers";
+import RequestBody from "./RequestBody";
 
 import {
   BundledOpenApiSpec,
@@ -12,15 +14,16 @@ import {
   ParameterConfiguration,
   ParametersMap,
   BundledParametersMap,
-  BundledOasParameter,
   OasSchema,
   deref,
+  OasRequestBody,
 } from "@xliic/common";
 
 import { useForm, FormProvider } from "react-hook-form";
 
 function Fo({
   parameters,
+  requestBody,
   config,
   path,
   method,
@@ -29,6 +32,7 @@ function Fo({
   oas: BundledOpenApiSpec;
   config: ParameterConfiguration;
   parameters: ParametersMap;
+  requestBody?: OasRequestBody;
   path: string;
   method: HttpMethod;
 }) {
@@ -52,8 +56,9 @@ function Fo({
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Badge>{method?.toUpperCase()}</Badge>
           <code> {path}</code>
+          <Servers name="servers" servers={oas.servers} />
           <Parameters parameters={bundledParameters} />
-          <Form.Control as="textarea" rows={5} className="mb-3" />
+          <RequestBody name="requestBody" requestBody={requestBody} />
           <Button variant="primary" type="submit">
             Submit
           </Button>
@@ -67,7 +72,10 @@ const Container = styled.div``;
 
 export default Fo;
 
-const parameterToConfigMap: Record<OasParameterLocation, keyof ParameterConfiguration> = {
+const parameterToConfigMap: Record<
+  OasParameterLocation,
+  keyof Omit<ParameterConfiguration, "requestBody">
+> = {
   query: "queryParameters",
   path: "pathParameters",
   header: "headerParameters",
@@ -88,6 +96,11 @@ function generateDefaultValues(
       }
     }
   }
+
+  if (configuration.requestBody !== undefined) {
+    values["requestBody"] = JSON.stringify(configuration.requestBody, null, 2);
+  }
+
   return values;
 }
 

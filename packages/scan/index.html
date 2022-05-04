@@ -17,13 +17,11 @@
     <script>
       window.addEventListener("DOMContentLoaded", async (event) => {
         const oas = await (await fetch("/sample-oas.json")).json();
-        const report = await (await fetch("/sample-report.json")).json();
+        const sampleConfig = await (await fetch("/sample-config.json")).json();
         const config =
-          report["playbook"]["paths"]["/api/register/{foo}/{bar}"]["post"]["happyPaths"][0][
+          sampleConfig["playbook"]["paths"]["/api/register/{foo}/{bar}"]["post"]["happyPaths"][0][
             "requests"
           ][0]["request"]["request"];
-
-        console.log("me got config", config);
 
         const host = { postMessage: (message) => console.log("postMessage", message) };
         window.renderWebView(host, { kind: "light" });

@@ -6,12 +6,11 @@ export function getPath(oas: BundledOpenApiSpec, path: string): BundledOasPathIt
 }
 
 export function getOperation(
-  oas: OpenApiSpec,
+  oas: BundledOpenApiSpec,
   path: string,
   method: HttpMethod
 ): OasOperation | undefined {
-  // TODO ref
-  return oas.paths[path][method];
+  return deref(oas, oas.paths[path])?.[method];
 }
 
 export function getPathItemParameters(
@@ -438,4 +437,5 @@ export interface ParameterConfiguration {
   queryParameters: Record<string, unknown>;
   headerParameters: Record<string, unknown>;
   cookieParameters: Record<string, unknown>;
+  requestBody?: unknown;
 }

@@ -6,6 +6,7 @@ import type {
 } from "@xliic/common";
 import Parameter from "./Parameter";
 import ArrayParameter from "./ArrayParameter";
+import Section from "./Section";
 
 export default function Parameters({ parameters }: { parameters: BundledParametersMap }) {
   return (
@@ -31,7 +32,7 @@ function ParametersBlock({
 
   return (
     <div>
-      <Heading>{location} parameters</Heading>
+      <Section>{location} parameters</Section>
       {parameters.map((parameter) => {
         const name = `${parameter.in}/${parameter.name}`;
         if (parameter?.schema?.type === "array") {
@@ -43,10 +44,3 @@ function ParametersBlock({
     </div>
   );
 }
-
-const Heading = styled.div`
-  border-bottom: 1px solid rgba(38, 50, 56, 0.3);
-  margin: 1em 0px;
-  color: rgba(38, 50, 56, 0.5);
-  text-transform: uppercase;
-`;
