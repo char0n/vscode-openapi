@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
+import { useForm, FormProvider } from "react-hook-form";
 
 import Parameters from "./Parameters";
 import Servers from "./Servers";
@@ -19,7 +20,8 @@ import {
   OasRequestBody,
 } from "@xliic/common";
 
-import { useForm, FormProvider } from "react-hook-form";
+import { useAppDispatch } from "../store/hooks";
+import { scan } from "../store/oasSlice";
 
 function Fo({
   parameters,
@@ -36,7 +38,10 @@ function Fo({
   path: string;
   method: HttpMethod;
 }) {
+  const dispatch = useAppDispatch();
+
   const defaultValues = generateDefaultValues(parameters, config);
+
   const bundledParameters = bundleParameters(oas, parameters);
 
   const methods = useForm({
@@ -46,8 +51,7 @@ function Fo({
   const { handleSubmit } = methods;
 
   const onSubmit = (data: any) => {
-    // console.log(data);
-    //dispatch(scan("foo"));
+    dispatch(scan(data));
   };
 
   return (
@@ -56,7 +60,7 @@ function Fo({
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Badge>{method?.toUpperCase()}</Badge>
           <code> {path}</code>
-          <Servers name="servers" servers={oas.servers} />
+          <Servers name="host" servers={oas.servers} />
           <Parameters parameters={bundledParameters} />
           <RequestBody name="requestBody" requestBody={requestBody} />
           <Button variant="primary" type="submit">
@@ -74,7 +78,7 @@ export default Fo;
 
 const parameterToConfigMap: Record<
   OasParameterLocation,
-  keyof Omit<ParameterConfiguration, "requestBody">
+  keyof Omit<ParameterConfiguration, "requestBody" | "host">
 > = {
   query: "queryParameters",
   path: "pathParameters",
@@ -92,7 +96,10 @@ function generateDefaultValues(
     for (const parameter of parameters[location]) {
       const value = configuration[parameterToConfigMap[parameter.in]]?.[parameter.name];
       if (value !== undefined) {
-        values[`${parameter.in}/${parameter.name}`] = Array.isArray(value) ? wrap(value) : value;
+        if (!values[parameter.in]) {
+          values[parameter.in] = {};
+        }
+        values[parameter.in][parameter.name] = Array.isArray(value) ? wrap(value) : value;
       }
     }
   }
@@ -100,6 +107,8 @@ function generateDefaultValues(
   if (configuration.requestBody !== undefined) {
     values["requestBody"] = JSON.stringify(configuration.requestBody, null, 2);
   }
+
+  values["host"] = configuration.host;
 
   return values;
 }

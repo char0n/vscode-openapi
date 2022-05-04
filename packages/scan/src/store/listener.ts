@@ -15,7 +15,7 @@ export default function createListener(host: HostApplication) {
   listenerMiddleware.startListening({
     actionCreator: scan,
     effect: async (action, listenerApi) => {
-      host.postMessage({ command: "scan", data: "blah" });
+      host.postMessage({ command: "scan", data: action.payload });
       //console.log("me scanning here", action, listenerApi);
     },
   });

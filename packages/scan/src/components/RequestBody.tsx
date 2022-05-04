@@ -27,7 +27,7 @@ export default function RequestBody({
         control={control}
         name={name}
         render={({ field: { onChange, onBlur, value, ref } }) => (
-          <Form.Control as="textarea" rows={5} onChange={onChange} value={value} ref={ref} />
+          <Form.Control as="textarea" rows={10} onChange={onChange} value={value} ref={ref} />
         )}
       />
     </>

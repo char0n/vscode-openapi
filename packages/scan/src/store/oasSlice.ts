@@ -38,6 +38,7 @@ const initialState: OasState = {
     cookie: [],
   },
   config: {
+    host: "",
     pathParameters: {},
     queryParameters: {},
     headerParameters: {},
@@ -52,7 +53,7 @@ export const parametersSlice = createSlice({
     updateOas: (state, action: PayloadAction<BundledOpenApiSpec>) => {
       state.oas = action.payload;
     },
-    scan: (state, action: PayloadAction<string>) => {},
+    scan: (state, action: PayloadAction<any>) => {},
     focus: (
       state,
       action: PayloadAction<{ path: string; method: HttpMethod; config: ParameterConfiguration }>

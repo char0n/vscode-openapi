@@ -438,4 +438,5 @@ export interface ParameterConfiguration {
   headerParameters: Record<string, unknown>;
   cookieParameters: Record<string, unknown>;
   requestBody?: unknown;
+  host: string;
 }
