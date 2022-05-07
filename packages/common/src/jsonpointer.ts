@@ -3,6 +3,8 @@
  Licensed under the GNU Affero General Public License version 3. See LICENSE.txt in the project root for license information.
 */
 
+import type { BundledOpenApiSpec, RefOr } from "./oas30";
+
 export type PathSegment = string;
 export type Path = PathSegment[];
 
@@ -60,4 +62,15 @@ export function find(target: unknown, pointer: string | string[]): unknown | und
     return findByPath(target, pointer);
   }
   return findByPath(target, parseJsonPointer(pointer));
+}
+
+export function deref<T>(oas: BundledOpenApiSpec, maybeRef: RefOr<T> | undefined): T | undefined {
+  if (maybeRef === undefined) {
+    return undefined;
+  }
+  if ("$ref" in maybeRef) {
+    const refTarget = find(oas, maybeRef.$ref);
+    return refTarget as T;
+  }
+  return maybeRef;
 }

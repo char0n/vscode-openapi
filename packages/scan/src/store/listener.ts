@@ -1,22 +1,21 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { HostApplication } from "../types";
-import { focus, scan } from "./oasSlice";
+import { sendRequest, sendRequestCurl } from "./oasSlice";
 
 export default function createListener(host: HostApplication) {
   const listenerMiddleware = createListenerMiddleware();
 
   listenerMiddleware.startListening({
-    actionCreator: focus,
+    actionCreator: sendRequest,
     effect: async (action, listenerApi) => {
-      //console.log("focused", action);
+      host.postMessage({ command: "sendRequest", payload: action.payload });
     },
   });
 
   listenerMiddleware.startListening({
-    actionCreator: scan,
+    actionCreator: sendRequestCurl,
     effect: async (action, listenerApi) => {
-      host.postMessage({ command: "scan", data: action.payload });
-      //console.log("me scanning here", action, listenerApi);
+      host.postMessage({ command: "sendCurl", payload: action.payload });
     },
   });
 

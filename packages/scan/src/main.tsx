@@ -2,17 +2,27 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 
-import { BundledOpenApiSpec } from "@xliic/common";
+import { ThemeRequests } from "@xliic/common/messages/theme";
+import { ScanRequests } from "@xliic/common/messages/scan";
 
-import { HostApplication } from "./types";
 import App from "./components/App";
 
 import { initStore } from "./store/store";
 import { changeTheme, ThemeState } from "@xliic/web-theme";
-import { updateOas, focus, showResponse } from "./store/oasSlice";
+import { showResponse, showError, show } from "./store/oasSlice";
 import createListener from "./store/listener";
+import { HostApplication } from "./types";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+
+type WebAppRequest = ThemeRequests | ScanRequests;
+
+const requestHandlers: Record<WebAppRequest["command"], Function> = {
+  changeTheme,
+  show,
+  showResponse,
+  showError,
+};
 
 function renderWebView(host: HostApplication, theme: ThemeState) {
   const store = initStore(createListener(host), theme);
@@ -27,28 +37,12 @@ function renderWebView(host: HostApplication, theme: ThemeState) {
   );
 
   window.addEventListener("message", (event) => {
-    const message = event.data;
-    switch (message.command) {
-      case "updateOas":
-        store.dispatch(updateOas(message.oas as BundledOpenApiSpec));
-        break;
-      case "focus":
-        store.dispatch(
-          focus({ path: message.path, method: message.method, config: message.config })
-        );
-        break;
-      case "showResponse":
-        store.dispatch(showResponse(message.response));
-        break;
-      case "changeTheme":
-        store.dispatch(
-          changeTheme({
-            kind: message.kind,
-            foreground: message.foreground,
-            background: message.background,
-          })
-        );
-        break;
+    const { command, payload } = event.data as WebAppRequest;
+    const handler = requestHandlers[command];
+    if (handler) {
+      store.dispatch(handler(payload));
+    } else {
+      throw new Error(`Unable to find handler for command: ${command}`);
     }
   });
 }

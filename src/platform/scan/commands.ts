@@ -1,21 +1,18 @@
 import * as vscode from "vscode";
 
 import { parseJsonPointer, Path, simpleClone } from "@xliic/preserving-json-yaml-parser";
-import { HttpMethod, BundledOpenApiSpec } from "@xliic/common";
+import { HttpMethod, BundledOpenApiSpec } from "@xliic/common/oas30";
 import { find } from "@xliic/common/jsonpointer";
-import {
-  getOperation,
-  getOperationParameters,
-  getPathItemParameters,
-  mergeParameters,
-  getPath,
-} from "@xliic/common";
+
+import { ScandConfiguration } from "@xliic/common";
 
 import { Cache } from "../../cache";
 import { writeFileSync, unlinkSync, fstat, existsSync, readFileSync } from "fs";
 import { OpenApiVersion } from "../../types";
 import { ScanWebView } from "./view";
 import { Node } from "../../outline";
+
+import { convertScanConfig } from "./scanconfig";
 
 export default (cache: Cache, scanView: ScanWebView) => ({
   async runCurl(command: string): Promise<void> {
@@ -81,11 +78,16 @@ export default (cache: Cache, scanView: ScanWebView) => ({
         "0",
         "request",
         "request",
-      ]);
+      ]) as ScandConfiguration;
 
       console.log("found", config);
 
-      scanView.show(cloned, path, method, config);
+      scanView.show({
+        oas: cloned as BundledOpenApiSpec,
+        path: path as string,
+        method: method as HttpMethod,
+        config: convertScanConfig(config),
+      });
 
       /*
       const pathItem = getPath(spec, path)!;

@@ -1,7 +1,7 @@
 import { useFormContext, Controller } from "react-hook-form";
 import Form from "react-bootstrap/Form";
 
-import type { OasRequestBody } from "@xliic/common";
+import type { OasRequestBody } from "@xliic/common/oas30";
 import Section from "./Section";
 
 export default function RequestBody({

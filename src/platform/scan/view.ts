@@ -4,63 +4,99 @@
 */
 
 import * as vscode from "vscode";
-import got, { Method, OptionsOfJSONResponseBody } from "got";
+import got, { Method, OptionsOfJSONResponseBody, RequestError } from "got";
 import { WebView } from "../web-view";
+
+import {
+  ScanRequests,
+  ScanResponses,
+  ShowPayload,
+  CurlPayload,
+  HttpRequestPayload,
+} from "@xliic/common/messages/scan";
 
 export class ScanWebView extends WebView {
   private panel?: vscode.WebviewPanel;
 
-  async show(oas: any, path: string | number, method: string | number, config: any) {
-    this.panel = await this.createPanel();
+  async show(payload: ShowPayload) {
+    if (!this.panel) {
+      this.panel = await this.createPanel();
+    }
 
-    this.panel.webview.postMessage({ command: "updateOas", oas });
-    this.panel.webview.postMessage({
-      command: "focus",
-      path,
-      method,
-      config,
-    });
+    this.panel.onDidDispose(() => (this.panel = undefined));
+
+    this.sendScanRequest({ command: "show", payload });
 
     this.panel.webview.onDidReceiveMessage(async (message) => {
-      switch (message.command) {
-        case "scan":
-          let { host, path, parameters, method, requestBody } = message.data;
-          if (parameters.path) {
-            for (const [name, value] of Object.entries(parameters.path)) {
-              path = path.replaceAll(`{${name}}`, value);
-            }
-          }
-
-          const url = host + path;
-
-          const response = await got(url, {
-            throwHttpErrors: false,
-            method,
-            body: requestBody,
-            headers: {
-              "content-type": "application/json",
-            },
-          });
-
-          console.log("got scan command", url, response);
-          this.showResponse({
-            rawHeaders: response.rawHeaders,
-            statusCode: response.statusCode,
-            statusMessage: response.statusMessage,
-            body: response.body,
-            httpVersion: response.httpVersion,
-          });
-          return;
+      const { command, payload } = message as ScanResponses;
+      const handler = requestHandlers[command];
+      if (handler) {
+        const request = await handler(payload);
+        if (request !== undefined) {
+          this.sendScanRequest(request);
+        }
+      } else {
+        throw new Error(`Unable to find handler for command: ${command}`);
       }
     });
   }
 
-  async showResponse(response: any) {
-    if (!this.panel) {
-      this.panel = await this.createPanel();
-    }
-    this.panel.webview.postMessage({ command: "showResponse", response });
+  async sendScanRequest(message: ScanRequests) {
+    this.panel!.webview.postMessage(message);
   }
+}
 
-  async foo() {}
+const requestHandlers: Record<
+  ScanResponses["command"],
+  (payload: any) => Promise<ScanRequests | void>
+> = {
+  sendRequest,
+  sendCurl,
+};
+
+async function sendCurl(payload: CurlPayload) {
+  console.log("got curl command", payload);
+}
+
+async function sendRequest(payload: HttpRequestPayload): Promise<ScanRequests> {
+  const { url, method, headers, body } = payload;
+
+  try {
+    const response = await got(url, {
+      throwHttpErrors: false,
+      method,
+      body,
+      headers: {
+        "content-type": "application/json",
+        ...headers,
+      },
+    });
+
+    const responseHeaders: [string, string][] = [];
+    for (let i = 0; i < response.rawHeaders.length; i += 2) {
+      responseHeaders.push([response.rawHeaders[i], response.rawHeaders[i + 1]]);
+    }
+
+    console.log("got scan command", url, response);
+
+    return {
+      command: "showResponse",
+      payload: {
+        statusCode: response.statusCode,
+        statusMessage: response.statusMessage,
+        body: response.body,
+        httpVersion: response.httpVersion,
+        headers: responseHeaders,
+      },
+    };
+  } catch (e: unknown) {
+    const { code, message } = e as RequestError;
+
+    return {
+      command: "showError",
+      payload: {
+        message,
+      },
+    };
+  }
 }

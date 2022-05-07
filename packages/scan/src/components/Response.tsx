@@ -9,18 +9,27 @@ import Servers from "./Servers";
 import RequestBody from "./RequestBody";
 
 import { useAppDispatch } from "../store/hooks";
-import { scan } from "../store/oasSlice";
+import { goToPage } from "../store/oasSlice";
 
 export default function Response({ response }: { response: any }) {
   const dispatch = useAppDispatch();
 
   return (
     <Container>
-      <code>
-        {response.statusCode} {response.statusMessage}
-      </code>
-      <Headers rawHeaders={response.rawHeaders} />
-      <code>{response.body}</code>
+      <p>
+        <code>
+          HTTP {response.httpVersion} {response.statusCode} {response.statusMessage}
+        </code>
+      </p>
+      <p>
+        <Headers rawHeaders={response.rawHeaders} />
+      </p>
+      <p>
+        <code>{response.body}</code>
+      </p>
+      <Button variant="primary" onClick={() => dispatch(goToPage("request"))}>
+        Back
+      </Button>
     </Container>
   );
 }
@@ -34,7 +43,7 @@ function Headers({ rawHeaders }: { rawHeaders: any }) {
     <>
       {headers.map(([name, value], index) => (
         <div>
-          <code>{name}</code> <code>{value}</code>
+          <code>{name}:</code> <code>{value}</code>
         </div>
       ))}
     </>

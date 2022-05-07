@@ -4,7 +4,7 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-import type { BundledOasParameter } from "@xliic/common";
+import type { ResolvedOasParameter } from "@xliic/common/oas30";
 import Parameter from "./Parameter";
 
 export default function ArrayParameter({
@@ -12,7 +12,7 @@ export default function ArrayParameter({
   parameter,
 }: {
   name: string;
-  parameter: BundledOasParameter;
+  parameter: ResolvedOasParameter;
 }) {
   const {
     control,

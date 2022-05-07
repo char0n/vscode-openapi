@@ -2,14 +2,14 @@ import { useFormContext, Controller } from "react-hook-form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 
-import type { BundledOasParameter } from "@xliic/common";
+import type { ResolvedOasParameter } from "@xliic/common/oas30";
 
 export default function Parameter({
   name,
   parameter,
 }: {
   name: string;
-  parameter: BundledOasParameter;
+  parameter: ResolvedOasParameter;
 }) {
   const {
     control,
@@ -24,14 +24,14 @@ export default function Parameter({
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <Form.Control
             type="text"
-            className="is-invalid"
+            className="xxx-is-invalid"
             onChange={onChange}
             value={value}
             ref={ref}
           />
         )}
       />
-      <div className="invalid-feedback">Please choose a username.</div>
+      {/*<div className="invalid-feedback">Please choose a username.</div>*/}
     </FloatingLabel>
   );
 }

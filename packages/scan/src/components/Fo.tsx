@@ -12,16 +12,13 @@ import {
   BundledOpenApiSpec,
   HttpMethod,
   OasParameterLocation,
-  ParameterConfiguration,
-  ParametersMap,
-  BundledParametersMap,
-  OasSchema,
-  deref,
+  OperationParametersMap,
   OasRequestBody,
-} from "@xliic/common";
+} from "@xliic/common/oas30";
+import { ScanConfig } from "@xliic/common/messages/scan";
 
 import { useAppDispatch } from "../store/hooks";
-import { scan } from "../store/oasSlice";
+import { sendRequest, sendRequestCurl } from "../store/oasSlice";
 
 function Fo({
   parameters,
@@ -32,8 +29,8 @@ function Fo({
   oas,
 }: {
   oas: BundledOpenApiSpec;
-  config: ParameterConfiguration;
-  parameters: ParametersMap;
+  config: ScanConfig;
+  parameters: OperationParametersMap;
   requestBody?: OasRequestBody;
   path: string;
   method: HttpMethod;
@@ -42,7 +39,7 @@ function Fo({
 
   const defaultValues = generateDefaultValues(parameters, config);
 
-  const bundledParameters = bundleParameters(oas, parameters);
+  console.log("de val", { defaultValues, config });
 
   const methods = useForm({
     defaultValues,
@@ -50,21 +47,37 @@ function Fo({
 
   const { handleSubmit } = methods;
 
-  const onSubmit = (data: any) => {
-    dispatch(scan({ ...data, path, method }));
+  const onTryInternal = (data: Record<string, any>) => {
+    // TODO build up request
+    /*
+    if (parameters.path) {
+      for (const [name, value] of Object.entries(parameters.path)) {
+        path = path.replaceAll(`{${name}}`, value);
+      }
+    }
+    */
+    console.log("hot data", data);
+    //dispatch(sendRequest({ ...data, path, method }));
+  };
+
+  const onTryCurl = (data: any) => {
+    dispatch(sendRequestCurl({ ...data, path, method }));
   };
 
   return (
     <Container>
       <FormProvider {...methods}>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form>
           <Badge>{method?.toUpperCase()}</Badge>
           <code> {path}</code>
           <Servers name="host" servers={oas.servers} />
-          <Parameters parameters={bundledParameters} />
+          <Parameters parameters={parameters} />
           <RequestBody name="requestBody" requestBody={requestBody} />
-          <Button variant="primary" type="submit">
-            Submit
+          <Button variant="primary" onClick={handleSubmit(onTryInternal)}>
+            Try It
+          </Button>
+          <Button variant="primary" onClick={handleSubmit(onTryCurl)}>
+            Curl It
           </Button>
         </Form>
       </FormProvider>
@@ -76,32 +89,20 @@ const Container = styled.div``;
 
 export default Fo;
 
-const parameterToConfigMap: Record<
-  OasParameterLocation,
-  keyof Omit<ParameterConfiguration, "requestBody" | "host">
-> = {
-  query: "queryParameters",
-  path: "pathParameters",
-  header: "headerParameters",
-  cookie: "cookieParameters",
-};
-
 function generateDefaultValues(
-  parameters: ParametersMap,
-  configuration: ParameterConfiguration
+  parameters: OperationParametersMap,
+  configuration: ScanConfig
 ): Record<string, any> {
   const values: Record<string, any> = { parameters: {} };
-  const locations = Object.keys(parameterToConfigMap) as OasParameterLocation[];
+  const locations = Object.keys(parameters) as OasParameterLocation[];
   for (const location of locations) {
-    for (const parameter of parameters[location]) {
-      const value = configuration[parameterToConfigMap[parameter.in]]?.[parameter.name];
+    for (const name of Object.keys(parameters[location])) {
+      const value = configuration.parameters[location]?.[name];
       if (value !== undefined) {
-        if (!values.parameters[parameter.in]) {
-          values.parameters[parameter.in] = {};
+        if (!values.parameters[location]) {
+          values.parameters[location] = {};
         }
-        values.parameters[parameter.in][parameter.name] = Array.isArray(value)
-          ? wrap(value)
-          : value;
+        values.parameters[location][name] = Array.isArray(value) ? wrap(value) : value;
       }
     }
   }
@@ -118,24 +119,4 @@ function generateDefaultValues(
 // arrays must be wrapped for react form hook
 function wrap(array: unknown[]): unknown {
   return array.map((value) => ({ value }));
-}
-
-function bundleParameters(
-  oas: BundledOpenApiSpec,
-  parameters: ParametersMap
-): BundledParametersMap {
-  const result: BundledParametersMap = {
-    query: [],
-    path: [],
-    cookie: [],
-    header: [],
-  };
-  const locations = Object.keys(parameters) as OasParameterLocation[];
-  for (const location of locations) {
-    for (const parameter of parameters[location]) {
-      const schema = deref<OasSchema>(oas, parameter.schema);
-      result[location].push({ ...parameter, schema });
-    }
-  }
-  return result;
 }

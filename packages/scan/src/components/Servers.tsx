@@ -2,7 +2,7 @@ import { useFormContext, Controller } from "react-hook-form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 
-import type { OasServer } from "@xliic/common";
+import type { OasServer } from "@xliic/common/oas30";
 
 export default function Servers({
   name,
