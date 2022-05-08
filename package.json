@@ -343,6 +343,14 @@
           "when": "viewItem == operation && view == openapiTwoPathOutline || viewItem == operation && view == openapiThreePathOutline"
         },
         {
+          "command": "openapi.platform.editorTryOperation",
+          "when": "viewItem == operation && view == openapiTwoPathOutline || viewItem == operation && view == openapiThreePathOutline"
+        },
+        {
+          "command": "openapi.platform.editorCurlOperation",
+          "when": "viewItem == operation && view == openapiTwoPathOutline || viewItem == operation && view == openapiThreePathOutline"
+        },
+        {
           "command": "openapi.addOperation",
           "group": "inline",
           "when": "!openapiErrors && view == openapiTwoPathOutline && viewItem == path"
@@ -431,6 +439,14 @@
       {
         "command": "openapi.platform.editorRunSingleOperationScan",
         "title": "Run scan on this operation"
+      },
+      {
+        "command": "openapi.platform.editorTryOperation",
+        "title": "Try it out"
+      },
+      {
+        "command": "openapi.platform.editorCurlOperation",
+        "title": "Try it out with Curl"
       },
       {
         "command": "openapi.platform.browseDataDictionaries",

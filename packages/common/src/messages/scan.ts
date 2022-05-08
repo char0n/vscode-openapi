@@ -37,10 +37,12 @@ export interface HttpErrorPayload {
 }
 
 // requests to scan web app
-type ShowRequest = { command: "show"; payload: ShowPayload };
+type ScanOperation = { command: "scanOperation"; payload: ShowPayload };
+type TryOperation = { command: "tryOperation"; payload: ShowPayload };
+type CurlOperation = { command: "curlOperation"; payload: ShowPayload };
 type ShowResponse = { command: "showResponse"; payload: HttpResponsePayload };
 type ShowError = { command: "showError"; payload: HttpErrorPayload };
-type ScanRequests = ShowRequest | ShowResponse | ShowError;
+type ScanRequests = ScanOperation | TryOperation | CurlOperation | ShowResponse | ShowError;
 
 // responses sent from web app to the vs code extension
 type SendHttpRequest = { command: "sendRequest"; payload: HttpRequestPayload };

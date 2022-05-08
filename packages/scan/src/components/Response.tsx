@@ -21,7 +21,7 @@ export default function Response({ response }: { response: HttpResponsePayload }
       <p>
         <code>{response.body}</code>
       </p>
-      <Button variant="primary" onClick={() => dispatch(goToPage("request"))}>
+      <Button variant="primary" onClick={() => dispatch(goToPage("tryOperation"))}>
         Back
       </Button>
     </Container>

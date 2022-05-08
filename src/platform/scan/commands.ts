@@ -7,8 +7,8 @@ import { find } from "@xliic/common/jsonpointer";
 import { ScandConfiguration } from "@xliic/common";
 
 import { Cache } from "../../cache";
-import { writeFileSync, unlinkSync, fstat, existsSync, readFileSync } from "fs";
-import { OpenApiVersion } from "../../types";
+import { writeFileSync, unlinkSync, existsSync, readFileSync } from "fs";
+import { BundleResult, OpenApiVersion } from "../../types";
 import { ScanWebView } from "./view";
 import { Node } from "../../outline";
 
@@ -22,6 +22,48 @@ export default (cache: Cache, scanView: ScanWebView) => ({
     terminal?.show();
   },
 
+  async editorTryOperation(
+    editor: vscode.TextEditor,
+    edit: vscode.TextEditorEdit,
+    node: Node
+  ): Promise<void> {
+    const [path, method] = node.path;
+    const bundle = await cache.getDocumentBundle(editor.document);
+    if (bundle && !("errors" in bundle)) {
+      const oas = extractSingleOperation(method as HttpMethod, path as string, bundle.value);
+      const config = await generateScanConfiguration(method as HttpMethod, path as string, oas);
+      if (config !== undefined) {
+        scanView.tryOperation({
+          oas: oas as BundledOpenApiSpec,
+          path: path as string,
+          method: method as HttpMethod,
+          config: convertScanConfig(config),
+        });
+      }
+    }
+  },
+
+  async editorCurlOperation(
+    editor: vscode.TextEditor,
+    edit: vscode.TextEditorEdit,
+    node: Node
+  ): Promise<void> {
+    const [path, method] = node.path;
+    const bundle = await cache.getDocumentBundle(editor.document);
+    if (bundle && !("errors" in bundle)) {
+      const oas = extractSingleOperation(method as HttpMethod, path as string, bundle.value);
+      const config = await generateScanConfiguration(method as HttpMethod, path as string, oas);
+      if (config !== undefined) {
+        scanView.curlOperation({
+          oas: oas as BundledOpenApiSpec,
+          path: path as string,
+          method: method as HttpMethod,
+          config: convertScanConfig(config),
+        });
+      }
+    }
+  },
+
   async editorRunSingleOperationScan(
     editor: vscode.TextEditor,
     edit: vscode.TextEditorEdit,
@@ -30,73 +72,16 @@ export default (cache: Cache, scanView: ScanWebView) => ({
     const [path, method] = node.path;
     const bundle = await cache.getDocumentBundle(editor.document);
     if (bundle && !("errors" in bundle)) {
-      const spec = bundle.value as BundledOpenApiSpec;
-
-      const visited = new Set<string>();
-      crawl(bundle.value, bundle.value["paths"][path][method], visited);
-      const cloned: any = simpleClone(bundle.value);
-      delete cloned["paths"];
-      delete cloned["components"]["schemas"];
-      cloned["paths"] = { [path]: { [method]: bundle.value["paths"][path][method] } };
-      if (bundle.value["paths"][path]["parameters"]) {
-        cloned["paths"][path]["parameters"] = bundle.value["paths"][path]["parameters"];
+      const oas = extractSingleOperation(method as HttpMethod, path as string, bundle.value);
+      const config = await generateScanConfiguration(method as HttpMethod, path as string, oas);
+      if (config !== undefined) {
+        scanView.scanOperation({
+          oas: oas as BundledOpenApiSpec,
+          path: path as string,
+          method: method as HttpMethod,
+          config: convertScanConfig(config),
+        });
       }
-      copyByPointer(bundle.value, cloned, Array.from(visited));
-      //console.log("cloned", cloned, getPath(spec, ""));
-
-      const json = JSON.stringify(cloned, null, 2);
-      writeFileSync("/Users/anton/crunch/platform/src/daemon/scand/test.json", json);
-
-      const configFile = "/Users/anton/crunch/platform/src/daemon/scand/debug_configuration.json";
-      if (existsSync(configFile)) {
-        unlinkSync(configFile);
-      }
-
-      const terminal = vscode.window.createTerminal({
-        cwd: "/Users/anton/crunch/platform/src/daemon/scand",
-      });
-      terminal.sendText(
-        "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -default-configuration -oasfile test.json"
-      );
-      terminal.show();
-
-      const configuration = await readWhenExists(configFile, 30);
-      if (configuration === undefined) {
-        return;
-      }
-
-      const parsedConfig = JSON.parse(configuration);
-
-      const config = find(parsedConfig, [
-        "playbook",
-        "paths",
-        path as string,
-        method as string,
-        "happyPaths",
-        "0",
-        "requests",
-        "0",
-        "request",
-        "request",
-      ]) as ScandConfiguration;
-
-      console.log("found", config);
-
-      scanView.show({
-        oas: cloned as BundledOpenApiSpec,
-        path: path as string,
-        method: method as HttpMethod,
-        config: convertScanConfig(config),
-      });
-
-      /*
-      const pathItem = getPath(spec, path)!;
-      const operation = getOperation(spec, path, method as HttpMethod)!;
-      const pathParameters = getPathItemParameters(spec, pathItem);
-      const opParameters = getOperationParameters(spec, operation);
-      const parameters = mergeParameters(pathParameters, opParameters);
-      */
-      //scanView.show(parameters);
     }
 
     /*
@@ -228,4 +213,63 @@ async function readWhenExists(filename: string, maxDelay: number): Promise<strin
 
 async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function generateScanConfiguration(
+  method: HttpMethod,
+  path: string,
+  oas: BundledOpenApiSpec
+): Promise<ScandConfiguration | undefined> {
+  const json = JSON.stringify(oas, null, 2);
+  writeFileSync("/Users/anton/crunch/platform/src/daemon/scand/test.json", json);
+
+  const configFile = "/Users/anton/crunch/platform/src/daemon/scand/debug_configuration.json";
+  if (existsSync(configFile)) {
+    unlinkSync(configFile);
+  }
+
+  const terminal = vscode.window.createTerminal({
+    cwd: "/Users/anton/crunch/platform/src/daemon/scand",
+  });
+  terminal.sendText(
+    "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -default-configuration -oasfile test.json"
+  );
+  terminal.show();
+
+  const configuration = await readWhenExists(configFile, 30);
+  if (configuration === undefined) {
+    return;
+  }
+
+  const parsedConfig = JSON.parse(configuration);
+
+  const config = find(parsedConfig, [
+    "playbook",
+    "paths",
+    path,
+    method,
+    "happyPaths",
+    "0",
+    "requests",
+    "0",
+    "request",
+    "request",
+  ]) as ScandConfiguration;
+
+  return config;
+}
+
+function extractSingleOperation(method: HttpMethod, path: string, oas: any): BundledOpenApiSpec {
+  const visited = new Set<string>();
+  crawl(oas, oas["paths"][path][method], visited);
+  const cloned: any = simpleClone(oas);
+  delete cloned["paths"];
+  delete cloned["components"]["schemas"];
+  cloned["paths"] = { [path]: { [method]: oas["paths"][path][method] } };
+  if (oas["paths"][path]["parameters"]) {
+    cloned["paths"][path]["parameters"] = oas["paths"][path]["parameters"];
+  }
+  copyByPointer(oas, cloned, Array.from(visited));
+  return cloned as BundledOpenApiSpec;
+  //console.log("cloned", cloned, getPath(spec, ""));
 }

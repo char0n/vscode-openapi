@@ -9,7 +9,13 @@ import App from "./components/App";
 
 import { initStore } from "./store/store";
 import { changeTheme, ThemeState } from "@xliic/web-theme";
-import { showResponse, showError, show } from "./store/oasSlice";
+import {
+  showResponse,
+  showError,
+  scanOperation,
+  tryOperation,
+  curlOperation,
+} from "./store/oasSlice";
 import createListener from "./store/listener";
 import { HostApplication } from "./types";
 
@@ -19,7 +25,9 @@ type WebAppRequest = ThemeRequests | ScanRequests;
 
 const requestHandlers: Record<WebAppRequest["command"], Function> = {
   changeTheme,
-  show,
+  scanOperation,
+  tryOperation,
+  curlOperation,
   showResponse,
   showError,
 };

@@ -18,27 +18,38 @@ import {
 export class ScanWebView extends WebView {
   private panel?: vscode.WebviewPanel;
 
-  async show(payload: ShowPayload) {
+  async scanOperation(payload: ShowPayload) {
+    await this.ensurePanel();
+    this.sendScanRequest({ command: "scanOperation", payload });
+  }
+
+  async tryOperation(payload: ShowPayload) {
+    await this.ensurePanel();
+    this.sendScanRequest({ command: "tryOperation", payload });
+  }
+
+  async curlOperation(payload: ShowPayload) {
+    await this.ensurePanel();
+    this.sendScanRequest({ command: "curlOperation", payload });
+  }
+
+  async ensurePanel(): Promise<void> {
     if (!this.panel) {
       this.panel = await this.createPanel();
-    }
-
-    this.panel.onDidDispose(() => (this.panel = undefined));
-
-    this.sendScanRequest({ command: "show", payload });
-
-    this.panel.webview.onDidReceiveMessage(async (message) => {
-      const { command, payload } = message as ScanResponses;
-      const handler = requestHandlers[command];
-      if (handler) {
-        const request = await handler(payload);
-        if (request !== undefined) {
-          this.sendScanRequest(request);
+      this.panel.onDidDispose(() => (this.panel = undefined));
+      this.panel.webview.onDidReceiveMessage(async (message) => {
+        const { command, payload } = message as ScanResponses;
+        const handler = requestHandlers[command];
+        if (handler) {
+          const request = await handler(payload);
+          if (request !== undefined) {
+            this.sendScanRequest(request);
+          }
+        } else {
+          throw new Error(`Unable to find handler for command: ${command}`);
         }
-      } else {
-        throw new Error(`Unable to find handler for command: ${command}`);
-      }
-    });
+      });
+    }
   }
 
   async sendScanRequest(message: ScanRequests) {

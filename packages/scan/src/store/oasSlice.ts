@@ -19,8 +19,16 @@ import {
   ShowPayload,
 } from "@xliic/common/messages/scan";
 
+type PageName =
+  | "loading"
+  | "scanOperation"
+  | "tryOperation"
+  | "curlOperation"
+  | "response"
+  | "error";
+
 export interface OasState {
-  page: "loading" | "request" | "response" | "error";
+  page: PageName;
   oas: BundledOpenApiSpec;
   path?: string;
   method?: HttpMethod;
@@ -61,7 +69,7 @@ export const parametersSlice = createSlice({
   name: "oas",
   initialState,
   reducers: {
-    show: (state, action: PayloadAction<ShowPayload>) => {
+    scanOperation: (state, action: PayloadAction<ShowPayload>) => {
       const { oas, path, method, config } = action.payload;
 
       const pathParameters = getPathItemParameters(oas, oas.paths[path]);
@@ -69,7 +77,41 @@ export const parametersSlice = createSlice({
       const operationParameters = getOperationParameters(oas, operation);
       const parameters = mergeParameters(oas, pathParameters, operationParameters);
 
-      state.page = "request";
+      state.page = "scanOperation";
+      state.oas = oas;
+      state.path = path;
+      state.method = method;
+      state.parameters = parameters;
+      state.requestBody = deref(state.oas, operation?.requestBody);
+      state.config = config;
+    },
+
+    tryOperation: (state, action: PayloadAction<ShowPayload>) => {
+      const { oas, path, method, config } = action.payload;
+
+      const pathParameters = getPathItemParameters(oas, oas.paths[path]);
+      const operation = getOperation(oas, path, method);
+      const operationParameters = getOperationParameters(oas, operation);
+      const parameters = mergeParameters(oas, pathParameters, operationParameters);
+
+      state.page = "tryOperation";
+      state.oas = oas;
+      state.path = path;
+      state.method = method;
+      state.parameters = parameters;
+      state.requestBody = deref(state.oas, operation?.requestBody);
+      state.config = config;
+    },
+
+    curlOperation: (state, action: PayloadAction<ShowPayload>) => {
+      const { oas, path, method, config } = action.payload;
+
+      const pathParameters = getPathItemParameters(oas, oas.paths[path]);
+      const operation = getOperation(oas, path, method);
+      const operationParameters = getOperationParameters(oas, operation);
+      const parameters = mergeParameters(oas, pathParameters, operationParameters);
+
+      state.page = "curlOperation";
       state.oas = oas;
       state.path = path;
       state.method = method;
@@ -98,7 +140,15 @@ export const parametersSlice = createSlice({
   },
 });
 
-export const { show, showResponse, showError, goToPage, sendRequest, sendRequestCurl } =
-  parametersSlice.actions;
+export const {
+  scanOperation,
+  tryOperation,
+  curlOperation,
+  showResponse,
+  showError,
+  goToPage,
+  sendRequest,
+  sendRequestCurl,
+} = parametersSlice.actions;
 
 export default parametersSlice.reducer;

@@ -12,7 +12,7 @@ export default function Error({ error }: { error: any }) {
       <p>
         <code>{error.message}</code>
       </p>
-      <Button variant="primary" onClick={() => dispatch(goToPage("request"))}>
+      <Button variant="primary" onClick={() => dispatch(goToPage("tryOperation"))}>
         Back
       </Button>
     </Container>
