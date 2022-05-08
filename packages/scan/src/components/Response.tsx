@@ -1,17 +1,11 @@
 import styled from "styled-components";
 import Button from "react-bootstrap/Button";
-import Badge from "react-bootstrap/Badge";
-import Form from "react-bootstrap/Form";
-import { useForm, FormProvider } from "react-hook-form";
-
-import Parameters from "./Parameters";
-import Servers from "./Servers";
-import RequestBody from "./RequestBody";
 
 import { useAppDispatch } from "../store/hooks";
 import { goToPage } from "../store/oasSlice";
+import { HttpResponsePayload } from "../../../common/src/messages/scan";
 
-export default function Response({ response }: { response: any }) {
+export default function Response({ response }: { response: HttpResponsePayload }) {
   const dispatch = useAppDispatch();
 
   return (
@@ -22,7 +16,7 @@ export default function Response({ response }: { response: any }) {
         </code>
       </p>
       <p>
-        <Headers rawHeaders={response.rawHeaders} />
+        <Headers headers={response.headers} />
       </p>
       <p>
         <code>{response.body}</code>
@@ -34,15 +28,11 @@ export default function Response({ response }: { response: any }) {
   );
 }
 
-function Headers({ rawHeaders }: { rawHeaders: any }) {
-  const headers = [];
-  for (let i = 0; i < rawHeaders.length; i += 2) {
-    headers.push([rawHeaders[i], rawHeaders[i + 1]]);
-  }
+function Headers({ headers }: { headers: HttpResponsePayload["headers"] }) {
   return (
     <>
       {headers.map(([name, value], index) => (
-        <div>
+        <div key={index}>
           <code>{name}:</code> <code>{value}</code>
         </div>
       ))}

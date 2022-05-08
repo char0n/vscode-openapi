@@ -15,7 +15,7 @@ import {
   OperationParametersMap,
   OasRequestBody,
 } from "@xliic/common/oas30";
-import { ScanConfig } from "@xliic/common/messages/scan";
+import { HttpRequestPayload, ScanConfig } from "@xliic/common/messages/scan";
 
 import { useAppDispatch } from "../store/hooks";
 import { sendRequest, sendRequestCurl } from "../store/oasSlice";
@@ -48,16 +48,10 @@ function Fo({
   const { handleSubmit } = methods;
 
   const onTryInternal = (data: Record<string, any>) => {
-    // TODO build up request
-    /*
-    if (parameters.path) {
-      for (const [name, value] of Object.entries(parameters.path)) {
-        path = path.replaceAll(`{${name}}`, value);
-      }
-    }
-    */
-    console.log("hot data", data);
-    //dispatch(sendRequest({ ...data, path, method }));
+    const httpRequest = makeHttpRequest(method, path, data);
+    console.log("data", data);
+    console.log("request", httpRequest);
+    dispatch(sendRequest(httpRequest));
   };
 
   const onTryCurl = (data: any) => {
@@ -119,4 +113,30 @@ function generateDefaultValues(
 // arrays must be wrapped for react form hook
 function wrap(array: unknown[]): unknown {
   return array.map((value) => ({ value }));
+}
+
+function makeHttpRequest(
+  method: HttpMethod,
+  path: string,
+  data: Record<string, any>
+): HttpRequestPayload {
+  const { parameters } = data;
+  let substitutedPath = path;
+  if (parameters?.path) {
+    for (const [name, value] of Object.entries(parameters.path)) {
+      substitutedPath = substitutedPath.replaceAll(`{${name}}`, value as string);
+    }
+  }
+  const url = data.host + substitutedPath;
+  const headers = {
+    "content-type": "application/javascript",
+    ...data?.parameters?.headers,
+  };
+
+  return {
+    method,
+    url,
+    headers,
+    body: data.requestBody,
+  };
 }

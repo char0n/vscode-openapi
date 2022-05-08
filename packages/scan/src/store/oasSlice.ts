@@ -13,6 +13,8 @@ import { deref } from "@xliic/common/jsonpointer";
 import {
   CurlPayload,
   HttpRequestPayload,
+  HttpResponsePayload,
+  HttpErrorPayload,
   ScanConfig,
   ShowPayload,
 } from "@xliic/common/messages/scan";
@@ -25,8 +27,8 @@ export interface OasState {
   parameters: OperationParametersMap;
   config: ScanConfig;
   requestBody?: OasRequestBody;
-  response?: any;
-  error?: any;
+  response?: HttpResponsePayload;
+  error?: HttpErrorPayload;
 }
 
 const initialState: OasState = {
@@ -76,12 +78,12 @@ export const parametersSlice = createSlice({
       state.config = config;
     },
 
-    showResponse: (state, action: PayloadAction<any>) => {
+    showResponse: (state, action: PayloadAction<HttpResponsePayload>) => {
       state.page = "response";
       state.response = action.payload;
     },
 
-    showError: (state, action: PayloadAction<{ message: string }>) => {
+    showError: (state, action: PayloadAction<HttpErrorPayload>) => {
       state.page = "error";
       state.error = action.payload;
     },

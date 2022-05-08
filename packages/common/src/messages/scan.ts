@@ -32,7 +32,7 @@ export interface ShowPayload {
   config: ScanConfig;
 }
 
-interface HttpErrorPayload {
+export interface HttpErrorPayload {
   message: string;
 }
 
