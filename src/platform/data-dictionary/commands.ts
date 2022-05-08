@@ -20,12 +20,8 @@ export default (
   dataDictionaryView: DataDictionaryWebView
 ) => ({
   browseDataDictionaries: async () => {
-    const dictionaries = await getDataDictionaries(
-      platformContext.connection,
-      platformContext.logger
-    );
-
-    dataDictionaryView.show(dictionaries);
+    const formats = await store.getDataDictionaries();
+    dataDictionaryView.show(formats);
   },
 
   editorDataDictionaryUpdateSchema: async (

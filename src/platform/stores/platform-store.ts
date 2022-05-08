@@ -255,6 +255,26 @@ export class PlatformStore {
     return readScanReport(apiId, this.context.connection, this.context.logger);
   }
 
+  async getDataDictionaries(): Promise<any> {
+    const dictionaries = await getDataDictionaries(this.context.connection, this.context.logger);
+    const result = [];
+    for (const dictionary of dictionaries) {
+      const formats = await getDataDictionaryFormats(
+        dictionary.id,
+        this.context.connection,
+        this.context.logger
+      );
+      result.push({
+        id: dictionary.id,
+        name: dictionary.name,
+        description: dictionary.description,
+        formats,
+      });
+    }
+
+    return result;
+  }
+
   async getDataDictionaryFormats(): Promise<DataDictionaryFormat[]> {
     const dictionaries = await getDataDictionaries(this.context.connection, this.context.logger);
     const result = [];
