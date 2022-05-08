@@ -48,14 +48,15 @@ function Fo({
   const { handleSubmit } = methods;
 
   const onTryInternal = (data: Record<string, any>) => {
-    const httpRequest = makeHttpRequest(method, path, data);
+    const httpRequest = makeHttpRequest(method, path, data as RequestFormData);
     console.log("data", data);
     console.log("request", httpRequest);
     dispatch(sendRequest(httpRequest));
   };
 
-  const onTryCurl = (data: any) => {
-    dispatch(sendRequestCurl({ ...data, path, method }));
+  const onTryCurl = (data: Record<string, any>) => {
+    const curl = makeCurlRequest(method, path, data as RequestFormData);
+    dispatch(sendRequestCurl({ curl }));
   };
 
   return (
@@ -115,22 +116,22 @@ function wrap(array: unknown[]): unknown {
   return array.map((value) => ({ value }));
 }
 
+interface RequestFormData {
+  parameters?: Record<OasParameterLocation, Record<string, any>>;
+  host: string;
+  requestBody?: string;
+}
+
 function makeHttpRequest(
   method: HttpMethod,
   path: string,
-  data: Record<string, any>
+  data: RequestFormData
 ): HttpRequestPayload {
-  const { parameters } = data;
-  let substitutedPath = path;
-  if (parameters?.path) {
-    for (const [name, value] of Object.entries(parameters.path)) {
-      substitutedPath = substitutedPath.replaceAll(`{${name}}`, value as string);
-    }
-  }
-  const url = data.host + substitutedPath;
+  const url = makeUrl(data.host, path, data?.parameters?.path);
+
   const headers = {
     "content-type": "application/javascript",
-    ...data?.parameters?.headers,
+    ...data?.parameters?.header,
   };
 
   return {
@@ -139,4 +140,44 @@ function makeHttpRequest(
     headers,
     body: data.requestBody,
   };
+}
+
+function makeUrl(host: string, path: string, pathParameters?: Record<string, any>): string {
+  const trimmedHost = host.endsWith("/") ? host.slice(0, -1) : host;
+  const substitutedPath = pathParameters ? substitutePathParams(path, pathParameters) : path;
+  return trimmedHost + substitutedPath;
+}
+
+function substitutePathParams(path: string, pathParameters: Record<string, any>) {
+  let substituted = path;
+  for (const [name, value] of Object.entries(pathParameters)) {
+    substituted = substituted.replaceAll(`{${name}}`, value as string);
+  }
+  return substituted;
+}
+
+function makeCurlRequest(method: HttpMethod, path: string, data: RequestFormData): string {
+  const substitutedPath = data?.parameters?.path
+    ? substitutePathParams(path, data.parameters.path)
+    : path;
+  const url = makeUrl(data.host, path, data?.parameters?.path);
+  const escape = (value: string) => value.replace(/'/g, "'\\''");
+  const curl = makeCurl(method, url, escape);
+  const headers = makeHeaders(data?.parameters?.header ?? {}, escape).join(" ");
+  const body = makeBody(data.requestBody!, escape);
+  return `${curl} ${headers} ${body}`;
+}
+
+// FIXME -H This option only changes the actual word used in the HTTP request, it does not alter the way curl behaves.
+// So for example if you want to make a proper HEAD request, using -X HEAD will not suffice. You need to use the --head option.
+function makeCurl(method: HttpMethod, url: string, escape: Function): string {
+  return `curl -v -X ${method.toUpperCase()} '${escape(url)}'`;
+}
+
+function makeHeaders(headers: Record<string, any>, escape: Function): string[] {
+  return Object.entries(headers).map(([key, value]) => `-H '${escape(key)}: ${escape(value)}'`);
+}
+
+function makeBody(body: string, escape: Function): string {
+  return `-d '${escape(body)}'`;
 }

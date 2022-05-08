@@ -56,6 +56,9 @@ const requestHandlers: Record<
 
 async function sendCurl(payload: CurlPayload) {
   console.log("got curl command", payload);
+  const terminal = vscode.window.createTerminal({});
+  terminal.sendText(payload.curl);
+  terminal.show();
 }
 
 async function sendRequest(payload: HttpRequestPayload): Promise<ScanRequests> {
