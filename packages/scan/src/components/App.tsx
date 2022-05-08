@@ -5,6 +5,18 @@ import Fo from "./Fo";
 import Response from "./Response";
 import Error from "./Error";
 import Example from "./Example";
+import BarChart from "./BarChart";
+
+type Data = {
+  label: string;
+  value: number;
+};
+
+const data: Data[] = [
+  { label: "Foo", value: 48 },
+  { label: "Bar", value: 18 },
+  { label: "Baz", value: 34 },
+];
 
 function App() {
   const theme = useAppSelector((state) => state.theme);
@@ -16,7 +28,9 @@ function App() {
   return (
     <>
       <ThemeStyles theme={theme} />
-      {/*<Example width={200} height={200} />*/}
+      {/*<Example width={200} height={200}/>*/}
+      {/*<BarChart width={500} height={400} data={data} />*/}
+
       <Container>
         {page === "request" && path !== undefined && (
           <Fo
