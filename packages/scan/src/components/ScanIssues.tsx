@@ -4,9 +4,13 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { ExclamationCircle, Check } from "@xliic/web-icons";
 
 function ScanIssues({ issues }: { issues: any }) {
+  const sorted = issues
+    ? [...issues].sort((a: any, b: any) => (a.status === "unexpected" ? -1 : 1))
+    : [];
+
   return (
     <>
-      {issues && issues.map((issue: any, index: number) => <ScanIssue issue={issue} key={index} />)}
+      {issues && sorted.map((issue: any, index: number) => <ScanIssue issue={issue} key={index} />)}
       {issues === undefined && <p>scan failed</p>}
     </>
   );
@@ -17,7 +21,7 @@ function ScanIssue({ issue }: { issue: any }) {
     <Card style={{ margin: "1em" }}>
       <Card.Body>
         <Card.Title>
-          {issue.injectionDescription}{" "}
+          {issue.responseHttpStatusCode} {issue.injectionDescription}{" "}
           {issue.status === "unexpected" && (
             <Badge bg="warning">
               <ExclamationCircle />
