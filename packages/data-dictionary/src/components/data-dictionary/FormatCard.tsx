@@ -140,8 +140,7 @@ const PropertyLabel = styled.div`
 
 const PropertyValue = styled.div`
   font-size: 0.85rem;
-  overflow: hidden;
-  white-space: nowrap;
+  overflow-wrap: break-word;
   max-width: 100%;
   text-overflow: ellipsis;
 `;
