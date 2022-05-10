@@ -44,6 +44,18 @@
 
         window.renderWebView(host, { kind: "light" });
 
+        /*
+        window.postMessage({
+          command: "scanOperation",
+          payload: {
+            oas,
+            path: "/api/register",
+            method: "post",
+            config,
+          },
+        });
+        */
+
         window.postMessage({
           command: "showScanReport",
           payload: sampleReport,

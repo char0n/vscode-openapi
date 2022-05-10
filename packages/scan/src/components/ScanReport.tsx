@@ -17,11 +17,12 @@ export default function ScanReport({
 }) {
   const dispatch = useAppDispatch();
 
-  const issues = scanReport.paths[path][method]["issues"];
+  const issues = scanReport.paths?.[path]?.[method]?.["issues"];
+  const error = scanReport?.paths?.[path]?.[method]?.happyPaths[0]?.endStateError;
 
   return (
     <Container>
-      <ScanIssues issues={issues} />
+      <ScanIssues issues={issues} error={error} />
       <Button variant="primary" onClick={() => dispatch(goToPage("scanOperation"))}>
         Back
       </Button>

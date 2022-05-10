@@ -3,7 +3,7 @@ import Badge from "react-bootstrap/Badge";
 import ListGroup from "react-bootstrap/ListGroup";
 import { ExclamationCircle, Check } from "@xliic/web-icons";
 
-function ScanIssues({ issues }: { issues: any }) {
+function ScanIssues({ issues, error }: { issues: any; error: any }) {
   const sorted = issues
     ? [...issues].sort((a: any, b: any) => (a.status === "unexpected" ? -1 : 1))
     : [];
@@ -11,7 +11,7 @@ function ScanIssues({ issues }: { issues: any }) {
   return (
     <>
       {issues && sorted.map((issue: any, index: number) => <ScanIssue issue={issue} key={index} />)}
-      {issues === undefined && <p>scan failed</p>}
+      {issues === undefined && <p>scan failed: {error}</p>}
     </>
   );
 }
@@ -21,7 +21,9 @@ function ScanIssue({ issue }: { issue: any }) {
     <Card style={{ margin: "1em" }}>
       <Card.Body>
         <Card.Title>
-          {issue.responseHttpStatusCode} {issue.injectionDescription}{" "}
+          {issue.status === "unexpected" ? "Unexpected response " : "Expected response "}
+          {issue.responseHttpStatusCode}
+          {": "} {issue.injectionDescription}{" "}
           {issue.status === "unexpected" && (
             <Badge bg="warning">
               <ExclamationCircle />
