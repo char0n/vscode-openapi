@@ -22,6 +22,7 @@ import { ScanWebView } from "./scan/view";
 import { DataDictionaryWebView } from "./data-dictionary/view";
 import { DataDictionaryCompletionProvider } from "./data-dictionary/completion";
 import { DataDictionaryCodeActions } from "./data-dictionary/code-actions";
+import { TryItCodelensProvider } from "./scan/codelens";
 
 export async function activate(
   context: vscode.ExtensionContext,
@@ -146,4 +147,9 @@ export async function activate(
     ],
     new CodelensProvider(store)
   );
+
+  const tryItCodeLensProvider = new TryItCodelensProvider(cache);
+  for (const selector of Object.values(selectors)) {
+    vscode.languages.registerCodeLensProvider(selector, tryItCodeLensProvider);
+  }
 }

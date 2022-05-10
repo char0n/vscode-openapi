@@ -253,6 +253,17 @@ export interface OasLicense {
 
 export type HttpMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
 
+export const HttpMethods: HttpMethod[] = [
+  "get",
+  "put",
+  "post",
+  "delete",
+  "options",
+  "head",
+  "patch",
+  "trace",
+];
+
 export type OasHeader = Omit<OasParameter, "in" | "name">;
 
 export type OasParameterLocation = "query" | "header" | "path" | "cookie";
@@ -345,4 +356,17 @@ export function mergeParameters(
   }
 
   return result;
+}
+
+export function getOperations(oas: BundledOpenApiSpec): [string, HttpMethod, OasOperation][] {
+  const operations: [string, HttpMethod, OasOperation][] = [];
+  for (const path of Object.keys(oas.paths)) {
+    for (const method of Object.keys(oas.paths[path])) {
+      if (HttpMethods.includes(method as HttpMethod)) {
+        const operation = getOperation(oas, path, method as HttpMethod)!;
+        operations.push([path, method as HttpMethod, operation]);
+      }
+    }
+  }
+  return operations;
 }

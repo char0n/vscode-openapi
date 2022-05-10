@@ -232,7 +232,7 @@ async function generateScanConfiguration(
     cwd: "/Users/anton/crunch/platform/src/daemon/scand",
   });
   terminal.sendText(
-    "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -default-configuration -oasfile test.json"
+    "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -cli -default-configuration -oasFile test.json -reportFile report.json -configurationFile debug_configuration.json"
   );
   terminal.show();
 
