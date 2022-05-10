@@ -1,0 +1,32 @@
+import styled from "styled-components";
+import Button from "react-bootstrap/Button";
+
+import { useAppDispatch } from "../store/hooks";
+import { goToPage } from "../store/oasSlice";
+import ScanIssues from "./ScanIssues";
+import { HttpMethod } from "@xliic/common/oas30";
+
+export default function ScanReport({
+  scanReport,
+  path,
+  method,
+}: {
+  scanReport: any;
+  path: string;
+  method: HttpMethod;
+}) {
+  const dispatch = useAppDispatch();
+
+  const issues = scanReport.paths[path][method]["issues"];
+
+  return (
+    <Container>
+      <ScanIssues issues={issues} />
+      <Button variant="primary" onClick={() => dispatch(goToPage("scanOperation"))}>
+        Back
+      </Button>
+    </Container>
+  );
+}
+
+const Container = styled.div``;

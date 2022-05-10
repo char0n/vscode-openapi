@@ -48,7 +48,14 @@ type TryOperation = { command: "tryOperation"; payload: ShowPayload };
 type CurlOperation = { command: "curlOperation"; payload: ShowPayload };
 type ShowResponse = { command: "showResponse"; payload: HttpResponsePayload };
 type ShowError = { command: "showError"; payload: HttpErrorPayload };
-type ScanRequests = ScanOperation | TryOperation | CurlOperation | ShowResponse | ShowError;
+type ShowScanReport = { command: "showScanReport"; payload: any };
+type ScanRequests =
+  | ScanOperation
+  | TryOperation
+  | CurlOperation
+  | ShowResponse
+  | ShowError
+  | ShowScanReport;
 
 // responses sent from web app to the vs code extension
 type UpdateScanConfig = { command: "updateScanConfig"; payload: UpdateScanConfigPayload };

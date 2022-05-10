@@ -23,6 +23,8 @@ import {
 type PageName =
   | "loading"
   | "scanOperation"
+  | "scanConfiguration"
+  | "scanReport"
   | "tryOperation"
   | "curlOperation"
   | "response"
@@ -38,6 +40,7 @@ export interface OasState {
   requestBody?: OasRequestBody;
   response?: HttpResponsePayload;
   error?: HttpErrorPayload;
+  scanReport: any;
 }
 
 const initialState: OasState = {
@@ -64,6 +67,7 @@ const initialState: OasState = {
   },
   response: undefined,
   error: undefined,
+  scanReport: undefined,
 };
 
 export const parametersSlice = createSlice({
@@ -121,6 +125,11 @@ export const parametersSlice = createSlice({
       state.config = config;
     },
 
+    showScanReport: (state, action: PayloadAction<any>) => {
+      state.page = "scanReport";
+      state.scanReport = action.payload;
+    },
+
     showResponse: (state, action: PayloadAction<HttpResponsePayload>) => {
       state.page = "response";
       state.response = action.payload;
@@ -152,6 +161,7 @@ export const {
   sendRequest,
   sendRequestCurl,
   updateScanConfig,
+  showScanReport,
 } = parametersSlice.actions;
 
 export default parametersSlice.reducer;

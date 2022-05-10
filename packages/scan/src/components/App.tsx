@@ -8,6 +8,7 @@ import BarChart from "./BarChart";
 import ScanOperation from "./ScanOperation";
 import TryOperation from "./TryOperation";
 import CurlOperation from "./CurlOperation";
+import ScanReport from "./ScanReport";
 
 type Data = {
   label: string;
@@ -22,7 +23,7 @@ const data: Data[] = [
 
 function App() {
   const theme = useAppSelector((state) => state.theme);
-  const { parameters, requestBody, path, method, oas, config, page, response, error } =
+  const { parameters, requestBody, path, method, oas, config, page, response, error, scanReport } =
     useAppSelector((state) => state.oas);
 
   return (
@@ -62,6 +63,10 @@ function App() {
             method={method!}
           />
         )}
+        {page === "scanReport" && (
+          <ScanReport scanReport={scanReport} path={path!} method={method!} />
+        )}
+
         {page === "response" && <Response response={response!} />}
         {page === "error" && <Error error={error!} />}
       </Container>

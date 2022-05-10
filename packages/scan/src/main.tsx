@@ -15,6 +15,7 @@ import {
   scanOperation,
   tryOperation,
   curlOperation,
+  showScanReport,
 } from "./store/oasSlice";
 import createListener from "./store/listener";
 import { HostApplication } from "./types";
@@ -30,6 +31,7 @@ const requestHandlers: Record<WebAppRequest["command"], Function> = {
   curlOperation,
   showResponse,
   showError,
+  showScanReport,
 };
 
 function renderWebView(host: HostApplication, theme: ThemeState) {

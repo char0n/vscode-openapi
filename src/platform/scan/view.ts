@@ -19,7 +19,7 @@ import {
 
 import { ScandConfiguration } from "@xliic/common";
 
-import { readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 
 import { find } from "@xliic/common/jsonpointer";
 
@@ -124,7 +124,7 @@ async function sendRequest(payload: HttpRequestPayload): Promise<ScanRequests> {
   }
 }
 
-async function updateScanConfig(payload: UpdateScanConfigPayload) {
+async function updateScanConfig(payload: UpdateScanConfigPayload): Promise<ScanRequests | void> {
   const debugConfiguration = {};
 
   const configFile = "/Users/anton/crunch/platform/src/daemon/scand/debug_configuration.json";
@@ -144,11 +144,56 @@ async function updateScanConfig(payload: UpdateScanConfigPayload) {
     "request",
   ]) as ScandConfiguration;
 
-  config.requestBody = payload.config.requestBody;
+  config.requestBody = JSON.parse(payload.config.requestBody as string);
+  config.host = payload.config.host;
+  parsedConfig.host = payload.config.host;
 
   console.log("scan config", config);
 
   const updatedConfigFile =
     "/Users/anton/crunch/platform/src/daemon/scand/updated_configuration.json";
   writeFileSync(updatedConfigFile, JSON.stringify(parsedConfig, null, 2));
+
+  const reportFile = "/Users/anton/crunch/platform/src/daemon/scand/report.json";
+
+  if (existsSync(reportFile)) {
+    unlinkSync(reportFile);
+  }
+
+  const terminal = vscode.window.createTerminal({
+    cwd: "/Users/anton/crunch/platform/src/daemon/scand",
+  });
+  terminal.sendText(
+    "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -cli -configurationFile updated_configuration.json  -oasFile test.json -reportFile report.json"
+  );
+  terminal.show();
+
+  const configuration = await readWhenExists(reportFile, 30);
+  if (configuration === undefined) {
+    return;
+  }
+
+  const reportData = readFileSync(reportFile, { encoding: "utf8" });
+
+  return {
+    command: "showScanReport",
+    payload: JSON.parse(reportData),
+  };
+}
+
+async function readWhenExists(filename: string, maxDelay: number): Promise<string | undefined> {
+  let currentDelay = 0;
+  while (currentDelay < maxDelay) {
+    if (existsSync(filename)) {
+      return readFileSync(filename, { encoding: "utf8" });
+    }
+    console.log("Waiting for", filename, "to become available");
+    await delay(1000);
+  }
+  console.log("Failed to read", filename);
+  return undefined;
+}
+
+async function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

@@ -18,6 +18,8 @@
       window.addEventListener("DOMContentLoaded", async (event) => {
         const oas = await (await fetch("/sample-oas.json")).json();
         const sampleConfig = await (await fetch("/sample-config.json")).json();
+        const sampleReport = await (await fetch("/sample-report.json")).json();
+
         const configFoo =
           sampleConfig["playbook"]["paths"]["/api/register/{foo}/{bar}"]["post"]["happyPaths"][0][
             "requests"
@@ -43,6 +45,12 @@
         window.renderWebView(host, { kind: "light" });
 
         window.postMessage({
+          command: "showScanReport",
+          payload: sampleReport,
+        });
+
+        /*,
+        window.postMessage({
           command: "show",
           payload: {
             oas,
@@ -51,6 +59,7 @@
             config,
           },
         });
+        */
 
         /*
         window.postMessage({

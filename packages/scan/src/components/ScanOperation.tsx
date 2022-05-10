@@ -46,7 +46,7 @@ export default function ScanOperation({
         path={path}
         method={method}
         onSubmit={scan}
-        buttonText="Update Scan Configuration"
+        buttonText="Run Scan"
       />
     </>
   );
