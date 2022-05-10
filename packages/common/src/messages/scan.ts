@@ -36,6 +36,12 @@ export interface HttpErrorPayload {
   message: string;
 }
 
+export interface UpdateScanConfigPayload {
+  path: string;
+  method: HttpMethod;
+  config: ScanConfig;
+}
+
 // requests to scan web app
 type ScanOperation = { command: "scanOperation"; payload: ShowPayload };
 type TryOperation = { command: "tryOperation"; payload: ShowPayload };
@@ -45,8 +51,9 @@ type ShowError = { command: "showError"; payload: HttpErrorPayload };
 type ScanRequests = ScanOperation | TryOperation | CurlOperation | ShowResponse | ShowError;
 
 // responses sent from web app to the vs code extension
+type UpdateScanConfig = { command: "updateScanConfig"; payload: UpdateScanConfigPayload };
 type SendHttpRequest = { command: "sendRequest"; payload: HttpRequestPayload };
 type SendCurl = { command: "sendCurl"; payload: CurlPayload };
-type ScanResponses = SendHttpRequest | SendCurl;
+type ScanResponses = SendHttpRequest | SendCurl | UpdateScanConfig;
 
 export type { ScanRequests, ScanResponses };

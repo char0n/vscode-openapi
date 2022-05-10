@@ -8,7 +8,6 @@ import { ScandConfiguration } from "@xliic/common";
 
 import { Cache } from "../../cache";
 import { writeFileSync, unlinkSync, existsSync, readFileSync } from "fs";
-import { BundleResult, OpenApiVersion } from "../../types";
 import { ScanWebView } from "./view";
 import { Node } from "../../outline";
 

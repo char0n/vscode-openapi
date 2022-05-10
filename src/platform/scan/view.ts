@@ -4,7 +4,7 @@
 */
 
 import * as vscode from "vscode";
-import got, { Method, OptionsOfJSONResponseBody, RequestError } from "got";
+import got, { RequestError } from "got";
 import { WebView } from "../web-view";
 
 import {
@@ -13,7 +13,15 @@ import {
   ShowPayload,
   CurlPayload,
   HttpRequestPayload,
+  ScanConfig,
+  UpdateScanConfigPayload,
 } from "@xliic/common/messages/scan";
+
+import { ScandConfiguration } from "@xliic/common";
+
+import { readFileSync, writeFileSync } from "fs";
+
+import { find } from "@xliic/common/jsonpointer";
 
 export class ScanWebView extends WebView {
   private panel?: vscode.WebviewPanel;
@@ -63,6 +71,7 @@ const requestHandlers: Record<
 > = {
   sendRequest,
   sendCurl,
+  updateScanConfig,
 };
 
 async function sendCurl(payload: CurlPayload) {
@@ -113,4 +122,33 @@ async function sendRequest(payload: HttpRequestPayload): Promise<ScanRequests> {
       },
     };
   }
+}
+
+async function updateScanConfig(payload: UpdateScanConfigPayload) {
+  const debugConfiguration = {};
+
+  const configFile = "/Users/anton/crunch/platform/src/daemon/scand/debug_configuration.json";
+  const data = readFileSync(configFile, { encoding: "utf8" });
+  const parsedConfig = JSON.parse(data);
+
+  const config = find(parsedConfig, [
+    "playbook",
+    "paths",
+    payload.path,
+    payload.method,
+    "happyPaths",
+    "0",
+    "requests",
+    "0",
+    "request",
+    "request",
+  ]) as ScandConfiguration;
+
+  config.requestBody = payload.config.requestBody;
+
+  console.log("scan config", config);
+
+  const updatedConfigFile =
+    "/Users/anton/crunch/platform/src/daemon/scand/updated_configuration.json";
+  writeFileSync(updatedConfigFile, JSON.stringify(parsedConfig, null, 2));
 }

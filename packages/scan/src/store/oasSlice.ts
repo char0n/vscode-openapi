@@ -17,6 +17,7 @@ import {
   HttpErrorPayload,
   ScanConfig,
   ShowPayload,
+  UpdateScanConfigPayload,
 } from "@xliic/common/messages/scan";
 
 type PageName =
@@ -137,6 +138,7 @@ export const parametersSlice = createSlice({
     // for listeners
     sendRequest: (state, action: PayloadAction<HttpRequestPayload>) => {},
     sendRequestCurl: (state, action: PayloadAction<CurlPayload>) => {},
+    updateScanConfig: (state, action: PayloadAction<UpdateScanConfigPayload>) => {},
   },
 });
 
@@ -149,6 +151,7 @@ export const {
   goToPage,
   sendRequest,
   sendRequestCurl,
+  updateScanConfig,
 } = parametersSlice.actions;
 
 export default parametersSlice.reducer;
