@@ -65,7 +65,7 @@ function makeHttpRequest(
   const url = makeUrl(data.host, path, data?.parameters?.path);
 
   const headers = {
-    "content-type": "application/javascript",
+    "content-type": "application/json",
     ...data?.parameters?.header,
   };
 

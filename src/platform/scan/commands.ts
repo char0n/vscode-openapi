@@ -1,5 +1,13 @@
 import * as vscode from "vscode";
 
+import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
+
+import { mkdtemp, mkdir } from "fs/promises";
+import { join } from "path";
+import { tmpdir } from "os";
+
 import { parseJsonPointer, Path, simpleClone } from "@xliic/preserving-json-yaml-parser";
 import { HttpMethod, BundledOpenApiSpec } from "@xliic/common/oas30";
 import { find } from "@xliic/common/jsonpointer";
@@ -115,7 +123,7 @@ export default (cache: Cache, scanView: ScanWebView) => ({
 
   async runScan(token: string): Promise<void> {
     // TODO use own?
-    token = "c7046e71-2b41-409e-b161-4f482977a713";
+    token = "";
     const terminal = vscode.window.createTerminal({
       message: "running the scan",
       name: "scan",
@@ -219,19 +227,22 @@ async function generateScanConfiguration(
   path: string,
   oas: BundledOpenApiSpec
 ): Promise<ScandConfiguration | undefined> {
-  const json = JSON.stringify(oas, null, 2);
-  writeFileSync("/Users/anton/crunch/platform/src/daemon/scand/test.json", json);
+  const tmpdir = await createTempDirectory();
 
-  const configFile = "/Users/anton/crunch/platform/src/daemon/scand/debug_configuration.json";
+  const json = JSON.stringify(oas, null, 2);
+  writeFileSync(`${tmpdir}/test.json`, json);
+
+  const configFile = `${tmpdir}/debug_configuration.json`;
   if (existsSync(configFile)) {
     unlinkSync(configFile);
   }
 
   const terminal = vscode.window.createTerminal({
-    cwd: "/Users/anton/crunch/platform/src/daemon/scand",
+    cwd: tmpdir,
   });
+
   terminal.sendText(
-    "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -cli -default-configuration -oasFile test.json -reportFile report.json -configurationFile debug_configuration.json"
+    `docker run --rm -it -w /tmpdir  -v ${tmpdir}:/tmpdir ak1394/scand -cli -default-configuration -oasFile test.json -reportFile report.json -configurationFile debug_configuration.json`
   );
   terminal.show();
 
@@ -271,4 +282,13 @@ function extractSingleOperation(method: HttpMethod, path: string, oas: any): Bun
   copyByPointer(oas, cloned, Array.from(visited));
   return cloned as BundledOpenApiSpec;
   //console.log("cloned", cloned, getPath(spec, ""));
+}
+
+async function createTempDirectory(): Promise<string> {
+  if (!existsSync("/tmp/scan")) {
+    await mkdir("/tmp/scan");
+  }
+  return "/tmp/scan";
+
+  //return mkdtemp(join(tmpdir(), "scan-"));
 }

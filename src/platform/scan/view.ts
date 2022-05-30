@@ -90,7 +90,6 @@ async function sendRequest(payload: HttpRequestPayload): Promise<ScanRequests> {
       method,
       body,
       headers: {
-        "content-type": "application/json",
         ...headers,
       },
     });
@@ -127,7 +126,7 @@ async function sendRequest(payload: HttpRequestPayload): Promise<ScanRequests> {
 async function updateScanConfig(payload: UpdateScanConfigPayload): Promise<ScanRequests | void> {
   const debugConfiguration = {};
 
-  const configFile = "/Users/anton/crunch/platform/src/daemon/scand/debug_configuration.json";
+  const configFile = "/tmp/scan/debug_configuration.json";
   const data = readFileSync(configFile, { encoding: "utf8" });
   const parsedConfig = JSON.parse(data);
 
@@ -150,21 +149,20 @@ async function updateScanConfig(payload: UpdateScanConfigPayload): Promise<ScanR
 
   console.log("scan config", config);
 
-  const updatedConfigFile =
-    "/Users/anton/crunch/platform/src/daemon/scand/updated_configuration.json";
+  const updatedConfigFile = "/tmp/scan/updated_configuration.json";
   writeFileSync(updatedConfigFile, JSON.stringify(parsedConfig, null, 2));
 
-  const reportFile = "/Users/anton/crunch/platform/src/daemon/scand/report.json";
+  const reportFile = "/tmp/scan/report.json";
 
   if (existsSync(reportFile)) {
     unlinkSync(reportFile);
   }
 
   const terminal = vscode.window.createTerminal({
-    cwd: "/Users/anton/crunch/platform/src/daemon/scand",
+    cwd: "/tmp/scan",
   });
   terminal.sendText(
-    "docker run --rm -it -w /asio/src/daemon/scand  -v /Users/anton/crunch/platform:/asio  platform-dev ./scand -cli -configurationFile updated_configuration.json  -oasFile test.json -reportFile report.json"
+    "docker run --rm -it -w /tmpdir  -v /tmp/scan:/tmpdir ak1394/scand -cli -configurationFile updated_configuration.json  -oasFile test.json -reportFile report.json"
   );
   terminal.show();
 

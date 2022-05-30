@@ -34,7 +34,14 @@ function ScanIssue({ issue }: { issue: any }) {
       <ListGroup variant="flush">
         <ListGroup.Item>
           <div>
-            <code>{issue.curl}</code>
+            <code style={{ lineBreak: "anywhere", whiteSpace: "pre-line" }}>{issue.curl}</code>
+          </div>
+        </ListGroup.Item>
+        <ListGroup.Item>
+          <div>
+            <code style={{ lineBreak: "anywhere", whiteSpace: "pre-line" }}>
+              {atob(issue.responseHttp)}
+            </code>
           </div>
         </ListGroup.Item>
       </ListGroup>

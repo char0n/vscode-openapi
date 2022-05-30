@@ -78,7 +78,7 @@ function makeCurlRequest(method: HttpMethod, path: string, data: RequestFormData
   const curl = makeCurl(method, url, escape);
   const headers = makeHeaders(data?.parameters?.header ?? {}, escape).join(" ");
   const body = makeBody(data.requestBody!, escape);
-  return `${curl} ${headers} ${body}`;
+  return `${curl} -H 'Content-Type: application/json' ${headers} ${body}`;
 }
 
 // FIXME -H This option only changes the actual word used in the HTTP request, it does not alter the way curl behaves.
