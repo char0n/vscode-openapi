@@ -15,3 +15,4 @@ out/test/**
 .prettierrc.yaml
 scripts/**
 snippets/**
+packages/**
