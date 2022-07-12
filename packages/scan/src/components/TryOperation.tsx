@@ -27,7 +27,7 @@ export default function TryOperation() {
         method={method!}
         defaultValues={wrapFormDefaults(defaultValues!)}
         onSubmit={tryOperation}
-        buttonText="Try It"
+        buttonText="Send"
       />
     </>
   );

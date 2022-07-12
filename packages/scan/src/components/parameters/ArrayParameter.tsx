@@ -26,8 +26,6 @@ export default function ArrayParameter({
     name,
   });
 
-  console.log("fileds", fields);
-
   return (
     <>
       {fields.map((field, index) => (

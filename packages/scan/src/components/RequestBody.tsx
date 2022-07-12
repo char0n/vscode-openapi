@@ -4,7 +4,6 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 
 import type { BundledOpenApiSpec, OasRequestBody } from "@xliic/common/oas30";
 
-import Section from "./Section";
 import { useEffect, useState } from "react";
 import { generateBody } from "../util";
 
@@ -58,7 +57,6 @@ export default function RequestBody({
 
   return (
     <>
-      <Section>request body</Section>
       <FloatingLabel className="m-1" label="media type">
         <Form.Select
           onChange={bodyMediaType.onChange}

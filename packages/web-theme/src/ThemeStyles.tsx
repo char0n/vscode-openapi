@@ -13,6 +13,7 @@ export default function ThemeStyles({ theme }: { theme: ThemeState }) {
 
   const style = `:root { ${vars.join("\n")} }
 	 body {
+     padding: 0;
 	   background-color: var(--xliic-background);
 	   color: var(--xliic-foreground);
 	   }

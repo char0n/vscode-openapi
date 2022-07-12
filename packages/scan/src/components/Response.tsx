@@ -10,6 +10,7 @@ export default function Response() {
 
   const response = useAppSelector((state) => state.oas.response!);
 
+  // FIXME handle non-json responses
   return (
     <Container>
       <p>
