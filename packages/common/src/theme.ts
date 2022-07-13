@@ -1,0 +1,22 @@
+export const ThemeColors: Record<string, string> = {
+  foreground: "--xliic-foreground",
+  background: "--xliic-background",
+  border: "--xliic-border",
+  buttonBorder: "--xliic-buttonBorder",
+  buttonBackground: "--xliic-buttonBackground",
+  buttonForeground: "--xliic-buttonForeground",
+  buttonHoverBackground: "--xliic-buttonHoverBackground",
+  buttonSecondaryBackground: "--xliic-buttonSecondaryBackground",
+  buttonSecondaryForeground: "--xliic-buttonSecondaryForeground",
+  buttonSecondaryHoverBackground: "--xliic-buttonSecondaryHoverBackground",
+  inputBackground: "--xliic-inputBackground",
+  inputForeground: "--xliic-inputForeground",
+  inputBorder: "--xliic-inputBorder",
+  tabBorder: "--xliic-tabBorder",
+  tabActiveBackground: "--xliic-tabActiveBackground",
+  tabActiveForeground: "--xliic-tabActiveForeground",
+  tabInactiveBackground: "--xliic-tabInactiveBackground",
+  tabInactiveForeground: "--xliic-tabInactiveForeground",
+} as const;
+
+export type VsCodeColorMap = Record<keyof typeof ThemeColors, string>;

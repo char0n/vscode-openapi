@@ -6,6 +6,7 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import { Message } from "@xliic/common/message";
+import { VsCodeColorMap } from "@xliic/common/theme";
 
 export abstract class WebView<Request extends Message, Response extends Message> {
   private style: vscode.Uri;
@@ -108,36 +109,7 @@ export abstract class WebView<Request extends Message, Response extends Message>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link href="${style}" rel="stylesheet">
       <style>
-        :root {
-          --xliic-foreground: var(
-            --xliic-custom-foreground,
-            var(--vscode-editor-foreground)
-          );
-          --xliic-background: var(
-            --xliic-custom-background,
-            var(--vscode-editor-background)
-          );
-          --xliic-button-background: var(
-            --xliic-custom-button-background,
-            var(--vscode-button-background)
-          );
-          --xliic-button-foreground: var(
-            --xliic-custom-button-foreground,
-            var(--vscode-button-foreground)
-          );
-          --xliic-button-hoverBackground: var(
-            --xliic-custom-button-hoverBackground,
-            var(--vscode-button-hoverBackground)
-          );
-        }
-        #root .btn-primary {
-          --bs-btn-bg: var(--xliic-button-background);
-          --bs-btn-hover-bg: var(--xliic-button-hoverBackground);
-          --bs-btn-color: var(--xliic-button-foreground);
-          --bs-btn-hover-color: var(--xliic-button-foreground);
-          --bs-btn-border-color: var(--xliic-button-background);
-          --bs-btn-hover-border-color: var(--xliic-button-hoverBackground);
-        }
+        ${customCssProperties()}
       </style>
     </head>
     <body>
@@ -153,4 +125,39 @@ export abstract class WebView<Request extends Message, Response extends Message>
     </body>
     </html>`;
   }
+}
+
+function customCssProperties(): string {
+  const vscodeColorMap: VsCodeColorMap = {
+    foreground: "--vscode-foreground",
+    background: "--vscode-editor-background",
+    border: "--vscode-editorGroup-border",
+    buttonBorder: "--vscode-button-border",
+    buttonBackground: "--vscode-button-background",
+    buttonForeground: "--vscode-button-foreground",
+    buttonHoverBackground: "--vscode-button-hoverBackground",
+    buttonSecondaryBackground: "--vscode-button-secondaryBackground",
+    buttonSecondaryForeground: "--vscode-button-secondaryForeground",
+    buttonSecondaryHoverBackground: "--vscode-button-secondaryHoverBackground",
+    inputBackground: "--vscode-input-background",
+    inputForeground: "--vscode-input-foreground",
+    inputBorder: "--vscode-input-border",
+    tabBorder: "--vscode-tab-border",
+    tabActiveBackground: "--vscode-tab-activeBackground",
+    tabActiveForeground: "--vscode-tab-activeForeground",
+    tabInactiveBackground: "--vscode-tab-inactiveBackground",
+    tabInactiveForeground: "--vscode-tab-inactiveForeground",
+  };
+
+  const props = Object.entries(vscodeColorMap)
+    .map(([name, vscode]) => {
+      return createColorProperty(name, vscode);
+    })
+    .join("\n");
+
+  return `:root { ${props} }`;
+}
+
+function createColorProperty(name: string, vscode: string): string {
+  return `--xliic-${name}: var(--xliic-custom-${name}, var(${vscode}));`;
 }
