@@ -31,10 +31,10 @@ export default function ArrayParameter({
       {fields.map((field, index) => (
         <Field key={field.id} className="m-1">
           <Parameter name={`${name}.${index}.value`} parameter={parameter} schema={schema} />
-          <Button className="m-1" variant="light" onClick={() => insert(index + 1, { value: "" })}>
+          <Button className="m-1" onClick={() => insert(index + 1, { value: "" })}>
             +
           </Button>
-          <Button className="m-1" variant="light" onClick={() => remove(index)}>
+          <Button className="m-1" onClick={() => remove(index)}>
             -
           </Button>
         </Field>
