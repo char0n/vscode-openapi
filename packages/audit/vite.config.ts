@@ -5,6 +5,9 @@ import svgrPlugin from "vite-plugin-svgr";
 
 export default defineConfig({
   plugins: [react(), svgrPlugin({ svgrOptions: { icon: true } })],
+  optimizeDeps: {
+    include: ["react/jsx-runtime"],
+  },
   build: {
     minify: true,
     lib: {
