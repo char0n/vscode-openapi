@@ -15,7 +15,7 @@ function defaultStyles(): string {
   return `
   body {
     padding: 0;
-    margin: 0;
+    margin: 4px;
     background-color: var(--xliic-background);
     color: var(--xliic-foreground);
     }`;
