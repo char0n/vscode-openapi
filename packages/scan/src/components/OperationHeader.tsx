@@ -18,9 +18,7 @@ export default function OperationHeader({
     <Container>
       <Operation>
         <Method>{method.toUpperCase()}</Method>
-        <Path>
-          <code>{path}</code>
-        </Path>
+        <Path>{path}</Path>
       </Operation>
       <Submit variant="primary" className="m-1" onClick={onSubmit}>
         {buttonText}
@@ -32,6 +30,7 @@ export default function OperationHeader({
 const Submit = styled(Button)``;
 
 const Path = styled.div`
+  font-familiy: monospace;
   padding: 0.5rem;
 `;
 
