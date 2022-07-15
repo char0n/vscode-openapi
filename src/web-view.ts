@@ -85,11 +85,19 @@ export abstract class WebView<Request extends Message, Response extends Message>
       }
     );
 
-    panel.webview.html = this.getHtml(
-      panel.webview.cspSource,
-      panel.webview.asWebviewUri(this.script),
-      panel.webview.asWebviewUri(this.style)
-    );
+    if (process.env["XLIIC_WEB_VIEW_DEV_MODE"] === "true") {
+      panel.webview.html = this.getDevHtml(
+        panel.webview.cspSource,
+        panel.webview.asWebviewUri(this.script),
+        panel.webview.asWebviewUri(this.style)
+      );
+    } else {
+      panel.webview.html = this.getHtml(
+        panel.webview.cspSource,
+        panel.webview.asWebviewUri(this.script),
+        panel.webview.asWebviewUri(this.style)
+      );
+    }
 
     return new Promise((resolve, reject) => {
       panel.webview.onDidReceiveMessage((message: any) => {
@@ -98,6 +106,40 @@ export abstract class WebView<Request extends Message, Response extends Message>
         }
       });
     });
+  }
+
+  private getDevHtml(cspSource: string, script: vscode.Uri, style: vscode.Uri): string {
+    return `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="Content-Security-Policy"  content="default-src 'none';  img-src ${cspSource} https: data:; script-src ${cspSource} http://localhost:3000/ 'unsafe-inline'; style-src ${cspSource} http://localhost:3000/ 'unsafe-inline'; connect-src http: https: ws:">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <base href="http://localhost:3000/">
+      <script type="module" src="/@vite/client"></script>
+      <script type="module">
+      import RefreshRuntime from "/@react-refresh"
+      RefreshRuntime.injectIntoGlobalHook(window)
+      window.$RefreshReg$ = () => {}
+      window.$RefreshSig$ = () => (type) => type
+      window.__vite_plugin_react_preamble_installed__ = true
+      </script>
+      <style>
+        ${customCssProperties()}
+      </style>
+    </head>
+    <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx?t=${Date.now()}"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", (event) => {
+        const vscode = acquireVsCodeApi();
+        window.renderWebView(vscode);
+        vscode.postMessage({command: "started"});
+      });
+    </script>
+    </body>
+    </html>`;
   }
 
   private getHtml(cspSource: string, script: vscode.Uri, style: vscode.Uri): string {
