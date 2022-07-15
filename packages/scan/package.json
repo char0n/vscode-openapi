@@ -7,6 +7,7 @@
     "build": "tsc -b && vite build"
   },
   "devDependencies": {
+    "@radix-ui/react-tabs": "^0.2.0-rc.23",
     "@reduxjs/toolkit": "^1.8.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",

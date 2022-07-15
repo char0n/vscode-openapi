@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import Form from "react-bootstrap/Form";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
+import Button from "react-bootstrap/Button";
+
+import * as Tabs from "@radix-ui/react-tabs";
+
 import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
@@ -14,6 +16,7 @@ import { deref } from "@xliic/common/jsonpointer";
 import { getParameters } from "../util";
 import OperationHeader from "./OperationHeader";
 import ParameterGroup from "./parameters/ParameterGroup";
+import { ThemeColors } from "@xliic/common/theme";
 
 function Operation({
   oas,
@@ -56,33 +59,40 @@ function Operation({
             buttonText={buttonText}
           />
           <Servers name="server" servers={oas?.servers} />
-          <Tabs className="m-1">
+          <Tabs.Root defaultValue="body">
+            <Tabs.List>
+              {requestBody !== undefined && <TabButton value="body">Body</TabButton>}
+              {hasParameters(parameters.path) && <TabButton value="path">Path</TabButton>}
+              {hasParameters(parameters.query) && <TabButton value="query">Query</TabButton>}
+              {hasParameters(parameters.header) && <TabButton value="header">Header</TabButton>}
+              {hasParameters(parameters.cookie) && <TabButton value="cookie">Cookie</TabButton>}
+            </Tabs.List>
             {requestBody !== undefined && (
-              <Tab eventKey="body" title="Body">
+              <Tabs.Content value="body">
                 <RequestBody oas={oas} requestBody={requestBody} />
-              </Tab>
+              </Tabs.Content>
             )}
             {hasParameters(parameters.path) && (
-              <Tab eventKey="path" title="Path">
+              <Tabs.Content value="path">
                 <ParameterGroup oas={oas} group={parameters.path} />
-              </Tab>
+              </Tabs.Content>
             )}
             {hasParameters(parameters.query) && (
-              <Tab eventKey="query" title="Query">
+              <Tabs.Content value="query">
                 <ParameterGroup oas={oas} group={parameters.query} />
-              </Tab>
+              </Tabs.Content>
             )}
             {hasParameters(parameters.header) && (
-              <Tab eventKey="header" title="Header">
+              <Tabs.Content value="header">
                 <ParameterGroup oas={oas} group={parameters.header} />
-              </Tab>
+              </Tabs.Content>
             )}
             {hasParameters(parameters.cookie) && (
-              <Tab eventKey="cookie" title="Cookie">
+              <Tabs.Content value="cookie">
                 <ParameterGroup oas={oas} group={parameters.cookie} />
-              </Tab>
+              </Tabs.Content>
             )}
-          </Tabs>
+          </Tabs.Root>
         </Form>
       </FormProvider>
     </Container>
@@ -94,5 +104,17 @@ function hasParameters(parameters?: Record<string, unknown>) {
 }
 
 const Container = styled.div``;
+
+const TabButton = styled(Tabs.Trigger).attrs({
+  className: "btn m-1",
+})`
+  border: 1px solid var(${ThemeColors.tabBorder});
+  color: var(${ThemeColors.tabInactiveForeground});
+  background-color: var(${ThemeColors.tabInactiveBackground});
+  &[data-state="active"] {
+    color: var(${ThemeColors.tabActiveForeground});
+    background-color: var(${ThemeColors.tabActiveBackground});
+  }
+`;
 
 export default Operation;
