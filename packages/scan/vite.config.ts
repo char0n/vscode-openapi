@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import { resolve } from "path";
 import react from "@vitejs/plugin-react";
 import svgrPlugin from "vite-plugin-svgr";
@@ -22,4 +22,5 @@ export default defineConfig({
       host: "localhost",
     },
   },
+  test: {},
 });

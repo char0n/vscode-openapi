@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { WritableDraft } from "immer/dist/internal";
 
 import { BundledOpenApiSpec, getOperation } from "@xliic/common/oas30";
-import { deref } from "@xliic/common/jsonpointer";
 import {
   ScanConfig,
   OasWithOperationAndConfig,
@@ -11,7 +10,8 @@ import {
 } from "@xliic/common/messages/scan";
 import { CurlCommand, OasWithOperation, OperationValues } from "@xliic/common/messages/tryit";
 import { HttpMethod, HttpRequest, HttpResponse } from "@xliic/common/http";
-import { generateBody, generateParameterValues, getParameters } from "../util";
+import { generateParameterValues, getParameters } from "../util";
+import { createDefaultBody } from "../core/form/body";
 
 type PageName = "loading" | "scanOperation" | "scanReport" | "tryOperation" | "response" | "error";
 
@@ -64,15 +64,12 @@ export const parametersSlice = createSlice({
       const operation = getOperation(oas, path, method);
       const parameters = getParameters(oas, path, method);
       const parameterValues = generateParameterValues(parameters);
-      const defaultMediaType = "application/json";
+      const body = createDefaultBody(oas, operation);
 
       state.defaultValues = {
         server: oas.servers?.[0].url || "",
         parameters: parameterValues,
-        body: {
-          mediaType: defaultMediaType,
-          value: generateBody(oas, deref(oas, operation?.requestBody), defaultMediaType),
-        },
+        body,
       };
       goTo(state, "tryOperation");
     },

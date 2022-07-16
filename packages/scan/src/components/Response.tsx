@@ -10,7 +10,7 @@ export default function Response() {
 
   const response = useAppSelector((state) => state.oas.response!);
 
-  // FIXME handle non-json responses
+  //  handle non-json responses
   return (
     <Container>
       <p>
@@ -23,7 +23,8 @@ export default function Response() {
       </p>
       <p>
         <code style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify(JSON.parse(response.body!), null, 2)}
+          {response.body}
+          {/*JSON.stringify(JSON.parse(response.body!), null, 2)*/}
         </code>
       </p>
       <Button variant="primary" onClick={() => dispatch(goBack())}>

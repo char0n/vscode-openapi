@@ -18,6 +18,9 @@ export async function executeHttpRequest(payload: HttpRequest): Promise<TryItReq
       headers: {
         ...headers,
       },
+      https: {
+        rejectUnauthorized: false,
+      },
     });
 
     const responseHeaders: [string, string][] = [];

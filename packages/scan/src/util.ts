@@ -8,12 +8,9 @@ import {
   getOperation,
   getOperationParameters,
   getParametersMap,
-  ResolvedOasParameter,
-  OasParameter,
   OasRequestBody,
 } from "@xliic/common/oas30";
-import { deref } from "@xliic/common/jsonpointer";
-import { OperationBodies, OperationValues, ParameterValues } from "@xliic/common/messages/tryit";
+import { OperationValues, ParameterValues } from "@xliic/common/messages/tryit";
 import { HttpMethod } from "@xliic/common/http";
 
 export function getParameters(
@@ -49,51 +46,6 @@ export function generateParameterValues(parameters: OperationParametersMap): Par
   }
 
   return values;
-}
-
-export function generateDefaultBodies(
-  oas: BundledOpenApiSpec,
-  path: string,
-  method: HttpMethod
-): OperationBodies {
-  const requestBody = deref(oas, getOperation(oas, path, method)?.requestBody);
-  if (!requestBody) {
-    return {};
-  }
-
-  const result: OperationBodies = {};
-  for (const [contentType, body] of Object.entries(requestBody.content)) {
-    if (contentType === "application/json") {
-      const schema = deref(oas, body?.schema);
-      if (schema) {
-        result[contentType] = jsf.generate(schema as any);
-      } else {
-        result[contentType] = "";
-      }
-    } else {
-      result[contentType] = "";
-    }
-  }
-  return result;
-}
-
-export function generateBody(
-  oas: BundledOpenApiSpec,
-  requestBody: OasRequestBody | undefined,
-  mediaType: string
-): unknown {
-  if (!requestBody || !requestBody.content?.[mediaType]) {
-    return;
-  }
-
-  const mto = requestBody.content[mediaType];
-
-  if (mediaType === "application/json") {
-    const schema = deref(oas, mto?.schema);
-    return jsf.generate(schema as any);
-  } else if (mediaType === "text/plain") {
-    return "";
-  }
 }
 
 export function wrapFormDefaults(values: OperationValues): Record<string, any> {

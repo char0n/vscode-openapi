@@ -5,7 +5,7 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import type { BundledOpenApiSpec, OasRequestBody } from "@xliic/common/oas30";
 
 import { useEffect, useState } from "react";
-import { generateBody } from "../util";
+import { createBody } from "../core/form/body";
 
 export default function RequestBody({
   oas,
@@ -41,11 +41,11 @@ export default function RequestBody({
   const bodyMediaTypeValue = useWatch({
     control,
     name: "body.mediaType",
-  });
+  }) as string;
 
   // update body when media type changes
   useEffect(() => {
-    const body = generateBody(oas, requestBody, bodyMediaTypeValue);
+    const body = createBody(oas, bodyMediaTypeValue, requestBody?.content?.[bodyMediaTypeValue]);
     setBodyText(convertDataToForm(bodyMediaTypeValue, body));
   }, [bodyMediaTypeValue]);
 
