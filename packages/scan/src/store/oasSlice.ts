@@ -8,7 +8,7 @@ import {
   ScanConfigForOperation,
   ErrorMessage,
 } from "@xliic/common/messages/scan";
-import { CurlCommand, OasWithOperation, OperationValues } from "@xliic/common/messages/tryit";
+import { CurlCommand, OasWithOperation, TryitOperationValues } from "@xliic/common/messages/tryit";
 import { HttpMethod, HttpRequest, HttpResponse } from "@xliic/common/http";
 import { generateParameterValues, getParameters } from "../util";
 import { createDefaultBody } from "../core/form/body";
@@ -21,7 +21,7 @@ export interface OasState {
   oas: BundledOpenApiSpec;
   path?: string;
   method?: HttpMethod;
-  defaultValues?: OperationValues;
+  defaultValues?: TryitOperationValues;
   config?: ScanConfig;
   response?: HttpResponse;
   error?: ErrorMessage;
@@ -98,7 +98,7 @@ export const parametersSlice = createSlice({
     // for listeners
     sendRequest: (
       state,
-      action: PayloadAction<{ defaultValues: OperationValues; request: HttpRequest }>
+      action: PayloadAction<{ defaultValues: TryitOperationValues; request: HttpRequest }>
     ) => {
       state.defaultValues = action.payload.defaultValues;
     },

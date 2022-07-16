@@ -10,7 +10,7 @@ import {
   getParametersMap,
   OasRequestBody,
 } from "@xliic/common/oas30";
-import { OperationValues, ParameterValues } from "@xliic/common/messages/tryit";
+import { TryitOperationValues, TryitParameterValues } from "@xliic/common/messages/tryit";
 import { HttpMethod } from "@xliic/common/http";
 
 export function getParameters(
@@ -25,8 +25,8 @@ export function getParameters(
   return result;
 }
 
-export function generateParameterValues(parameters: OperationParametersMap): ParameterValues {
-  const values: ParameterValues = {
+export function generateParameterValues(parameters: OperationParametersMap): TryitParameterValues {
+  const values: TryitParameterValues = {
     query: {},
     header: {},
     path: {},
@@ -48,7 +48,7 @@ export function generateParameterValues(parameters: OperationParametersMap): Par
   return values;
 }
 
-export function wrapFormDefaults(values: OperationValues): Record<string, any> {
+export function wrapFormDefaults(values: TryitOperationValues): Record<string, any> {
   const parameters: Record<string, any> = { query: {}, header: {}, path: {}, cookie: {} };
   const locations = Object.keys(values.parameters) as OasParameterLocation[];
   for (const location of locations) {
@@ -68,7 +68,7 @@ export function unwrapFormDefaults(
   oas: BundledOpenApiSpec,
   parameters: OperationParametersMap,
   values: Record<string, any>
-): OperationValues {
+): TryitOperationValues {
   return {
     parameters: unwrapFormParameters(oas, parameters, values.parameters),
     body: values.body,
@@ -80,8 +80,8 @@ export function unwrapFormParameters(
   oas: BundledOpenApiSpec,
   parameters: OperationParametersMap,
   values: Record<string, any>
-): ParameterValues {
-  const result: ParameterValues = { query: {}, header: {}, path: {}, cookie: {} };
+): TryitParameterValues {
+  const result: TryitParameterValues = { query: {}, header: {}, path: {}, cookie: {} };
   const locations = Object.keys(values) as OasParameterLocation[];
   for (const location of locations) {
     for (const name of Object.keys(values[location])) {

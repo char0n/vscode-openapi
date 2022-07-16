@@ -15,18 +15,18 @@ export interface CurlCommand {
   curl: string;
 }
 
-export type ParameterValues = Record<OasParameterLocation, Record<string, unknown>>;
+export type TryitParameterValues = Record<OasParameterLocation, Record<string, unknown>>;
 
-export type OperationBodies = Record<string, any>;
+export type TryitOperationBodies = Record<string, any>;
 
-export interface OperationBody {
+export interface TryitOperationBody {
   mediaType: string;
   value: unknown;
 }
 
-export interface OperationValues {
-  parameters: ParameterValues;
-  body?: OperationBody;
+export interface TryitOperationValues {
+  parameters: TryitParameterValues;
+  body?: TryitOperationBody;
   server: string;
 }
 

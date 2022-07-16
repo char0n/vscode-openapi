@@ -8,13 +8,13 @@ import {
   OasOperation,
 } from "@xliic/common/oas30";
 import { HttpMethod } from "@xliic/common/http";
-import { OperationBody } from "@xliic/common/messages/tryit";
+import { TryitOperationBody } from "@xliic/common/messages/tryit";
 import { deref } from "@xliic/common/jsonpointer";
 
 export function createDefaultBody(
   oas: BundledOpenApiSpec,
   operation?: OasOperation
-): OperationBody {
+): TryitOperationBody {
   const preferred = findPreferredBody(deref(oas, operation?.requestBody));
 
   if (!preferred) {
@@ -43,7 +43,7 @@ export function createBody(
   oas: BundledOpenApiSpec,
   mediaType: string,
   mto?: OasMediaType
-): OperationBody {
+): TryitOperationBody {
   // use example if available
   if (mto?.example) {
     return {

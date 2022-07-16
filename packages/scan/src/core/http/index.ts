@@ -1,13 +1,13 @@
 import { BundledOpenApiSpec, OasRequestBody, getOperation } from "@xliic/common/oas30";
 import { HttpMethod, HttpRequest } from "@xliic/common/http";
-import { OperationBody, OperationValues } from "@xliic/common/messages/tryit";
+import { TryitOperationBody, TryitOperationValues } from "@xliic/common/messages/tryit";
 import { deref } from "@xliic/common/jsonpointer";
 
 export function makeHttpRequest(
   oas: BundledOpenApiSpec,
   method: HttpMethod,
   path: string,
-  values: OperationValues
+  values: TryitOperationValues
 ): HttpRequest {
   const operation = getOperation(oas, path, method);
   const requestBody = deref(oas, operation?.requestBody);
@@ -48,7 +48,7 @@ function substitutePathParams(path: string, pathParameters: Record<string, any>)
 }
 
 type BodyFormatter = (
-  body: OperationBody,
+  body: TryitOperationBody,
   oas: BundledOpenApiSpec,
   requestBody?: OasRequestBody
 ) => unknown;
@@ -59,7 +59,7 @@ const bodyFormatters: Record<string, BodyFormatter> = {
 };
 
 export function formatBody(
-  body: OperationBody,
+  body: TryitOperationBody,
   oas: BundledOpenApiSpec,
   requestBody?: OasRequestBody
 ): unknown {
@@ -67,7 +67,7 @@ export function formatBody(
 }
 
 export function formatBodyJson(
-  body: OperationBody,
+  body: TryitOperationBody,
   oas: BundledOpenApiSpec,
   requestBody?: OasRequestBody
 ): unknown {
@@ -75,7 +75,7 @@ export function formatBodyJson(
 }
 
 export function formatBodyUrlEncoded(
-  body: OperationBody,
+  body: TryitOperationBody,
   oas: BundledOpenApiSpec,
   requestBody?: OasRequestBody
 ): unknown {
