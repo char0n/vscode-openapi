@@ -3,11 +3,9 @@ import jsf from "json-schema-faker";
 import {
   BundledOpenApiSpec,
   OasRequestBody,
-  getOperation,
   OasMediaType,
   OasOperation,
 } from "@xliic/common/oas30";
-import { HttpMethod } from "@xliic/common/http";
 import { TryitOperationBody } from "@xliic/common/messages/tryit";
 import { deref } from "@xliic/common/jsonpointer";
 
@@ -22,21 +20,6 @@ export function createDefaultBody(
   }
 
   return createBody(oas, preferred[0], preferred[1]);
-}
-
-function findPreferredBody(requestBody?: OasRequestBody): [string, OasMediaType] | undefined {
-  if (!requestBody) {
-    return undefined;
-  }
-
-  const preferredMediaTypes = ["application/json", "application/x-www-form-urlencoded"];
-  for (const mediaType of preferredMediaTypes) {
-    if (requestBody.content[mediaType]) {
-      return [mediaType, requestBody.content[mediaType]];
-    }
-  }
-
-  return undefined;
 }
 
 export function createBody(
@@ -77,4 +60,45 @@ export function createBody(
     mediaType,
     value: "",
   };
+}
+
+export function serializeToFormText(body: TryitOperationBody): string {
+  if (
+    body.mediaType === "application/json" ||
+    body.mediaType === "application/x-www-form-urlencoded"
+  ) {
+    return JSON.stringify(body.value, null, 2);
+  }
+  // text/plain
+  return (body.value as any).toString();
+}
+
+export function parseFromFormText(mediaType: string, value: string): TryitOperationBody | Error {
+  if (mediaType === "application/json" || mediaType === "application/x-www-form-urlencoded") {
+    try {
+      return {
+        mediaType,
+        value: JSON.parse(value),
+      };
+    } catch (e) {
+      return new Error(`failed to convert: ${e}`);
+    }
+  }
+  // text/plain
+  return { mediaType, value };
+}
+
+function findPreferredBody(requestBody?: OasRequestBody): [string, OasMediaType] | undefined {
+  if (!requestBody) {
+    return undefined;
+  }
+
+  const preferredMediaTypes = ["application/json", "application/x-www-form-urlencoded"];
+  for (const mediaType of preferredMediaTypes) {
+    if (requestBody.content[mediaType]) {
+      return [mediaType, requestBody.content[mediaType]];
+    }
+  }
+
+  return undefined;
 }
