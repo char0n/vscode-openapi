@@ -16,6 +16,7 @@ export default function RequestBody({
 }) {
   const { control } = useFormContext();
 
+  // FIXME create json body if requestBody is not defined
   if (requestBody === undefined) {
     return null;
   }

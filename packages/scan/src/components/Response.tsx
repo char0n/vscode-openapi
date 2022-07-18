@@ -10,23 +10,17 @@ export default function Response() {
 
   const response = useAppSelector((state) => state.oas.response!);
 
-  //  handle non-json responses
+  const body = formatBody(response);
+
   return (
     <Container>
-      <p>
-        <code>
-          HTTP {response.httpVersion} {response.statusCode} {response.statusMessage}
-        </code>
-      </p>
-      <p>
+      <Section>
+        HTTP {response.httpVersion} {response.statusCode} {response.statusMessage}
+      </Section>
+      <Section>
         <Headers headers={response.headers} />
-      </p>
-      <p>
-        <code style={{ whiteSpace: "pre-wrap" }}>
-          {response.body}
-          {/*JSON.stringify(JSON.parse(response.body!), null, 2)*/}
-        </code>
-      </p>
+      </Section>
+      <Section>{body}</Section>
       <Button variant="primary" onClick={() => dispatch(goBack())}>
         Back
       </Button>
@@ -39,11 +33,39 @@ function Headers({ headers }: { headers: HttpResponse["headers"] }) {
     <>
       {headers.map(([name, value], index) => (
         <div key={index}>
-          <code>{name}:</code> <code>{value}</code>
+          <span>{name}:</span> <span>{value}</span>
         </div>
       ))}
     </>
   );
 }
 
+const Section = styled.div`
+  white-space: pre-wrap;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-family: monospace;
+`;
+
 const Container = styled.div``;
+
+function isJsonResponse(response: HttpResponse): boolean {
+  for (const [name, value] of response.headers) {
+    if (name.toLowerCase() === "content-type" && value.startsWith("application/json")) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function formatBody(response: HttpResponse): string | undefined {
+  if (!isJsonResponse(response) || response.body === undefined) {
+    return response.body;
+  }
+
+  try {
+    return JSON.stringify(JSON.parse(response.body), null, 2);
+  } catch (e) {
+    return response.body;
+  }
+}

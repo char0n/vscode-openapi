@@ -1,7 +1,8 @@
-import { BundledOpenApiSpec, OasRequestBody, getOperation } from "@xliic/common/oas30";
+import { BundledOpenApiSpec, getOperation } from "@xliic/common/oas30";
 import { HttpMethod, HttpRequest } from "@xliic/common/http";
-import { TryitOperationBody, TryitOperationValues } from "@xliic/common/messages/tryit";
+import { TryitOperationValues } from "@xliic/common/messages/tryit";
 import { deref } from "@xliic/common/jsonpointer";
+import { formatBody } from "./body";
 
 export function makeHttpRequest(
   oas: BundledOpenApiSpec,
@@ -45,41 +46,4 @@ function substitutePathParams(path: string, pathParameters: Record<string, any>)
     substituted = substituted.replaceAll(`{${name}}`, value as string);
   }
   return substituted;
-}
-
-type BodyFormatter = (
-  body: TryitOperationBody,
-  oas: BundledOpenApiSpec,
-  requestBody?: OasRequestBody
-) => unknown;
-
-const bodyFormatters: Record<string, BodyFormatter> = {
-  "application/json": formatBodyJson,
-  "application/x-www-form-urlencoded": formatBodyUrlEncoded,
-};
-
-export function formatBody(
-  body: TryitOperationBody,
-  oas: BundledOpenApiSpec,
-  requestBody?: OasRequestBody
-): unknown {
-  return bodyFormatters[body.mediaType](body, oas, requestBody);
-}
-
-export function formatBodyJson(
-  body: TryitOperationBody,
-  oas: BundledOpenApiSpec,
-  requestBody?: OasRequestBody
-): unknown {
-  return JSON.stringify(body.value);
-}
-
-export function formatBodyUrlEncoded(
-  body: TryitOperationBody,
-  oas: BundledOpenApiSpec,
-  requestBody?: OasRequestBody
-): unknown {
-  return Object.entries(body.value as object)
-    .map(([name, value]) => `${name}=${value}`)
-    .join("&");
 }

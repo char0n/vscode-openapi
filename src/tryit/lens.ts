@@ -2,6 +2,8 @@ import * as vscode from "vscode";
 import { Cache } from "../cache";
 import { BundledOpenApiSpec, getOperations } from "@xliic/common/oas30";
 import { getLocation } from "@xliic/preserving-json-yaml-parser";
+import { getOpenApiVersion } from "../parsers";
+import { OpenApiVersion } from "../types";
 
 export class TryItCodelensProvider implements vscode.CodeLensProvider {
   onDidChangeCodeLenses?: vscode.Event<void>;
@@ -13,7 +15,9 @@ export class TryItCodelensProvider implements vscode.CodeLensProvider {
   ): Promise<vscode.CodeLens[]> {
     const result = [];
     const parsed = this.cache.getParsedDocument(document);
-    if (parsed) {
+    const version = getOpenApiVersion(parsed);
+    // TODO support Swagger 2.0
+    if (parsed && version === OpenApiVersion.V3) {
       const oas = parsed as unknown as BundledOpenApiSpec;
       const operations = getOperations(oas);
       for (const [path, method, operation] of operations) {
