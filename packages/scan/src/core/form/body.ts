@@ -11,22 +11,30 @@ import { deref } from "@xliic/common/jsonpointer";
 
 export function createDefaultBody(
   oas: BundledOpenApiSpec,
-  operation?: OasOperation
+  operation?: OasOperation,
+  preferredMediaType?: string,
+  preferredBodyValue?: unknown
 ): TryitOperationBody {
-  const preferred = findPreferredBody(deref(oas, operation?.requestBody));
+  const preferred = findPreferredBody(deref(oas, operation?.requestBody), preferredMediaType);
 
   if (!preferred) {
     return createBody(oas, "application/json", undefined);
   }
 
-  return createBody(oas, preferred[0], preferred[1]);
+  return createBody(oas, preferred[0], preferred[1], preferredBodyValue);
 }
 
 export function createBody(
   oas: BundledOpenApiSpec,
   mediaType: string,
-  mto?: OasMediaType
+  mto?: OasMediaType,
+  preferredBodyValue?: unknown
 ): TryitOperationBody {
+  // use the preferred body value if it's provided
+  if (preferredBodyValue !== undefined) {
+    return { mediaType, value: preferredBodyValue };
+  }
+
   // use example if available
   if (mto?.example) {
     return {
@@ -88,12 +96,19 @@ export function parseFromFormText(mediaType: string, value: string): TryitOperat
   return { mediaType, value };
 }
 
-function findPreferredBody(requestBody?: OasRequestBody): [string, OasMediaType] | undefined {
+function findPreferredBody(
+  requestBody?: OasRequestBody,
+  preferredMediaType?: string
+): [string, OasMediaType] | undefined {
   if (!requestBody) {
     return undefined;
   }
 
   const preferredMediaTypes = ["application/json", "application/x-www-form-urlencoded"];
+  if (preferredMediaType) {
+    preferredMediaTypes.unshift(preferredMediaType);
+  }
+
   for (const mediaType of preferredMediaTypes) {
     if (requestBody.content[mediaType]) {
       return [mediaType, requestBody.content[mediaType]];

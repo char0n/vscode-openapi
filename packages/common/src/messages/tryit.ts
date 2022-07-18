@@ -5,6 +5,8 @@ export interface OasWithOperation {
   oas: BundledOpenApiSpec;
   path: string;
   method: HttpMethod;
+  preferredMediaType?: string;
+  preferredBodyValue?: unknown;
 }
 
 export interface ErrorMessage {

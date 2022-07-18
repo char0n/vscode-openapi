@@ -21,6 +21,10 @@ export interface OasState {
   oas: BundledOpenApiSpec;
   path?: string;
   method?: HttpMethod;
+  example?: {
+    mediaType: string;
+    name: string;
+  };
   defaultValues?: TryitOperationValues;
   config?: ScanConfig;
   response?: HttpResponse;
@@ -55,7 +59,7 @@ export const parametersSlice = createSlice({
     },
 
     tryOperation: (state, action: PayloadAction<OasWithOperation>) => {
-      const { oas, path, method } = action.payload;
+      const { oas, path, method, preferredMediaType, preferredBodyValue } = action.payload;
       state.oas = oas;
       state.path = path;
       state.method = method;
@@ -64,7 +68,7 @@ export const parametersSlice = createSlice({
       const operation = getOperation(oas, path, method);
       const parameters = getParameters(oas, path, method);
       const parameterValues = generateParameterValues(parameters);
-      const body = createDefaultBody(oas, operation);
+      const body = createDefaultBody(oas, operation, preferredMediaType, preferredBodyValue);
 
       state.defaultValues = {
         server: oas.servers?.[0].url || "",

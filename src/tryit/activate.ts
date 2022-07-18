@@ -20,6 +20,8 @@ type TryIt = {
   path: string;
   method: HttpMethod;
   versions: BundleDocumentVersions;
+  preferredMediaType?: string;
+  preferredBodyValue?: unknown;
 };
 
 const selectors = {
@@ -76,6 +78,27 @@ export function activate(
     }
   );
 
+  vscode.commands.registerCommand(
+    "openapi.tryOperationWithExample",
+    async (
+      uri: vscode.Uri,
+      path: string,
+      method: HttpMethod,
+      preferredMediaType: string,
+      preferredBodyValue: unknown
+    ) => {
+      tryIt = {
+        documentUri: uri,
+        path,
+        method,
+        versions: {},
+        preferredMediaType,
+        preferredBodyValue,
+      };
+      startTryIt(view, cache, tryIt);
+    }
+  );
+
   const tryItCodeLensProvider = new TryItCodelensProvider(cache);
   for (const selector of Object.values(selectors)) {
     vscode.languages.registerCodeLensProvider(selector, tryItCodeLensProvider);
@@ -91,11 +114,25 @@ async function startTryIt(view: TryItWebView, cache: Cache, tryIt: TryIt) {
   } else {
     tryIt.versions = getBundleVersions(bundle);
     await view.show();
-    showTryIt(view, bundle, tryIt.path, tryIt.method);
+    showTryIt(
+      view,
+      bundle,
+      tryIt.path,
+      tryIt.method,
+      tryIt.preferredMediaType,
+      tryIt.preferredBodyValue
+    );
   }
 }
 
-async function showTryIt(view: TryItWebView, bundle: Bundle, path: string, method: HttpMethod) {
+async function showTryIt(
+  view: TryItWebView,
+  bundle: Bundle,
+  path: string,
+  method: HttpMethod,
+  preferredMediaType?: string,
+  preferredBodyValue?: unknown
+) {
   if (view.isActive()) {
     const oas = extractSingleOperation(method as HttpMethod, path as string, bundle.value);
     await view.show();
@@ -103,6 +140,8 @@ async function showTryIt(view: TryItWebView, bundle: Bundle, path: string, metho
       oas,
       path,
       method,
+      preferredMediaType,
+      preferredBodyValue,
     });
   }
 }
