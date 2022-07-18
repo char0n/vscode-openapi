@@ -192,25 +192,9 @@ export class PathOutlineProvider extends OutlineProvider {
 
   filterChildren(node: Node, children: Node[]) {
     const depth = node.depth;
-    const key = node.key;
     if (depth === 2) {
       return children.filter((child) => {
-        return [
-          "get",
-          "put",
-          "post",
-          "delete",
-          "options",
-          "head",
-          "patch",
-          "trace",
-          "parameters",
-        ].includes(String(child.key));
-      });
-    } else if (depth === 3 && key !== "parameters") {
-      return children.filter((child) => {
-        const key = child.key;
-        return key === "responses" || key === "parameters";
+        return ["responses", "parameters", "requestBody"].includes(String(child.key));
       });
     }
     return children;
