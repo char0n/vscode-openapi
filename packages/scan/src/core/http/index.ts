@@ -29,15 +29,32 @@ export function makeHttpRequest(
     url += `?${qs}`;
   }
 
-  console.log("foo", url);
+  if (values.parameters.header) {
+    for (const [name, value] of Object.entries(values.parameters.header)) {
+      headers[name] = String(value);
+    }
+  }
 
-  // FIXME add query string handling
-  // FIXME add cookie params handling
+  if (values.parameters.cookie) {
+    let cookies = "";
+    for (const [name, value] of Object.entries(values.parameters.cookie)) {
+      const encoded = `${encodeURIComponent(name)}=${encodeURIComponent(String(value))}`;
+      if (cookies !== "") {
+        cookies += "; " + encoded;
+      } else {
+        cookies = encoded;
+      }
+    }
+
+    if (cookies !== "") {
+      headers["Set-Cookie"] = cookies;
+    }
+  }
 
   return {
     method,
     url,
-    headers: { ...headers, ...(values.parameters?.header as HttpRequest["headers"]) },
+    headers,
     body,
   };
 }
