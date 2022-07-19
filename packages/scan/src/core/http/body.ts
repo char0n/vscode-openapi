@@ -10,6 +10,7 @@ type BodyFormatter = (
 const bodyFormatters: Record<string, BodyFormatter> = {
   "application/json": formatBodyJson,
   "application/x-www-form-urlencoded": formatBodyUrlEncoded,
+  "text/plain": formatBodyText,
 };
 
 export function formatBody(
@@ -36,4 +37,12 @@ export function formatBodyUrlEncoded(
   return Object.entries(body.value as object)
     .map(([name, value]) => `${name}=${value}`)
     .join("&");
+}
+
+export function formatBodyText(
+  body: TryitOperationBody,
+  oas: BundledOpenApiSpec,
+  requestBody?: OasRequestBody
+): unknown {
+  return String(body.value);
 }

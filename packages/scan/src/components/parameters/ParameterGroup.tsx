@@ -32,9 +32,8 @@ export default function ParameterGroup({
           );
         } else {
           return (
-            <div className="m-1">
+            <div className="m-1" key={name}>
               <Parameter
-                key={name}
                 name={name}
                 parameter={parameter}
                 schema={parameter.schema || defaultSchema}
