@@ -3,6 +3,7 @@ import { HttpMethod, HttpRequest } from "@xliic/common/http";
 import { TryitOperationValues } from "@xliic/common/messages/tryit";
 import { deref } from "@xliic/common/jsonpointer";
 import { formatBody } from "./body";
+import { encode } from "./query";
 
 export function makeHttpRequest(
   oas: BundledOpenApiSpec,
@@ -13,7 +14,7 @@ export function makeHttpRequest(
   const operation = getOperation(oas, path, method);
   const requestBody = deref(oas, operation?.requestBody);
 
-  const url = makeUrl(values.server, path, values?.parameters?.path);
+  let url = makeUrl(values.server, path, values?.parameters?.path);
 
   const headers: Record<string, string> = {};
   let body: unknown | undefined = undefined;
@@ -22,6 +23,13 @@ export function makeHttpRequest(
     headers["content-type"] = values.body.mediaType;
     body = formatBody(values.body, oas, requestBody);
   }
+
+  if (values.parameters.query) {
+    const qs = encode(values.parameters.query);
+    url += `?${qs}`;
+  }
+
+  console.log("foo", url);
 
   // FIXME add query string handling
   // FIXME add cookie params handling

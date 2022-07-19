@@ -14,11 +14,11 @@ export function createDefaultBody(
   operation?: OasOperation,
   preferredMediaType?: string,
   preferredBodyValue?: unknown
-): TryitOperationBody {
+): TryitOperationBody | undefined {
   const preferred = findPreferredBody(deref(oas, operation?.requestBody), preferredMediaType);
 
   if (!preferred) {
-    return createBody(oas, "application/json", undefined);
+    return undefined;
   }
 
   return createBody(oas, preferred[0], preferred[1], preferredBodyValue);

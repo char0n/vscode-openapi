@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { sendRequest } from "../store/oasSlice";
 
-import Operation from "./Operation";
+import Operation from "./operation/Operation";
 
 import { getParameters, wrapFormDefaults, unwrapFormDefaults } from "../util";
 import { makeHttpRequest } from "../core/http";

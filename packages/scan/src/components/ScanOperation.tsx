@@ -3,7 +3,7 @@ import { ScanConfig } from "@xliic/common/messages/scan";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { updateScanConfig } from "../store/oasSlice";
 
-import Operation from "./Operation";
+import Operation from "./operation/Operation";
 import { HttpMethod } from "@xliic/common/http";
 
 export default function ScanOperation() {

@@ -176,14 +176,15 @@ function extractSingleOperation(method: HttpMethod, path: string, oas: any): Bun
   crawl(oas, oas["paths"][path][method], visited);
   const cloned: any = simpleClone(oas);
   delete cloned["paths"];
-  delete cloned["components"]["schemas"];
+  if (cloned["components"]?.["schemas"]) {
+    delete cloned["components"]["schemas"];
+  }
   cloned["paths"] = { [path]: { [method]: oas["paths"][path][method] } };
   if (oas["paths"][path]["parameters"]) {
     cloned["paths"][path]["parameters"] = oas["paths"][path]["parameters"];
   }
   copyByPointer(oas, cloned, Array.from(visited));
   return cloned as BundledOpenApiSpec;
-  //console.log("cloned", cloned, getPath(spec, ""));
 }
 
 function crawl(root: any, current: any, visited: Set<string>) {
