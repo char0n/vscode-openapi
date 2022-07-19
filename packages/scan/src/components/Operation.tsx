@@ -115,6 +115,7 @@ const TabList = styled(Tabs.List)`
 `;
 
 const TabButton = styled(Tabs.Trigger)`
+  border-radius: 0.375rem 0.375rem 0 0;
   border: 1px solid var(${ThemeColors.tabBorder});
   padding: 0.25rem 1rem;
   color: var(${ThemeColors.tabInactiveForeground});
