@@ -36,7 +36,7 @@ export default function Parameter({
 
   return (
     <>
-      <FloatingLabel className="m-1" label={parameter.name}>
+      <FloatingLabel label={parameter.name}>
         <Form.Control
           type="text"
           className={error ? "is-invalid" : undefined}

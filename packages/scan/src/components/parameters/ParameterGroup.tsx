@@ -32,12 +32,14 @@ export default function ParameterGroup({
           );
         } else {
           return (
-            <Parameter
-              key={name}
-              name={name}
-              parameter={parameter}
-              schema={parameter.schema || defaultSchema}
-            />
+            <div className="m-1">
+              <Parameter
+                key={name}
+                name={name}
+                parameter={parameter}
+                schema={parameter.schema || defaultSchema}
+              />
+            </div>
           );
         }
       })}

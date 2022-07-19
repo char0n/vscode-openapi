@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 
 import * as Tabs from "@radix-ui/react-tabs";
 
@@ -60,13 +59,13 @@ function Operation({
           />
           <Servers name="server" servers={oas?.servers} />
           <Tabs.Root defaultValue="body">
-            <Tabs.List>
+            <TabList>
               {requestBody !== undefined && <TabButton value="body">Body</TabButton>}
               {hasParameters(parameters.path) && <TabButton value="path">Path</TabButton>}
               {hasParameters(parameters.query) && <TabButton value="query">Query</TabButton>}
               {hasParameters(parameters.header) && <TabButton value="header">Header</TabButton>}
               {hasParameters(parameters.cookie) && <TabButton value="cookie">Cookie</TabButton>}
-            </Tabs.List>
+            </TabList>
             {requestBody !== undefined && (
               <Tabs.Content value="body">
                 <RequestBody oas={oas} requestBody={requestBody} />
@@ -105,15 +104,26 @@ function hasParameters(parameters?: Record<string, unknown>) {
 
 const Container = styled.div``;
 
-const TabButton = styled(Tabs.Trigger).attrs({
-  className: "btn m-1",
-})`
+const TabList = styled(Tabs.List)`
+  margin: 0.25rem;
+  display: flex;
+  :after {
+    border-bottom: 1px solid var(${ThemeColors.tabBorder});
+    content: "";
+    flex: 1;
+  }
+`;
+
+const TabButton = styled(Tabs.Trigger)`
   border: 1px solid var(${ThemeColors.tabBorder});
+  padding: 0.25rem 1rem;
   color: var(${ThemeColors.tabInactiveForeground});
   background-color: var(${ThemeColors.tabInactiveBackground});
+
   &[data-state="active"] {
     color: var(${ThemeColors.tabActiveForeground});
     background-color: var(${ThemeColors.tabActiveBackground});
+    border-bottom: 1px transparent solid;
   }
 `;
 
