@@ -4,6 +4,7 @@ import { TryitOperationValues } from "@xliic/common/messages/tryit";
 import { deref } from "@xliic/common/jsonpointer";
 import { formatBody } from "./body";
 import { encode } from "./query";
+import { getSecurity } from "../../util";
 
 export function makeHttpRequest(
   oas: BundledOpenApiSpec,
@@ -12,6 +13,7 @@ export function makeHttpRequest(
   values: TryitOperationValues
 ): HttpRequest {
   const operation = getOperation(oas, path, method);
+  const security = getSecurity(oas, path, method);
   const requestBody = deref(oas, operation?.requestBody);
 
   let url = makeUrl(values.server, path, values?.parameters?.path);
@@ -48,6 +50,16 @@ export function makeHttpRequest(
 
     if (cookies !== "") {
       headers["Set-Cookie"] = cookies;
+    }
+
+    const securityScheme = security?.[values.securityIndex];
+    const securityValues = values.security[values.securityIndex];
+    if (securityScheme && securityValues) {
+      for (const [name, scheme] of Object.entries(securityScheme)) {
+        if (scheme.type === "apiKey" && scheme.in === "header") {
+          headers[scheme.name!] = securityValues[name];
+        }
+      }
     }
   }
 

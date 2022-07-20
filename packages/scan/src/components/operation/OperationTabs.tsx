@@ -7,18 +7,22 @@ import { useEffect, useState } from "react";
 import RequestBody from "../RequestBody";
 
 import { BundledOpenApiSpec, OasRequestBody, OperationParametersMap } from "@xliic/common/oas30";
+import { ThemeColors } from "@xliic/common/theme";
+import { TryitSecurity } from "@xliic/common/messages/tryit";
 
 import ParameterGroup from "../parameters/ParameterGroup";
-import { ThemeColors } from "@xliic/common/theme";
+import Security from "./Security";
 
 export default function OperationTabs({
   oas,
   requestBody,
   parameters,
+  security,
 }: {
   oas: BundledOpenApiSpec;
   requestBody?: OasRequestBody;
   parameters: OperationParametersMap;
+  security: TryitSecurity;
 }) {
   const tabs = [
     {
@@ -26,6 +30,12 @@ export default function OperationTabs({
       title: "Body",
       content: <RequestBody oas={oas} requestBody={requestBody} />,
       enabled: requestBody !== undefined,
+    },
+    {
+      id: "security",
+      title: "Auth",
+      content: <Security oas={oas} security={security} />,
+      enabled: security && security.length > 0,
     },
     {
       id: "path",

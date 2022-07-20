@@ -8,9 +8,15 @@ import {
   getOperation,
   getOperationParameters,
   getParametersMap,
-  OasRequestBody,
+  OasSecurityScheme,
 } from "@xliic/common/oas30";
-import { TryitOperationValues, TryitParameterValues } from "@xliic/common/messages/tryit";
+import {
+  TryitOperationValues,
+  TryitParameterValues,
+  TryitSecurity,
+  TryitSecurityValue,
+  TryitSecurityValues,
+} from "@xliic/common/messages/tryit";
 import { HttpMethod } from "@xliic/common/http";
 
 export function getParameters(
@@ -22,6 +28,24 @@ export function getParameters(
   const operation = getOperation(oas, path, method);
   const operationParameters = getOperationParameters(oas, operation);
   const result = getParametersMap(oas, pathParameters, operationParameters);
+  return result;
+}
+
+export function getSecurity(
+  oas: BundledOpenApiSpec,
+  path: string,
+  method: HttpMethod
+): TryitSecurity {
+  const operation = getOperation(oas, path, method);
+  const requirements = operation?.security ?? oas.security ?? [];
+  const result: TryitSecurity = [];
+  for (const requirement of requirements) {
+    const resolved: Record<string, OasSecurityScheme> = {};
+    for (const schemeName of Object.keys(requirement)) {
+      resolved[schemeName] = oas?.components?.securitySchemes?.[schemeName]!;
+    }
+    result.push(resolved);
+  }
   return result;
 }
 
@@ -48,6 +72,22 @@ export function generateParameterValues(parameters: OperationParametersMap): Try
   return values;
 }
 
+export function generateSecurityValues(security: TryitSecurity): TryitSecurityValues {
+  const result: TryitSecurityValues = [];
+  for (const requirement of security) {
+    const resolved: Record<string, TryitSecurityValue> = {};
+    for (const [name, scheme] of Object.entries(requirement)) {
+      resolved[name] = generateSecurityValue(scheme);
+    }
+    result.push(resolved);
+  }
+  return result;
+}
+
+export function generateSecurityValue(security: OasSecurityScheme): TryitSecurityValue {
+  return "";
+}
+
 export function wrapFormDefaults(values: TryitOperationValues): Record<string, any> {
   const parameters: Record<string, any> = { query: {}, header: {}, path: {}, cookie: {} };
   const locations = Object.keys(values.parameters) as OasParameterLocation[];
@@ -61,6 +101,8 @@ export function wrapFormDefaults(values: TryitOperationValues): Record<string, a
     parameters,
     body: values.body,
     server: values.server,
+    security: values.security,
+    securityIndex: values.securityIndex,
   };
 }
 
@@ -73,6 +115,8 @@ export function unwrapFormDefaults(
     parameters: unwrapFormParameters(oas, parameters, values.parameters),
     body: values.body,
     server: values.server,
+    securityIndex: values.securityIndex,
+    security: values.security,
   };
 }
 

@@ -42,6 +42,7 @@ function Headers({ headers }: { headers: HttpResponse["headers"] }) {
 
 const Section = styled.div`
   white-space: pre-wrap;
+  word-break: break-all;
   margin-top: 10px;
   margin-bottom: 10px;
   font-family: monospace;

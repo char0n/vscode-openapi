@@ -10,7 +10,12 @@ import {
 } from "@xliic/common/messages/scan";
 import { CurlCommand, OasWithOperation, TryitOperationValues } from "@xliic/common/messages/tryit";
 import { HttpMethod, HttpRequest, HttpResponse } from "@xliic/common/http";
-import { generateParameterValues, getParameters } from "../util";
+import {
+  generateParameterValues,
+  generateSecurityValues,
+  getParameters,
+  getSecurity,
+} from "../util";
 import { createDefaultBody } from "../core/form/body";
 
 type PageName = "loading" | "scanOperation" | "scanReport" | "tryOperation" | "response" | "error";
@@ -66,13 +71,20 @@ export const parametersSlice = createSlice({
       state.config = undefined;
 
       const operation = getOperation(oas, path, method);
+      // parameters
       const parameters = getParameters(oas, path, method);
       const parameterValues = generateParameterValues(parameters);
+      // security
+      const security = getSecurity(oas, path, method);
+      const securityValues = generateSecurityValues(security);
+      // body
       const body = createDefaultBody(oas, operation, preferredMediaType, preferredBodyValue);
 
       state.defaultValues = {
         server: oas.servers?.[0].url || "",
         parameters: parameterValues,
+        security: securityValues,
+        securityIndex: 0,
         body,
       };
       goTo(state, "tryOperation");

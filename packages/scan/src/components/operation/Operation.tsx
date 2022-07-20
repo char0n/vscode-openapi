@@ -9,7 +9,7 @@ import Servers from "../Servers";
 import { HttpMethod } from "@xliic/common/http";
 import { BundledOpenApiSpec, getOperation, OasRequestBody } from "@xliic/common/oas30";
 import { deref } from "@xliic/common/jsonpointer";
-import { getParameters } from "../../util";
+import { getParameters, getSecurity } from "../../util";
 import OperationHeader from "./OperationHeader";
 import OperationTabs from "./OperationTabs";
 
@@ -30,6 +30,8 @@ export default function Operation({
 }) {
   const parameters = getParameters(oas, path, method);
   const operation = getOperation(oas, path, method);
+  const security = getSecurity(oas, path, method);
+
   const requestBody = deref<OasRequestBody>(oas, operation?.requestBody);
 
   const methods = useForm({
@@ -54,7 +56,12 @@ export default function Operation({
             buttonText={buttonText}
           />
           <Servers name="server" servers={oas?.servers} />
-          <OperationTabs oas={oas} requestBody={requestBody} parameters={parameters} />
+          <OperationTabs
+            oas={oas}
+            requestBody={requestBody}
+            parameters={parameters}
+            security={security}
+          />
         </Form>
       </FormProvider>
     </Container>

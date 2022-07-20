@@ -1,5 +1,5 @@
 import { HttpMethod, HttpRequest, HttpResponse } from "../http";
-import type { BundledOpenApiSpec, OasParameterLocation } from "../oas30";
+import type { BundledOpenApiSpec, OasParameterLocation, OasSecurityScheme } from "../oas30";
 
 export interface OasWithOperation {
   oas: BundledOpenApiSpec;
@@ -26,11 +26,19 @@ export interface TryitOperationBody {
   value: unknown;
 }
 
+export type TryitSecurityValueApiKey = string;
+export type TryitSecurityValue = TryitSecurityValueApiKey; // TODO add other types
+export type TryitSecurityValues = Record<string, TryitSecurityValue>[];
+
 export interface TryitOperationValues {
   parameters: TryitParameterValues;
+  security: TryitSecurityValues;
+  securityIndex: number;
   body?: TryitOperationBody;
   server: string;
 }
+
+export type TryitSecurity = Record<string, OasSecurityScheme>[];
 
 // vs code to webapp requests
 type TryOperationMessage = { command: "tryOperation"; payload: OasWithOperation };

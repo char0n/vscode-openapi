@@ -81,19 +81,16 @@ export function serializeToFormText(body: TryitOperationBody): string {
   return (body.value as any).toString();
 }
 
-export function parseFromFormText(mediaType: string, value: string): TryitOperationBody | Error {
+export function parseFromFormText(mediaType: string, value: string): unknown | Error {
   if (mediaType === "application/json" || mediaType === "application/x-www-form-urlencoded") {
     try {
-      return {
-        mediaType,
-        value: JSON.parse(value),
-      };
+      return JSON.parse(value);
     } catch (e) {
       return new Error(`failed to convert: ${e}`);
     }
   }
   // text/plain
-  return { mediaType, value };
+  return value;
 }
 
 function findPreferredBody(
