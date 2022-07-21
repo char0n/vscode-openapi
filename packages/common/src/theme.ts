@@ -17,6 +17,9 @@ export const ThemeColors: Record<string, string> = {
   tabActiveForeground: "--xliic-tabActiveForeground",
   tabInactiveBackground: "--xliic-tabInactiveBackground",
   tabInactiveForeground: "--xliic-tabInactiveForeground",
+  dropdownBackground: "--xliic-dropdownBackground",
+  dropdownBorder: "--xliic-dropdownBorder",
+  dropdownForeground: "--xliic-dropdownForeground",
 } as const;
 
 export type VsCodeColorMap = Record<keyof typeof ThemeColors, string>;

@@ -189,6 +189,9 @@ function customCssProperties(): string {
     tabActiveForeground: "--vscode-tab-activeForeground",
     tabInactiveBackground: "--vscode-tab-inactiveBackground",
     tabInactiveForeground: "--vscode-tab-inactiveForeground",
+    dropdownBackground: "--vscode-dropdown-background",
+    dropdownBorder: "--vscode-dropdown-border",
+    dropdownForeground: "--vscode-dropdown-foreground",
   };
 
   const props = Object.entries(vscodeColorMap)
