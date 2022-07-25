@@ -14,6 +14,7 @@ import { ThemeColors } from "@xliic/common/theme";
 import ResponseStatus from "./ResponseStatus";
 import Headers from "./Headers";
 import Body from "./Body";
+import Tools from "./Tools";
 
 export default function ResponseTabs({ response }: { response: HttpResponse }) {
   const tabs = [
@@ -27,6 +28,12 @@ export default function ResponseTabs({ response }: { response: HttpResponse }) {
       id: "headers",
       title: "Headers",
       content: <Headers headers={response.headers} />,
+      enabled: true,
+    },
+    {
+      id: "tools",
+      title: "Tools",
+      content: <Tools response={response} />,
       enabled: true,
     },
   ];

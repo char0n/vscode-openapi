@@ -54,7 +54,7 @@ export function activate(
 
   const debouncedTryIt = debounce(showTryIt);
 
-  const view = new TryItWebView(context.extensionPath);
+  const view = new TryItWebView(context.extensionPath, cache);
 
   cache.onDidChange(async (document: vscode.TextDocument) => {
     const uri = document.uri.toString();
@@ -116,6 +116,7 @@ async function startTryIt(view: TryItWebView, cache: Cache, tryIt: TryIt) {
     await view.show();
     showTryIt(
       view,
+      document,
       bundle,
       tryIt.path,
       tryIt.method,
@@ -127,6 +128,7 @@ async function startTryIt(view: TryItWebView, cache: Cache, tryIt: TryIt) {
 
 async function showTryIt(
   view: TryItWebView,
+  document: vscode.TextDocument,
   bundle: Bundle,
   path: string,
   method: HttpMethod,
@@ -136,7 +138,7 @@ async function showTryIt(
   if (view.isActive()) {
     const oas = extractSingleOperation(method as HttpMethod, path as string, bundle.value);
     await view.show();
-    view.sendTryOperation({
+    view.sendTryOperation(document, {
       oas,
       path,
       method,

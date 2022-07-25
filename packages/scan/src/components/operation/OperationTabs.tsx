@@ -12,6 +12,7 @@ import { TryitSecurity } from "@xliic/common/messages/tryit";
 
 import ParameterGroup from "../parameters/ParameterGroup";
 import Security from "./Security";
+import Settings from "./Settings";
 
 export default function OperationTabs({
   oas,
@@ -60,6 +61,12 @@ export default function OperationTabs({
       title: "Cookie",
       content: <ParameterGroup oas={oas} group={parameters.cookie} />,
       enabled: hasParameters(parameters.cookie),
+    },
+    {
+      id: "settings",
+      title: "Settings",
+      content: <Settings />,
+      enabled: true,
     },
   ];
 

@@ -50,7 +50,7 @@ function bootstrapColorOverrides(): string {
   #root .dropdown-menu {
     --bs-dropdown-border-color: var(${ThemeColors.dropdownBorder});
     --bs-dropdown-bg: var(${ThemeColors.dropdownBackground});
-    --bs-dropdown-link-color: var(${ThemeColors.dropdownForeground});});
+    --bs-dropdown-link-color: var(${ThemeColors.dropdownForeground});
   }
 
   #root .form-control, #root .form-select {

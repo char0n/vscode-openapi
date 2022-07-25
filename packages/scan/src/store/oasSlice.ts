@@ -119,6 +119,8 @@ export const parametersSlice = createSlice({
       state.defaultValues = action.payload.defaultValues;
     },
 
+    createSchema: (state, action: PayloadAction<{ response: any }>) => {},
+
     sendRequestCurl: (state, action: PayloadAction<CurlCommand>) => {},
     updateScanConfig: (state, action: PayloadAction<ScanConfigForOperation>) => {},
   },
@@ -139,6 +141,7 @@ export const {
   sendRequestCurl,
   updateScanConfig,
   showScanReport,
+  createSchema,
 } = parametersSlice.actions;
 
 export default parametersSlice.reducer;

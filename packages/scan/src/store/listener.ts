@@ -1,6 +1,6 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { HostApplication } from "../types";
-import { sendRequest, sendRequestCurl, updateScanConfig } from "./oasSlice";
+import { sendRequest, createSchema, sendRequestCurl, updateScanConfig } from "./oasSlice";
 
 export default function createListener(host: HostApplication) {
   const listenerMiddleware = createListenerMiddleware();
@@ -9,6 +9,13 @@ export default function createListener(host: HostApplication) {
     actionCreator: sendRequest,
     effect: async (action, listenerApi) => {
       host.postMessage({ command: "sendRequest", payload: action.payload.request });
+    },
+  });
+
+  listenerMiddleware.startListening({
+    actionCreator: createSchema,
+    effect: async (action, listenerApi) => {
+      host.postMessage({ command: "createSchema", payload: action.payload.response });
     },
   });
 

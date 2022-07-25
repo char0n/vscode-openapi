@@ -19,7 +19,7 @@ export async function executeHttpRequest(payload: HttpRequest): Promise<TryItReq
         ...headers,
       },
       https: {
-        rejectUnauthorized: false,
+        //  rejectUnauthorized: false,
       },
     });
 

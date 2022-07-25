@@ -50,5 +50,9 @@ export type TryItRequest = TryOperationMessage | ShowResponseMessage | ShowError
 // webapp to vs code responses
 type SendHttpRequestMessage = { command: "sendRequest"; payload: HttpRequest };
 type SendCurlCommandMessage = { command: "sendCurl"; payload: CurlCommand };
+type CreateSchemaCommandMessage = { command: "createSchema"; payload: any };
 
-export type TryItResponse = SendHttpRequestMessage | SendCurlCommandMessage;
+export type TryItResponse =
+  | SendHttpRequestMessage
+  | SendCurlCommandMessage
+  | CreateSchemaCommandMessage;
