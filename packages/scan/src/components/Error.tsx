@@ -13,6 +13,9 @@ export default function Error() {
       <p>
         <code>{error.message}</code>
       </p>
+      {error.code === "UNABLE_TO_VERIFY_LEAF_SIGNATURE" && (
+        <div>Failed to establish secure connection. Try disabling SSL validation in Settings</div>
+      )}
       <Button variant="primary" onClick={() => dispatch(goBack())}>
         Back
       </Button>
@@ -20,4 +23,7 @@ export default function Error() {
   );
 }
 
-const Container = styled.div``;
+const Container = styled.div`
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+`;

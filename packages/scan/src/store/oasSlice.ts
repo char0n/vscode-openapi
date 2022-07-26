@@ -6,9 +6,14 @@ import {
   ScanConfig,
   OasWithOperationAndConfig,
   ScanConfigForOperation,
-  ErrorMessage,
 } from "@xliic/common/messages/scan";
-import { CurlCommand, OasWithOperation, TryitOperationValues } from "@xliic/common/messages/tryit";
+import {
+  CurlCommand,
+  OasWithOperation,
+  TryitOperationValues,
+  TryitConfig,
+  ErrorMessage,
+} from "@xliic/common/messages/tryit";
 import { HttpMethod, HttpRequest, HttpResponse } from "@xliic/common/http";
 import {
   generateParameterValues,
@@ -19,6 +24,18 @@ import {
 import { createDefaultBody } from "../core/form/body";
 
 type PageName = "loading" | "scanOperation" | "scanReport" | "tryOperation" | "response" | "error";
+
+type ConfigSslIgnoreAdd = {
+  type: "configSslIgnoreAdd";
+  hostname: string;
+};
+
+type ConfigSslIgnoreRemove = {
+  type: "configSslIgnoreRemove";
+  hostname: string;
+};
+
+type ConfigUpdatePayload = ConfigSslIgnoreAdd | ConfigSslIgnoreRemove;
 
 export interface OasState {
   page: PageName;
@@ -31,7 +48,8 @@ export interface OasState {
     name: string;
   };
   defaultValues?: TryitOperationValues;
-  config?: ScanConfig;
+  tryitConfig: TryitConfig;
+  scanConfig?: ScanConfig;
   response?: HttpResponse;
   error?: ErrorMessage;
   scanReport: any;
@@ -44,6 +62,9 @@ const initialState: OasState = {
     openapi: "3.0.0",
     info: { title: "", version: "0.0" },
     paths: {},
+  },
+  tryitConfig: {
+    insecureSslHostnames: [],
   },
   response: undefined,
   error: undefined,
@@ -59,16 +80,18 @@ export const parametersSlice = createSlice({
       state.oas = oas;
       state.path = path;
       state.method = method;
-      state.config = config;
+      state.scanConfig = config;
       goTo(state, "scanOperation");
     },
 
     tryOperation: (state, action: PayloadAction<OasWithOperation>) => {
-      const { oas, path, method, preferredMediaType, preferredBodyValue } = action.payload;
+      const { oas, path, method, preferredMediaType, preferredBodyValue, config } = action.payload;
       state.oas = oas;
       state.path = path;
       state.method = method;
-      state.config = undefined;
+      state.scanConfig = undefined;
+      // excersise a bit of caution, config is user-editable, let's make sure it has all expected values
+      state.tryitConfig.insecureSslHostnames = config?.insecureSslHostnames || [];
 
       const operation = getOperation(oas, path, method);
       // parameters
@@ -120,9 +143,17 @@ export const parametersSlice = createSlice({
     },
 
     createSchema: (state, action: PayloadAction<{ response: any }>) => {},
-
     sendRequestCurl: (state, action: PayloadAction<CurlCommand>) => {},
     updateScanConfig: (state, action: PayloadAction<ScanConfigForOperation>) => {},
+    saveConfig: (state, action: PayloadAction<ConfigUpdatePayload>) => {
+      if (action.payload.type === "configSslIgnoreAdd") {
+        state.tryitConfig.insecureSslHostnames.push(action.payload.hostname);
+      } else if (action.payload.type === "configSslIgnoreRemove") {
+        state.tryitConfig.insecureSslHostnames = state.tryitConfig.insecureSslHostnames.filter(
+          (hostname) => hostname !== action.payload.hostname
+        );
+      }
+    },
   },
 });
 
@@ -142,6 +173,7 @@ export const {
   updateScanConfig,
   showScanReport,
   createSchema,
+  saveConfig,
 } = parametersSlice.actions;
 
 export default parametersSlice.reducer;

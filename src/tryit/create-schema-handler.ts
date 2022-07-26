@@ -62,9 +62,18 @@ export async function executeCreateSchemaRequest(
   const start = document.positionAt(location2!.key!.start);
   const end = document.positionAt(location2!.value.end);
 
-  const editor = vscode.window.activeTextEditor;
+  const editor = await focusEditor(document);
   editor!.selection = new vscode.Selection(start, end);
   editor!.revealRange(editor!.selection, vscode.TextEditorRevealType.AtTop);
+}
+
+async function focusEditor(document: vscode.TextDocument): Promise<vscode.TextEditor> {
+  for (const editor of vscode.window.visibleTextEditors) {
+    if (editor.document.uri.toString() === document.uri.toString()) {
+      return editor;
+    }
+  }
+  return vscode.window.showTextDocument(document);
 }
 
 function getUniqueSchemaName(schemaNames: Set<string>): string {

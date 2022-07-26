@@ -8,7 +8,7 @@ import { HttpRequest } from "@xliic/common/http";
 import { TryItRequest } from "@xliic/common/messages/tryit";
 
 export async function executeHttpRequest(payload: HttpRequest): Promise<TryItRequest> {
-  const { url, method, headers, body } = payload;
+  const { url, method, headers, body, config } = payload;
 
   try {
     const response = await got(url, {
@@ -19,7 +19,7 @@ export async function executeHttpRequest(payload: HttpRequest): Promise<TryItReq
         ...headers,
       },
       https: {
-        //  rejectUnauthorized: false,
+        rejectUnauthorized: config?.https?.rejectUnauthorized ?? true,
       },
     });
 
@@ -46,6 +46,7 @@ export async function executeHttpRequest(payload: HttpRequest): Promise<TryItReq
     return {
       command: "showError",
       payload: {
+        code,
         message,
       },
     };

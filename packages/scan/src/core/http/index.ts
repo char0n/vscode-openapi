@@ -1,12 +1,13 @@
 import { BundledOpenApiSpec, getOperation } from "@xliic/common/oas30";
 import { HttpMethod, HttpRequest } from "@xliic/common/http";
-import { TryitOperationValues } from "@xliic/common/messages/tryit";
+import { TryitConfig, TryitOperationValues } from "@xliic/common/messages/tryit";
 import { deref } from "@xliic/common/jsonpointer";
 import { formatBody } from "./body";
 import { encode } from "./query";
 import { getSecurity } from "../../util";
 
 export function makeHttpRequest(
+  config: TryitConfig,
   oas: BundledOpenApiSpec,
   method: HttpMethod,
   path: string,
@@ -63,11 +64,20 @@ export function makeHttpRequest(
     }
   }
 
+  const url_ = new URL(url);
+
+  const rejectUnauthorized = !config.insecureSslHostnames.includes(url_.hostname);
+
   return {
     method,
     url,
     headers,
     body,
+    config: {
+      https: {
+        rejectUnauthorized,
+      },
+    },
   };
 }
 

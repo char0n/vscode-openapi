@@ -7,6 +7,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import Servers from "../Servers";
 
 import { HttpMethod } from "@xliic/common/http";
+import { TryitConfig } from "@xliic/common/messages/tryit";
 import { BundledOpenApiSpec, getOperation, OasRequestBody } from "@xliic/common/oas30";
 import { deref } from "@xliic/common/jsonpointer";
 import { getParameters, getSecurity } from "../../util";
@@ -15,6 +16,7 @@ import OperationTabs from "./OperationTabs";
 
 export default function Operation({
   oas,
+  config,
   path,
   method,
   defaultValues,
@@ -22,6 +24,7 @@ export default function Operation({
   buttonText,
 }: {
   oas: BundledOpenApiSpec;
+  config: TryitConfig;
   path: string;
   method: HttpMethod;
   defaultValues: Record<string, any>;
@@ -58,6 +61,7 @@ export default function Operation({
           <Servers name="server" servers={oas?.servers} />
           <OperationTabs
             oas={oas}
+            config={config}
             requestBody={requestBody}
             parameters={parameters}
             security={security}

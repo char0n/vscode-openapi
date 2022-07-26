@@ -8,13 +8,13 @@ import { makeHttpRequest } from "../core/http";
 
 export default function TryOperation() {
   const dispatch = useAppDispatch();
-  const { path, method, oas, defaultValues } = useAppSelector((state) => state.oas);
+  const { path, method, oas, defaultValues, tryitConfig } = useAppSelector((state) => state.oas);
 
   const parameters = getParameters(oas, path!, method!);
 
   const tryOperation = (data: Record<string, any>) => {
     const values = unwrapFormDefaults(oas, parameters, data);
-    const httpRequest = makeHttpRequest(oas, method!, path!, values);
+    const httpRequest = makeHttpRequest(tryitConfig, oas, method!, path!, values);
     dispatch(sendRequest({ defaultValues: values, request: httpRequest }));
   };
 
@@ -22,6 +22,7 @@ export default function TryOperation() {
     <>
       <Operation
         oas={oas}
+        config={tryitConfig}
         path={path!}
         method={method!}
         defaultValues={wrapFormDefaults(defaultValues!)}

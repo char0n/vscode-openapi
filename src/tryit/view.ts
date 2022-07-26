@@ -21,6 +21,11 @@ export class TryItWebView extends WebView<TryItRequest, TryItResponse> {
     createSchema: async (response: any) => {
       executeCreateSchemaRequest(this.document!, this.cache, response);
     },
+    saveConfig: async (config: any) => {
+      vscode.workspace
+        .getConfiguration("openapi")
+        .update("tryit.insecureSslHostnames", config.insecureSslHostnames);
+    },
   };
 
   constructor(extensionPath: string, private cache: Cache) {

@@ -20,6 +20,9 @@ export const ThemeColors: Record<string, string> = {
   dropdownBackground: "--xliic-dropdownBackground",
   dropdownBorder: "--xliic-dropdownBorder",
   dropdownForeground: "--xliic-dropdownForeground",
+  checkboxBackground: "--xliic-checkboxBackground",
+  checkboxBorder: "--xliic-checkboxBorder",
+  checkboxForeground: "--xliic-checkboxForeground",
 } as const;
 
 export type VsCodeColorMap = Record<keyof typeof ThemeColors, string>;

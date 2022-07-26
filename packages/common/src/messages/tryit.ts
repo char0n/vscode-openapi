@@ -1,16 +1,22 @@
 import { HttpMethod, HttpRequest, HttpResponse } from "../http";
 import type { BundledOpenApiSpec, OasParameterLocation, OasSecurityScheme } from "../oas30";
 
+export interface TryitConfig {
+  insecureSslHostnames: string[];
+}
+
 export interface OasWithOperation {
   oas: BundledOpenApiSpec;
   path: string;
   method: HttpMethod;
   preferredMediaType?: string;
   preferredBodyValue?: unknown;
+  config: TryitConfig;
 }
 
 export interface ErrorMessage {
   message: string;
+  code: string;
 }
 
 export interface CurlCommand {
@@ -51,8 +57,10 @@ export type TryItRequest = TryOperationMessage | ShowResponseMessage | ShowError
 type SendHttpRequestMessage = { command: "sendRequest"; payload: HttpRequest };
 type SendCurlCommandMessage = { command: "sendCurl"; payload: CurlCommand };
 type CreateSchemaCommandMessage = { command: "createSchema"; payload: any };
+type SaveConfigMessage = { command: "saveConfig"; payload: TryitConfig };
 
 export type TryItResponse =
   | SendHttpRequestMessage
   | SendCurlCommandMessage
-  | CreateSchemaCommandMessage;
+  | CreateSchemaCommandMessage
+  | SaveConfigMessage;

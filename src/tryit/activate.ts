@@ -108,6 +108,7 @@ export function activate(
 async function startTryIt(view: TryItWebView, cache: Cache, tryIt: TryIt) {
   const document = await vscode.workspace.openTextDocument(tryIt.documentUri);
   const bundle = await cache.getDocumentBundle(document);
+
   if (!bundle || "errors" in bundle) {
     vscode.commands.executeCommand("workbench.action.problems.focus");
     vscode.window.showErrorMessage("Failed to try it, check OpenAPI file for errors.");
@@ -138,12 +139,19 @@ async function showTryIt(
   if (view.isActive()) {
     const oas = extractSingleOperation(method as HttpMethod, path as string, bundle.value);
     await view.show();
+    const insecureSslHostnames =
+      vscode.workspace.getConfiguration("openapi").get<string[]>("tryit.insecureSslHostnames") ||
+      [];
+    console.log("hostnames", insecureSslHostnames);
     view.sendTryOperation(document, {
       oas,
       path,
       method,
       preferredMediaType,
       preferredBodyValue,
+      config: {
+        insecureSslHostnames,
+      },
     });
   }
 }

@@ -192,6 +192,9 @@ function customCssProperties(): string {
     dropdownBackground: "--vscode-dropdown-background",
     dropdownBorder: "--vscode-dropdown-border",
     dropdownForeground: "--vscode-dropdown-foreground",
+    checkboxBackground: "--vscode-checkbox-background",
+    checkboxBorder: "--vscode-checkbox-border",
+    checkboxForeground: "--vscode-checkbox-foreground",
   };
 
   const props = Object.entries(vscodeColorMap)

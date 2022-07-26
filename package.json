@@ -789,6 +789,15 @@
           },
           "default": [],
           "description": "List of hostnames approved for resolving external http:// and https:// references"
+        },
+        "openapi.tryit.insecureSslHostnames": {
+          "scope": "workbench",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "List of hostnames TryIt is allowed to connect ignoring SSL certificate errors"
         }
       }
     },

@@ -5,7 +5,7 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import type { BundledOpenApiSpec, OasRequestBody } from "@xliic/common/oas30";
 
 import { useEffect, useState } from "react";
-import { createBody, serializeToFormText, parseFromFormText } from "../core/form/body";
+import { createBody, serializeToFormText, parseFromFormText } from "../../core/form/body";
 
 export default function RequestBody({
   oas,

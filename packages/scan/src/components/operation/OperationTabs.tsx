@@ -4,11 +4,11 @@ import * as Tabs from "@radix-ui/react-tabs";
 
 import { useEffect, useState } from "react";
 
-import RequestBody from "../RequestBody";
+import RequestBody from "./RequestBody";
 
 import { BundledOpenApiSpec, OasRequestBody, OperationParametersMap } from "@xliic/common/oas30";
 import { ThemeColors } from "@xliic/common/theme";
-import { TryitSecurity } from "@xliic/common/messages/tryit";
+import { TryitSecurity, TryitConfig } from "@xliic/common/messages/tryit";
 
 import ParameterGroup from "../parameters/ParameterGroup";
 import Security from "./Security";
@@ -16,11 +16,13 @@ import Settings from "./Settings";
 
 export default function OperationTabs({
   oas,
+  config,
   requestBody,
   parameters,
   security,
 }: {
   oas: BundledOpenApiSpec;
+  config: TryitConfig;
   requestBody?: OasRequestBody;
   parameters: OperationParametersMap;
   security: TryitSecurity;
@@ -65,7 +67,7 @@ export default function OperationTabs({
     {
       id: "settings",
       title: "Settings",
-      content: <Settings />,
+      content: <Settings config={config} />,
       enabled: true,
     },
   ];

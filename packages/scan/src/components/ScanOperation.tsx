@@ -8,7 +8,7 @@ import { HttpMethod } from "@xliic/common/http";
 
 export default function ScanOperation() {
   const dispatch = useAppDispatch();
-  const { path, method, oas, config } = useAppSelector((state) => state.oas);
+  const { path, method, oas, scanConfig: config } = useAppSelector((state) => state.oas);
 
   const scan = (data: Record<string, any>) => {
     const scanConfig = makeScanConfig(method!, path!, data as RequestFormData);
