@@ -1,313 +1,247 @@
-# OpenAPI Editing with API quality, Conformance and Security Testing
-
-Rich support for the OpenAPI Specification (OAS) / Swagger specification making it quicker and easier to create, edit and navigate your OpenAPI definitions.
-
-Also check the quality, conformance and security of your APIs from inside VS Code, with the bundled 42Crunch API security testing tools - [API Audit](#activating-api-audit) and [API Scan](#activating-api-scan). Audit and Scan are available to both our freemium users and to 42Crunch platform subscribers. Monthly usage limitations apply for freemium users. [Upgrade options](https://42crunch.com/single-user-pricing/) available.
-
-## OpenAPI Editing
-
-The plugin supports code navigation, linting, SwaggerUI or ReDoc preview, IntelliSense, schema enforcement and generation, schema definition links and snippets.
-It also supports both OpenAPI v2 and v3.0.x in JSON or YAML format. [QuickStart](#quick-start)
-
-- [Creating OpenAPI files](#creating-openapi-files)
-- [Navigating an API definition](#navigating-an-api-definition)
-- [Add new elements](#add-new-elements-in-the-openapi-explorer)
-- [Use IntelliSense](#use-intellisense)
-- [Jump to a reference](#jump-to-a-reference)
-- [Sort entries in the navigation pane](#sort-entries-in-the-navigation-pane)
-- [Preview OpenAPI documentation](#preview-openapi-documentation)
-- [Execute operations with "Try it"](#execute-operations-with-try-it)
-- [Generate JSON schemas based on the response content](#generate-json-schemas-based-on-the-response-content)
-- [Configure authentication for external references in OpenAPI files](#configure-authentication-for-external-references-in-openapi-files)
-- Split your OpenAPI into multiple files linked via $ref
-- Use quick fixes to automatically resolve problems in your OpenAPI
-- Use Code snippets to add paths, operations, components, security
-
-## Activating API Audit
-
-A static analysis that lets you check the quality, conformance (to the OpenAPI specification) and security of your API definition. [Video explainer](https://vimeo.com/873235173)
-
-- [Running an audit](#running-an-audit)
-- [Navigating the issues in the audit report](#navigating-the-issues-in-the-audit-report)
-  - [Priority issues](#priority-issues)
-  - [Full issue list](#full-issue-list)
-- [Issues details](#issues-details)
-- [Fixing issues](#fixing-issues)
-
-## Activating API Scan
-
-A dynamic conformance and security tool that tests the API for conformance to the API definition and security vulnerabilities. The free version of API Scan runs locally in your own environment and does not require your API to be uploaded to the 42Crunch platform.
-[Video explainer](https://vimeo.com/884864394/b167153ec4)
-
-- [Conformance to the API Definition](#new-dynamic-api-security-testing)
-- [Launching the Scan](#launching-42crunch-scan)
-
-The free version of API Scan runs locally in your own environment and requires no API file to be uploaded.
-
-## Freemium
-
-This service lets users of our OpenAPI editor extension who are not customers run the API Audit and Scan tests on their APIs.
-
-- [Getting a Freemium Token](#getting-a-freemium-token)
-
-## Support and Documentation:
-
-We’ve recently launched our developer community where you’ll be able to help, get tips-n-tricks and keep up to speed with all the latest developments: https://developers.42crunch.com/
-
-## Quick start
-
-After installing the plugin, open any JSON or YAML file that contains an OpenAPI definition. The plugin automatically detects that this is an OpenAPI file, and the **/API** button is shown in the left-hand panel.
-
-![OpenAPI Explorer](./images/OpenAPI%20Explorer.PNG)
-
-We also encourage you to watch [this video](https://42crunch.com/tutorial-openapi-swagger-extension-vs-code/#Introducing-OpenAPI-Editor) that gives you a full tour of the editor and its different features.
-
-## Editor features
-
-This extension makes it easier and faster to navigate your OpenAPI definitions, especially when they get longer.
-
-You can home in on elements in the OpenAPI explorer view, or jump directly to the target of a reference in the API. You can also add new elements to your API directly in the OpenAPI explorer directly where they are needed. Filling in the details is quicker with IntelliSense support for OpenAPI elements.
-
-### Creating OpenAPI files
-
-1. Press **Ctrl+Shift+P** on Windows or Linux, or **Cmd+Shift+P** on a Mac.
-2. In the command prompt, start typing `new openapi`, and click the corresponding command to create either an OAS v2 or v3 template file.
-3. Use the OpenAPI explorer to populate the template with new paths and other elements as needed.
-4. Save the file to your disk to fully enable IntelliSense.
-
-![Create new OpenAPI file from a template](./images/New%20OpenAPI%20file.gif?raw=true)
-
-![](https://img.shields.io/badge/Learning%20More!-red) Watch this [video](https://42crunch.com/tutorial-openapi-swagger-extension-vs-code/#Navigating-OpenAPI-Explorer) on editor basics.
-
-### Navigating an API definition
-
-1. Open an OpenAPI file.
-2. Click the OpenAPI button to switch to the OpenAPI explorer view.
-3. Expand the sections and elements in the file as needed, and click the ones you want to jump to in the editor.
-
-![Navigation inside the OpenAPI file](./images/Navigation.gif?raw=true)
-
-### Add new elements in the OpenAPI explorer
-
-1. In OpenAPI explorer pane, go to the section where you want to add a new element and right-click on the relevant node to open a context menu.
-2. Click the item you want to add from the list.
-
-![Add new API path and verb](./images/Add%20paths%20and%20verbs.gif?raw=true)
-
-### Use IntelliSense
-
-As you start typing OpenAPI elements or their values, the context-sensitive list of available options is displayed in the IntelliSense menu. In JSON OpenAPI files, just type double-quote (`"`) to show the menu, and type further to filter the list. In YAML OpenAPI files, start typing the property name.
-
-You can also use the corresponding VS Code hotkey (**Ctrl+Space** on Windows, **Cmd+Space** on Mac) to open the IntelliSense menu.
-
-![IntelliSense for OpenAPI editing](https://github.com/42Crunch/vscode-openapi/blob/master/images/Intellisense.gif?raw=true)
-
-### Jump to a reference
-
-Use Go to Definition to locate the targets of references easily. To jump to view the definition from a reference in your API, either **Ctrl+click** a reference, or right-click a reference and click **Go to Definition** in the shortcut menu.
-
-![Go to definition](./images/Go%20to%20Definition.gif?raw=true)
-
-### Sort entries in the navigation pane
-
-By default, entries in the OpenAPI Explorer pane are sorted alphabetically. If you want to instead have them sorted in the order they are in the OpenAPI file, change the corresponding setting:
-
-1. On the **File** menu, click **Preferences > Settings**.
-2. Expand the **Extensions** section and click **OpenAPI**.
-3. Clear the checkbox **Alphabetically sort contents of OpenAPI explorer outlines**.
-
-![](./images/OutlineSettings.png)
-
-### Preview OpenAPI documentation
-
-You can get a documentation-style preview of the API you are editing by clicking the Preview button <img src="./images/Preview_button.png" width=19 /> at the top right:
-
-![OpenAPI Preview Pane](./images/OASPreview.png)
-
-The extension supports two popular OpenAPI documentation generators: [SwaggerUI](https://swagger.io/tools/swagger-ui/) and [ReDoc](https://github.com/Redocly/redoc).
-
-To change the default OpenAPI Preview rendering engine:
-
-1. On the **File** menu, click **Preferences > Settings**.
-2. Expand the **Extensions** section and click **OpenAPI**.
-3. Pick the option of your choice from the **Default Preview Rendered** dropdown list.
-
-![OpenAPI Preview Pane](./images/Change_OpenAPI_Preview_engine.png)
-
-### Execute operations with "Try it"
-
-With "Try it", you can invoke operations defined in your OpenAPI directly from VS Code:
-
-- Click on "Try it" code lens which is displayed right below the HTTP verb (e.g. "get", "post") of your operation and in the examples section.
-- The payload data will be generated based on the request JSON Schema, or the first example available. You can edit this information before sending the request.
-
-![TryIt view](./images/tryit.png)
-
-Try it comes with a number of limitations:
-
-- Sending files is not supported
-- It works best with text-based responses, such as JSON
-- Binary/image responses will be shown as text
-
-### Generate JSON schemas based on the response content
-
-"Try it" can be used to generate JSON Schema based on the body of the response.
-
-- Select "Tools" tab in the TryIt response
-- Click "Generate schema" button.
-
-![TryIt response tools](images/tryit-schema.png)
-
-### Configure authentication for external references in OpenAPI files
-
-If you use references to schemas served by an authenticated HTTP service (such as an Schema Registry service or a repository), you'll need to configure the list of approved hosts in the extension settings. To do this:
-
-1. On the **File** menu, click **Preferences > Settings**.
-2. Expand the **Extensions** section and click **OpenAPI**.
-3. Locate the **Openapi: Approved Hostnames** setting, click on **Add item**, and write the hostname you need for resolving external references.
-   ![Configure approved hosts and authentication](./images/Configure%20approved%20hosts.png)
-
-In case some of the approved hosts requires authentication, you can configure it in the OpenAPI > External References section of the `42Crunch: Open Settings` command view:
-
-![Configure approved hosts and authentication](./images/Configure%20approved%20hosts%20authentication.png)
+<div>
+  <a href="https://speclynx.com"><img width="739" height="103" alt="image" src="https://github.com/user-attachments/assets/87c88ea9-5746-497a-8c33-43fa55b72b0b" /></a>
+  <br><br>
+  <p>
+    Stop wrestling with OpenAPI specs — SpecLynx OpenAPI Toolkit delivers the most effective way to author and manage your API specs, bringing unprecedented ease, pinpoint accuracy, and unmatched power directly to your VSCode workflow.  
+  </p>
+</div>  
 
 <br>
 
-> To open this view, go to `View > Command Palette...` in VSCode menu and type in `42Crunch`, you'll see the Open Settings command listed below:
-> ![42Crunch: Open Settings](./images/42Crunch%20Open%20Settings.png)
-> You can also use keyboard shortcuts for the Command Palette **Ctrl+Shift+P**, or **Cmd+Shift+P** for Mac users.
+[![SpecLynx OpenAPI Toolkit](https://speclynx.com/assets/images/speclynx-openapi-toolkit.png)](https://speclynx.com)
 
-<br>
+## Why Choose SpecLynx OpenAPI Toolkit?
 
-After configuring all hosts you need to refer to, all OpenAPI references to any of the approved hosts will be dynamically resolved when linting or previewing your API.
+SpecLynx OpenAPI Toolkit is engineered for clarity, control, and confidence, enabling you to focus on designing exceptional APIs.
 
-## Static API Security Testing
+### OpenAPI Authoring
 
-You can use this OpenAPI extension to check the quality and security of your API definition as you work on it. This feature is powered by 42Crunch [Audit](https://docs.42crunch.com/latest/content/concepts/api_contract_security_audit.htm?utm_campaign=IDE&utm_medium=referral&utm_source=vscode). 42Crunch Audit performs a static analysis of the API definition that includes more than 300 checks on best practices and potential vulnerabilities related to authentication, authorization as well as data constraints.
+Get full YAML/JSON autocompletion, inline documentation hints, validation, linting, and live preview as you type — so you catch errors before they cost you time. OpenAPI Toolkit surfaces context-aware suggestions for paths, parameters, responses, components, ...; flags missing or mismatched fields instantly; and renders a side-by-side spec-to-UI preview that updates with every keystroke. Say goodbye to manual spec checks and hello to a fluid authoring experience that keeps your API specs accurate and up-to-date.
 
-![](https://img.shields.io/badge/Learning%20More!-green) Watch this [video](https://42crunch.com/free-user-faq/#Free-API-Security-Testing-FAQs-00) to learn more about 42Crunch Audit.
+### One-Click Tooling
 
-You can run the audit service in freemium or platform mode:
+- Powered by a powerful [Language Server](https://microsoft.github.io/language-server-protocol/)
+- JSON Schema Validation
+- Semantic Validation & Linting
+- Spectral Validation & Linting
+- OpenAPI Description dereferencing
+- Workspace-Wide Operations
 
-- **Using our freemium centralized service**: this service is a fully featured version of the audit, but with usage limits. In this mode, OAS files are sent to the service, audited and a report is returned. This is a stateless service: **we do not keep the OpenAPI file, nor the report.**
-- New! **Using the 42Crunch CLI**: in this mode, audits are performed locally (on the user's machine). This is only available to <u>freemium</u> users for now. Support for local audit/scans using a platform API token will be available soon. In this mode, **OpenAPI files and reports are kept locally**.
-- **Using 42Crunch SaaS platform**: this requires an account on a 42Crunch platform, which is available to customers and to prospects evaluating our product. In this case, you need to supply your platform URL and an IDE token (which can be created from the platform home page). You can specify those settings by invoking `42Crunch: Update platform credentials` from the command palette.
+All these commands — and more — are just a keystroke away in VS Code, so you can focus on designing great APIs instead of wrestling with tooling.
 
-![IDE-PlatformIntegration](./images/IDE-PlatformIntegration.png)
+### Built by Veterans
 
-### Getting a Freemium Token
+SpecLynx OpenAPI Toolkit is crafted by industry veterans, [Vladimír Gorej](https://vladimirgorej.com) and [Francesco Tumanischvili](https://github.com/frantuma), who bring over **15 years of dedicated experience maintaining and evolving Swagger/OpenAPI tools**. Their unparalleled expertise ensures you receive a solution with battle-tested reliability and best practices meticulously baked into every feature.
 
-To run Security Audit from VS Code, you need a token. The first time you try to audit or scan an API, you are asked to provide your email address or an API token from the platform.
+## What is it?
 
-Once you supply the address, the extension requests the token to be sent to your mailbox. Paste the token you received in the prompt in VS Code, and you are all set.
+OpenAPI Toolkit provides advanced editing, processing, rendering, and execution capabilities for Swagger/OpenAPI files (2.0, 3.0, 3.1). These include an editor experience — offering validation/linting, completion, documentation, syntax highlighting, reference navigation, and more — along with a preview panel (based on Swagger UI) for rendering the OpenAPI document and allowing interaction and execution.
 
-Watch this short [video](https://42crunch.com/free-user-faq/#Free-API-Security-Testing-FAQs-02) which takes you through those steps.
+Several capabilities are unique in the VS Code OpenAPI ecosystem, such as Spectral support in the web, custom semantic linting, in-context documentation (including in completion items), full JSON/YAML parity, and rich reference handling.
 
-### Running an audit
+We are actively expanding the feature set and fixing bugs; this documentation will be updated accordingly.&#x20;
 
-You can use OpenAPI extension to check the quality of your API as you work on it. You can run the audit directly from VS Code by clicking the Audit button in the toolbar. Alternatively, you can run an audit for an individual endpoint using the code lens.
+## Capabilities
 
-![](./images/StartAudit.png)
+### Editor
 
-### Navigating the issues in the audit report
+#### Foreword
 
-After the audit finishes, you get the audit report directly in the VS Code view, side by side with your code. The report viewer provides handy ways to navigate the found issues, even if the report is quite long.
+**JSON and YAML** — OpenAPI Toolkit provides the same level of support for OpenAPI specs written in JSON or YAML format. It also aims to provide editor capabilities even for not-well-formed documents (for example, offering completion and syntax highlighting where possible).
 
-#### Priority issues
+OpenAPI Toolkit supports following OpenAPI versions with a consistent feature set:
 
-Look here for issues that require the most attention.
+- [OpenAPI 2.0 (Swagger)](https://spec.openapis.org/oas/v2.0.html)
+- [OpenAPI 3.0.x](https://spec.openapis.org/oas/v3.0.4.html)
+- [OpenAPI 3.1.x](https://spec.openapis.org/oas/v3.1.1.html)
 
-- **Most Common issues**: this list contains issues that are occuring the most, and how many times they are repeated.
-- **Opportunities**: this list contains issues that, if fixed, will most contribute to raise the audit score.
+###### OpenAPI 2.0 (Swagger)
 
-Those two lists will often overlap and in certain cases be identical, but this is totally normal.
+![OpenAPI (Swagger) 2.0 support](https://github.com/user-attachments/assets/c1d7d002-97e8-48cc-a64d-30e4c8987655)
 
-![AuditIssuesList](./images/AuditIssuesList.png)
+###### OpenAPI 3.0.x
 
-#### Full issue list
+![OpenAPI 3.0.x support](https://github.com/user-attachments/assets/cfcc92af-648b-41d4-bddf-e74fdd493645)
 
-The full issue list contains all issues found. The list can be filtered in two ways:
+###### OpenAPI 3.1.x
 
-- **Using the security gate (SQG) toggle**: an SQG enforces enterprise compliance and hightlights issues that are offending the requirements established, such as a minimal score, issues severity or specific issues (e.g. an API key is used when only OAuth is allowed across the enterprise). When the toggle is on, only the issues affecting the SQG status are shown.
+![OpenAPI 3.1.x support](https://github.com/user-attachments/assets/0e0e7017-e4f9-40e7-b7ad-303b8934d582)
 
-![](https://img.shields.io/badge/Note%20-blue) SQG results are not visible yet to all Freemium users.
+**Web support** — OpenAPI Toolkit is designed to run both on Desktop and in Web environments such as [vscode.dev](https://vscode.dev/), [github.dev](https://github.dev/), and [GitHub Codespaces](https://github.com/features/codespaces). It is one of the few extensions that deliver advanced OpenAPI editing and validation/linting in the web environment.&#x20;
 
-![AuditIssuesList-Full](./images/AuditIssuesList-Full.png)
+#### In-context OpenAPI Documentation (hover)
 
-- **Using the filtering options**: you can also use filtering options to drill-down into the list such as severity, category or even a specific issue type.
+When you hover over a keyword (node key) in the document, the extension shows full, context-aware documentation in a hover panel that corresponds to the selected construct and matches the official specification.
 
-#### Issues details
+![In-context OpenAPI Documentation ](https://github.com/user-attachments/assets/7aaf568d-9a2f-4d4f-bb63-9d38db654579)
 
-For each issue, you have access to full information about the issue, why it is relevant and recommendations on how to address the issue.
+The same documentation is also shown in the details pane of completion items. See the “Completion / Suggestions” section below.&#x20;
 
-![](https://img.shields.io/badge/Learning%20More!-green) Watch this [video](https://42crunch.com/free-user-faq/#Free-API-Security-Testing-FAQs-2) to learn more about audit and how to navigate issues.
+#### Completion / Suggestions
 
-### Fixing issues
+OpenAPI Toolkit provides an enriched completion experience. Under the hood, completion is driven by a semantic understanding of the node where completion is triggered, making suggestions far more precise and useful than standard JSON-Schema-based completion.&#x20;
 
-Many of the issues reported by 42Crunch Audit have fixes associated with them. These are code snippets that you can insert into the OpenAPI file and then customize with the appropriate value.
+##### Completion documentation
 
-1. Cick some of the error lines in your OpenAPI file to bring up the QuickFix blue icon on the left of the line.
-2. Click the Quickfix icon and select the fix to apply.
-3. Tweak the values in the inserted code snippet as you see fit.
+Each completion item includes full documentation (the same content shown in hover).
+**Tip:** If the documentation panel doesn’t appear to the right of the completion label, click the `>` icon that appears when you hover the completion entry.&#x20;
 
-![Quick Fixes in VSCode](./images/Quick_Fixes_in_VSCode.gif)
+![Completion documentation](https://github.com/user-attachments/assets/1d90a38b-427a-4b23-a8f8-aeaa1aa2d448)
 
-## (New!) Dynamic API Security testing
+##### References completion
 
-42Crunch Audit performs a security analysis that does not require any live API, just the definition itself. 42Crunch Scan leverages the OpenAPI definition to:
+When completion is triggered within the value of a `$ref` field, the editor offers suggestions of compatible targets found in the document (this will be expanded to include documents across the workspace). It also displays the referenced content in the completion box, providing an in-context view of potential references without losing focus&#x20;
 
-- Test the resilience and behavior of APIs by automatically generating security tests from the APIs' OpenAPI definition. Scan reproduces the typical behavior of a hacker by injecting bad payloads, bad tokens, and using invalid HTTP verbs and paths. This helps detect vulnerabilities early in the API life cycle, especially those associated with the [OWASP API Security Top 10](https://apisecurity.io/owasp-api-security-top-10/owasp-api-security-top-10-project/).
-- Validate that the implementation of the API conforms to its established contract: Scan checks all responses against the OpenAPI definition and detects unexpected responses and data leaks.
+![References completion](https://github.com/user-attachments/assets/d293593c-332a-4183-abca-5cbf944176cb)
 
-![](https://img.shields.io/badge/Learning%20More!-Blue) Watch this [video](https://42crunch.com/free-user-faq/?utm_campaign=IDE&utm_medium=referral&utm_source=vscode#Free-API-Security-Testing-FAQs-4) to learn more about 42Crunch Scan.
+##### Context-aware completion (e.g., `type: integer` → `format`)
 
-APIs which thoroughly enforce compliance to an established contract are far more resilient to all types of attacks.
+Suggestions adapt to related fields. For example, if a schema sets `type: integer`, the `format` suggestions include only compatible values.&#x20;
 
-![](https://img.shields.io/badge/Important-red) You must only use 42Crunch Scan against APIs that you own, not those of third parties.
+![Context-aware completion](https://github.com/user-attachments/assets/6ef34a33-f7b4-4341-9edb-e8641e626914)
 
-### Launching 42Crunch Scan
+#### References
 
-We recommend you use the 42Crunch API Security Testing Binary to run scans. The alternative is to run a docker image locally. 42Crunch customers can also leverage our [scand manager](https://github.com/42Crunch/scand-manager), by deploying an API-driven scan engine on Kubernetes.
+##### Reference target content in hover
 
-In order to run a scan, you will need :
+Hovering over the value of a `$ref` field displays the referenced content in the hover box, providing an in-context view of references without losing focus.&#x20;
 
-- **A credential** : most likely, your API is using some form of authentication, like an API Key or token. You need a valid credential to provide to the scan engine.
+![Preview reference target](https://github.com/user-attachments/assets/4882f6e3-7b13-4cd7-84ab-8ce2e3a4081c)
 
-- **The URL** when the API is deployed.
 
-  ![](https://img.shields.io/badge/Warning-orange) We strongly recommend that you do <u>not</u> target a production system. While the tool does not try to inject malicious payloads, it is possible that the API implementation is not resilient enough to handle the tests and may crash or behave unexpectedly.
+##### Go to definition (F3)
 
-When you first launch a scan, you are presented with the scan configuration viewer. The scan configuration is generated automatically from the OpenAPI file you chose to scan.
+Right-click the value of a `$ref` field and choose **Go to Definition** (or press **F3**) to jump to the reference target—either within the current file or in another file in the workspace.&#x20;
 
-- For each operation in the OpenAPI file, a request is created. You can test individual requests using the **Try** button top-right.
+![Go to definition](https://github.com/user-attachments/assets/a5c1610a-1c06-4c8d-8316-46f953755cd8)
 
-  ![](./images/ScantryIt.png)
+##### Go to references
 
-- Requests can be arranged into testing scenarios: a scenario combines one or multiple requests, for example you need to create a resource before you can view it. The editor allows you to extract data as variables from a request execution to inject it into the next step.
+Right-click a key (for example, under `components.schemas`) and choose **Go to References** to open a panel listing available references to jump to.&#x20;
 
-  Similarly to requests, you can test an individual scenario to ensure it is built correctly before starting a scan: the scan engine will execute the scenario and if successful, launch automatically dozens of tests using the data provided in the OpenAPI file. The scan will send bad verbs, bad data types, bad data formats as well as authentication tests.
+![Go to references](https://github.com/user-attachments/assets/2cb17ad2-cd43-4945-94a7-746c6397a82a)
 
-  ![](./images/ScanScenarios.png)
+##### Find all references
 
-Once the scan has run, you are presented with a results page. The summary shows if the scan got a testing baseline by running the HappyPath test. Additional testing results are visible from the tests list. For each issue, you can easily reproduce the problem using a curl request.
+Right-click a key (for example, of a schema) and choose **Find All References** to open the References panel listing every usage of the selected target.&#x20;
 
-![](./images/ScanReport.gif)
+![Find all references](https://github.com/user-attachments/assets/9b00b3b1-03f3-4252-b7b9-4a853f00783d)
 
-## Miscellaneous commands
+##### Dereference command
 
-- You can load results of Security Audit from a file for a currently open OpenAPI file by running command `42Crunch: Load Security Audit report from file` from the command palette
+Right-click inside an OpenAPI document or right-click the file in the Explorer, then choose **OpenAPI Toolkit → Dereference API Document** to save a dereferenced copy locally. The default output name is `{filename}-dereferenced.{extension}`.&#x20;
 
-## Network requirements
+![Dereference command](https://github.com/user-attachments/assets/e7bc9c2b-95be-4508-8212-1f2dd99334c3)
 
-To execute the 42Crunch Freemium services, you need access to the following URL: https://stateless.42crunch.com. You may need to ask your administrators to add a firewall rule to allow the connection.
+#### Syntax Highlighting
 
-## Known issues
+OpenAPI Toolkit provides **semantic** syntax highlighting, going beyond basic keyword coloring. Specific OpenAPI elements—such as operations, schemas, and reference objects—are highlighted with distinct colors and font styles. This helps you quickly recognize and distinguish different parts of an API definition, improving readability and navigation in complex specifications.&#x20;
 
-- For new files, IntelliSense does not work until you save the file. File extension must be `.json` or `.yaml`.
-- When running 42Crunch Scan on a host with incorrect clock, the scan can fail with the message `cannot send the scan report : rpc error: code = InvalidArgument desc = invalid input`, to resolve the issue make sure your clock is correctly set.
+![Semantic Syntax Highlighting](https://github.com/user-attachments/assets/b67c64b5-771d-4eb1-81d3-359872e7607b)
 
-## Feedback
+#### Validation and Linting
 
-Submit your bug reports at [GitHub project Issues](https://github.com/42Crunch/vscode-openapi/issues).
+##### Definitions
 
-And, needless to say, your reviews at [VS Code marketplace](https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi&ssr=false#review-details) mean the world to us!
+* **Validation** — Checks that the document conforms to the OpenAPI and JSON Schema specifications.
+* **Linting** — Analyzes an OpenAPI document against a configurable ruleset. Unlike validation (which only checks spec conformance), linting enforces best practices, style guidelines, and quality standards. It can catch issues such as inconsistent naming, missing descriptions, or patterns that harm API usability—even when the document is technically valid.
+* **Semantic validation** — Validates using rules that target semantic properties of elements (e.g., `operation`, `schema`) rather than only applying JSON Schema. This enables more precise checks and clearer diagnostics (including highlighting the exact key, value, or child node that’s wrong).
+* **Semantic linting** — Lints using rules that can target semantic element types and/or JSONPath expressions. Compared to tools that only support JSONPath, this hybrid approach simplifies writing targeted rules (including for nested elements) and yields more precise editor markings.&#x20;
+
+##### Validation/Linting modes
+
+OpenAPI Toolkit supports three modes, which you can combine:
+
+1. **JSON Schema validation** — Standard validation based on OpenAPI JSON Schemas
+2. **Spectral validation and linting**
+3. **Semantic validation and linting**&#x20;
+
+![Validation/Linting modes](https://github.com/user-attachments/assets/36d55b1d-6cfa-41db-8656-1242e3e946c0)
+
+##### Default configuration
+
+By default, JSON Schema validation and **semantic linting** are enabled. You can change this in the extension settings. **Semantic validation** is currently disabled by default because it has not yet completed a full compliance test cycle; once complete, it is expected to become the default validation method.&#x20;
+
+##### Spectral validation/linting
+
+To enable Spectral-based checks:
+
+1. Enable **Apply Spectral Validation** in the extension settings.
+2. Provide a ruleset by either:
+   **(a)** adding a `.spectral.json`, `.spectral.yaml`, or `.spectral.yml` at the root of your workspace, **or**
+   **(b)** setting the Spectral ruleset file path in the extension settings, or via the command **OpenAPI Toolkit: Pick Spectral Validation/Linting Rules File** (available from the editor context menu or the Explorer).
+
+Refer to the [Spectral documentation](https://docs.stoplight.io/docs/spectral/) for ruleset format details.&#x20;
+
+###### Create a Spectral ruleset
+![Create a Spectral ruleset](https://github.com/user-attachments/assets/1cb7691d-7fba-4b82-96b8-3a0344aa2ba4)
+
+###### Use a Spectral ruleset
+![Use a Spectral ruleset](https://github.com/user-attachments/assets/2bfd9175-a42b-43e2-96ad-1217b60bebcd)
+
+##### Semantic validation
+
+Enable **Apply Semantic Validation** in the extension settings. No rules file is required to run the built-in semantic validation checks.&#x20;
+
+![Semantic Validation](https://github.com/user-attachments/assets/6245a7f4-71d2-46f9-a271-b031728ace4c)
+
+##### Semantic linting
+
+To run semantic linting:
+
+1. Enable **Apply Semantic Linting** in the extension settings.
+2. Provide a ruleset by either:
+   **(a)** adding a rules file at the workspace root named `.speclynx.json`, `.speclynx.yaml`, `.speclynx.yml` (or without the leading dot), **or**
+   **(b)** setting the semantic ruleset file path in the extension settings, or via the command **OpenAPI Toolkit: Pick Semantic Validation/Linting Rules File** (available from the editor context menu or the Explorer).&#x20;
+
+##### Semantic linting rules (overview)
+
+Semantic lint rules are defined in JSON or YAML. A ruleset typically includes:
+
+* **Rule ID** and **description/message**
+* **Severity** (e.g., error, warning, info)
+* **Target selector**: a semantic **element type** (e.g., `operation`, `schema`, `parameter`, etc.) and/or a **JSONPath** for precise targeting
+* **Condition(s)** to evaluate (e.g., required fields, naming patterns, min/max constraints)
+* **Optional fixes** or suggestions (when applicable)
+
+![Semantic linting rules](https://github.com/user-attachments/assets/a2f3e0d8-8178-43a6-b26c-f1678b3a7622)
+
+A separate section provides the complete rule schema and examples. *(If you don’t see it yet, it will be added as the rules stabilize.)*&#x20;
+
+##### Supported major element “types” for semantic checks
+
+These are the current high-level element types recognized by the semantic engine.
+
+| &nbsp;            | &nbsp;                  | &nbsp;                   |
+|-------------------|-------------------------|--------------------------|
+| `callback`        | `components`            | `contact`                |
+| `content`         | `definitions`           | `discriminator`          |
+| `encoding`        | `example`               | `external-documentation` |
+| `header`          | `headers`               | `info`                   |
+| `items`           | `license`               | `link`                   |
+| `media-type`      | `oauth-flow`            | `oauth-flows`            |
+| `openapi`         | `openapi3_0`            | `openapi3_1`             |
+| `operation`       | `parameter`             | `parameters-definitions` |
+| `path-item`       | `paths`                 | `path-template`          |
+| `reference`       | `request-body`          | `response`               |
+| `responses`       | `responses-definitions` | `schema`                 |
+| `scopes`          | `security-definitions`  | `security-requirement`   |
+| `security-scheme` | `server`                | `server-variable`        |
+| `swagger`         | `tag`                   | `xml`                    |
+
+
+### Preview
+
+The Preview panel (powered by [SwaggerUI](https://github.com/swagger-api/swagger-ui)) renders the current OpenAPI document and lets you interact with it.
+Preview panel can be opened by opening the Command Palette (CTRL+Shift+P) and running the `OpenAPI Toolkit: Show API Document preview` command.
+
+![SpecLynx OpenAPI Toolkit Preview](https://github.com/user-attachments/assets/67c4e9a9-9084-41ab-bbbe-a01bb50d3457)
+
+
+Preview interactions include:
+
+* **Live rendering** — Quickly verify how changes look without leaving the editor
+* **Server selection & auth** — Choose servers and authorize requests where applicable
+* **Try it out** — Execute operations directly from the preview to validate requests/responses during development
+
+This helps you validate the specification from both a structural and a consumer point of view.&#x20;
